@@ -4,6 +4,15 @@
 #include <logger.h>
 #include "client_logger_builder.h"
 
+#include <iostream>
+#include <sstream>
+#include <map>
+#include <list>
+#include <string>
+#include <iomanip>
+#include <fstream>
+
+
 class client_logger final:
     public logger
 {

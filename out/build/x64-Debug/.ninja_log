@@ -1,0 +1,13 @@
+# ninja log v5
+20	863	7343961475166695	allocator/allocator/CMakeFiles/mp_os_allctr_allctr.dir/src/allocator_test_utils.cpp.obj	8db3c179749b0928
+15	872	7343961475226708	allocator/allocator/CMakeFiles/mp_os_allctr_allctr.dir/src/allocator_guardant.cpp.obj	a88f3e88805a36f7
+80	999	7343961476482086	common/CMakeFiles/mp_os_cmmn.dir/src/operation_not_supported.cpp.obj	426ab95d390a081f
+75	1028	7343961477007360	common/CMakeFiles/mp_os_cmmn.dir/src/not_implemented.cpp.obj	42704b5677066fde
+1028	1467	7343961481108804	common/mp_os_cmmn.lib	abe6cc1adafbd186
+872	1497	7343961480988786	allocator/allocator/mp_os_allctr_allctr.lib	791f719f32c5e90b
+36	1634	7343961483199638	allocator/allocator_buddies_system/CMakeFiles/mp_os_allctr_allctr_bdds_sstm.dir/src/allocator_buddies_system.cpp.obj	fdb5e511232f0fa
+999	2087	7343961487461255	logger/client_logger/CMakeFiles/mp_os_lggr_clnt_lggr.dir/src/client_logger_builder.cpp.obj	7c59948b578721c
+1468	2407	7343961490886179	logger/logger/CMakeFiles/mp_os_lggr_lggr.dir/src/logger.cpp.obj	988201ea4d19213e
+31	2430	7343961491151359	_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj	a9723e0d7f31ad8
+1498	2477	7343961491656539	logger/logger/CMakeFiles/mp_os_lggr_lggr.dir/src/logger_builder.cpp.obj	b167c4e2dd3c046f
+26	4356	7343961510385986	_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	167d48ef3b89dfc7
