@@ -57,10 +57,7 @@ logger_builder *client_logger_builder::add_file_stream(
     
     file_patches->push_back(stream_file_path);
     
-   
-
-
-
+  
     return this;
    // throw not_implemented("logger_builder *client_logger_builder::add_file_stream(std::string const &stream_file_path, logger::severity severity)", "your code should be here...");
 }
@@ -68,7 +65,11 @@ logger_builder *client_logger_builder::add_file_stream(
 logger_builder *client_logger_builder::add_console_stream(
     logger::severity severity)
 {
-    throw not_implemented("logger_builder *client_logger_builder::add_console_stream(logger::severity severity)", "your code should be here...");
+    std::list<logger::severity>* severities = &_client_logger->_severity_console;
+    severities->push_back(severity);
+
+    return this;
+    //throw not_implemented("logger_builder *client_logger_builder::add_console_stream(logger::severity severity)", "your code should be here...");
 }
 
 logger_builder* client_logger_builder::transform_with_configuration(

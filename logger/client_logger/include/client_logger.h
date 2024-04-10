@@ -17,12 +17,13 @@ class client_logger final :
     public logger
 {
 
-
 public:
     std::map<
         logger::severity,
         std::list<std::string>
     > * _severity_file_patches;
+
+    std::list<logger::severity> _severity_console;
      
 public:
 
@@ -47,7 +48,6 @@ public:
     [[nodiscard]] logger const *log(
         const std::string &message,
         logger::severity severity) const noexcept override;
-
 
 };
 

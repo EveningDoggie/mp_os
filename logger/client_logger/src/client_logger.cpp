@@ -37,13 +37,19 @@ client_logger &client_logger::operator=(
 
 client_logger::~client_logger() noexcept
 {
-    throw not_implemented("client_logger::~client_logger() noexcept", "your code should be here...");
+   // delete _severity_file_patches; //+чистка внутри
+   throw not_implemented("client_logger::~client_logger() noexcept", "your code should be here...");
 }
 
 logger const *client_logger::log(
     const std::string &text,
     logger::severity severity) const noexcept
 {
+    std::string output_value = "[%s][%d %t] %m";
+    output_value.replace(output_value.find("%s"), 2, severity_to_string(severity));
+    output_value.replace(output_value.find("%m"), 2, text);
+    output_value.replace(output_value.find("%d"), 2, current_date_to_string());
+    output_value.replace(output_value.find("%t"), 2, current_time_to_string());
 
 
     std::map<logger::severity, std::list<std::string>>* severity_file_patches = _severity_file_patches;
@@ -54,15 +60,19 @@ logger const *client_logger::log(
     {
         std::ofstream out;
         out.open(patch, std::ios::app);
-        // text = get_format_output_string(text, severity);
-        //СДЕЛАТЬ ФУНКЦИЮ С ФЛАГАМИ С ПРОШЛОГО СЕМЕСТРА. А ЛУЧШе использовать готовую
-        out << text << std::endl;
+        out << output_value << std::endl;
         out.close();
     }
-
+   
+    for (logger::severity iteration_severity : _severity_console) 
+    {
+        if (iteration_severity == severity)
+            std::cout << output_value << std::endl;
+    }
    
     return this;
     //throw not_implemented("logger const *client_logger::log(const std::string &text, logger::severity severity) const noexcept", "your code should be here...");
 }
 
 
+//Изменить так как было ранее - потоки чтобы использовались а не файлы

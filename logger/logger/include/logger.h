@@ -57,8 +57,9 @@ protected:
     static std::string severity_to_string(
         logger::severity severity);
 
-    static std::string current_datetime_to_string() noexcept;
+    static std::string current_date_to_string() noexcept;
 
+    static std::string current_time_to_string() noexcept;
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_LOGGER_H

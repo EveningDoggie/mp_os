@@ -2,20 +2,19 @@
 #include <client_logger_builder.h>
 int main(
     int argc,
-    char *argv[])
+    char* argv[])
 {
 
-    client_logger_builder * builder = new client_logger_builder();
-    logger * logger = builder
+    client_logger_builder* builder = new client_logger_builder();
+    logger* logger = builder
         ->add_file_stream("debug.txt", logger::severity::debug)
-        ->add_file_stream("critical.txt", logger::severity::critical)
-        ->add_file_stream("error.txt", logger::severity::error)
+        ->add_console_stream(logger::severity::debug)
         ->build();
 
- 
-    logger->log("error", logger::severity::error);
 
-    std::cout << "final";
+    logger->log("sdaf", logger::severity::debug);
+
+    std::cout << "ok";
     int a;
     std::cin >> a;
     return 0;
