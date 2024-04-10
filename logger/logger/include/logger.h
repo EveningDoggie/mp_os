@@ -11,12 +11,18 @@ public:
 
     enum class severity
     {
-        trace=1,
-        debug=2,
-        information=3,
-        warning=4,
-        error=5,
-        critical=6
+        trace,
+        debug,
+        information,
+        warning,
+        error,
+        critical
+    };
+
+    enum class severity_type
+    {
+        minimal,
+        specific
     };
 
 public:

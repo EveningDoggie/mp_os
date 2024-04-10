@@ -12,11 +12,10 @@
     "\\logger\\client_logger\\include",
     "\\logger\\client_logger\\src",
     "\\logger\\client_logger\\tests",
-    "\\logger\\logger\\include",
-    "\\logger\\logger\\src",
     "\\own_tests",
+    "\\tasks",
     "\\tasks\\rguk"
   ],
-  "SelectedNode": "\\logger\\client_logger\\tests\\client_logger_tests.cpp",
+  "SelectedNode": "\\tasks\\rguk\\plm1.pdf",
   "PreviewInSolutionExplorer": false
 }

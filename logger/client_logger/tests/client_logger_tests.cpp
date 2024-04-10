@@ -6,11 +6,14 @@ int main(
 {
 
     client_logger_builder* builder = new client_logger_builder();
-    logger* logger = builder
-        ->add_file_stream("debug.txt", logger::severity::debug)
-        ->add_console_stream(logger::severity::debug)
+     logger* logger = builder
+        ->add_file_stream("file1.txt", logger::severity::debug)
+        ->add_file_stream("file2.txt", logger::severity::debug)
+        ->add_file_stream("file3.txt", logger::severity::debug)
+        //->add_console_stream(logger::severity::debug)
         ->build();
 
+     //см лист - переделать так же как там
 
     logger->log("sdaf", logger::severity::debug);
 

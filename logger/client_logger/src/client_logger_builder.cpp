@@ -41,14 +41,13 @@ client_logger_builder::~client_logger_builder() noexcept
     throw not_implemented("client_logger_builder::~client_logger_builder() noexcept", "your code should be here...");
 }
 
-int i = 0;
 
 logger_builder *client_logger_builder::add_file_stream(
     std::string const &stream_file_path,
     logger::severity severity)
 {
 
-    std::map<
+  /*  std::map<
         logger::severity,
         std::list<std::string>
     >* severity_file_patches = _client_logger->_severity_file_patches;
@@ -57,7 +56,24 @@ logger_builder *client_logger_builder::add_file_stream(
     
     file_patches->push_back(stream_file_path);
     
+    */
+
+    std::map<
+        logger::severity,
+        std::list<std::ofstream*>
+    > * severity_file_streams = _client_logger->_severity_file_streams;
+
+    std::list<std::ofstream*>* file_streams = &((*severity_file_streams)[severity]);
+
+    std::ofstream * out = new std::ofstream(stream_file_path, std::ios::app);
+    file_streams->push_back(out);
   
+
+   // for (std::ofstream* out : *file_streams)
+    {
+        // *out << "data" << std::endl;
+    }
+
     return this;
    // throw not_implemented("logger_builder *client_logger_builder::add_file_stream(std::string const &stream_file_path, logger::severity severity)", "your code should be here...");
 }

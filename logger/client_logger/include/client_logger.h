@@ -23,6 +23,11 @@ public:
         std::list<std::string>
     > * _severity_file_patches;
 
+    std::map<
+        logger::severity,
+        std::list<std::ofstream *>
+    >* _severity_file_streams;
+
     std::list<logger::severity> _severity_console;
      
 public:
@@ -48,6 +53,9 @@ public:
     [[nodiscard]] logger const *log(
         const std::string &message,
         logger::severity severity) const noexcept override;
+
+protected:
+
 
 };
 
