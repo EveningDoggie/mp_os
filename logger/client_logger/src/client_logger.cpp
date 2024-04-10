@@ -2,11 +2,14 @@
 
 #include "../include/client_logger.h"
 
-std::map<
-    logger::severity,
-    std::list<std::ofstream>
-> severity_file_streams;
 
+
+
+client_logger::client_logger() {
+    _severity_file_patches = 
+        new std::map <logger::severity, std::list<std::string>>();
+
+}
 
 client_logger::client_logger(
     client_logger const &other)
@@ -41,23 +44,25 @@ logger const *client_logger::log(
     const std::string &text,
     logger::severity severity) const noexcept
 {
-    if (severity_file_streams.empty())
-    {
 
+
+    std::map<logger::severity, std::list<std::string>>* severity_file_patches = _severity_file_patches;
+    if (_severity_file_patches->empty()) {}
+
+    std::list<std::string>* file_patches = &(*severity_file_patches)[severity];
+    for (std::string patch : *file_patches)
+    {
+        std::ofstream out;
+        out.open(patch, std::ios::app);
+        // text = get_format_output_string(text, severity);
+        //ÑÄÅËÀÒÜ ÔÓÍÊÖÈŞ Ñ ÔËÀÃÀÌÈ Ñ ÏĞÎØËÎÃÎ ÑÅÌÅÑÒĞÀ. À ËÓ×Øå èñïîëüçîâàòü ãîòîâóş
+        out << text << std::endl;
+        out.close();
     }
 
-    std::list<std::ofstream>* file_streams = &severity_file_streams[logger::severity::critical];
-    if (file_streams->empty())
-    {
-
-    }
-
-    for (auto out = file_streams->begin(); out != file_streams->end(); out++)
-    {
-        *out << text << std::endl;
-    }
-
-
-
+   
+    return this;
     //throw not_implemented("logger const *client_logger::log(const std::string &text, logger::severity severity) const noexcept", "your code should be here...");
 }
+
+

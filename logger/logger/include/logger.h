@@ -11,17 +11,20 @@ public:
 
     enum class severity
     {
-        trace,
-        debug,
-        information,
-        warning,
-        error,
-        critical
+        trace=1,
+        debug=2,
+        information=3,
+        warning=4,
+        error=5,
+        critical=6
     };
 
 public:
 
+
     virtual ~logger() noexcept = default;
+
+    logger() noexcept = default;
 
 public:
 

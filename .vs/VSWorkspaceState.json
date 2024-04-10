@@ -11,9 +11,12 @@
     "\\logger\\client_logger",
     "\\logger\\client_logger\\include",
     "\\logger\\client_logger\\src",
+    "\\logger\\client_logger\\tests",
     "\\logger\\logger\\include",
-    "\\logger\\logger\\src"
+    "\\logger\\logger\\src",
+    "\\tasks",
+    "\\tasks\\rguk"
   ],
-  "SelectedNode": "\\logger\\client_logger\\src\\client_logger_builder.cpp",
+  "SelectedNode": "\\tasks\\rguk\\plm2.pdf",
   "PreviewInSolutionExplorer": false
 }
