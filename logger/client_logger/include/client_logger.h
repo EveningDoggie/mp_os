@@ -11,7 +11,7 @@
 #include <string>
 #include <iomanip>
 #include <fstream>
-
+#include <set>
 
 class client_logger final :
     public logger
@@ -19,16 +19,14 @@ class client_logger final :
     friend class client_logger_builder;
 
 protected:
-    static std::map<std::string, std::pair<std::ofstream*, size_t>> _all_streams;
-    static std::ofstream* asd;
 
-    std::map<
-        logger::severity,
-        std::list<std::ofstream *>
-    >* _severity_file_streams;
+    static std::map<std::string, std::pair<std::ofstream*, size_t>> _files_streams_all;
+    std::map<std::string, std::pair<std::ofstream*, std::set<logger::severity>>> _files_streams;
+   
+    std::set<logger::severity> _console_streams;
 
-    std::list<logger::severity> _severity_console;
-     
+    std::string _log_format;
+
 public:
 
     client_logger();
@@ -54,7 +52,7 @@ public:
         logger::severity severity) const noexcept override;
 
 protected:
-
+    
 
 };
 

@@ -11,11 +11,8 @@
     "\\logger\\client_logger",
     "\\logger\\client_logger\\include",
     "\\logger\\client_logger\\src",
-    "\\logger\\client_logger\\tests",
-    "\\own_tests",
-    "\\tasks",
-    "\\tasks\\rguk"
+    "\\logger\\client_logger\\tests"
   ],
-  "SelectedNode": "\\tasks\\rguk\\plm1.pdf",
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

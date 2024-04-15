@@ -3,13 +3,10 @@
 #include "../include/client_logger.h"
 #include <map>
 
-std::ofstream* client_logger::asd;
+std::map<std::string, std::pair<std::ofstream*, size_t>> client_logger::_files_streams_all;
 
 client_logger::client_logger() {
-    
-    _severity_file_streams =
-        new std::map <logger::severity, std::list<std::ofstream*>>();
-
+    _log_format = "[%s][%d %t] %m";
 }
 
 client_logger::client_logger(
@@ -42,64 +39,30 @@ client_logger::~client_logger() noexcept
    throw not_implemented("client_logger::~client_logger() noexcept", "your code should be here...");
 }
 
-/*
-logger const* client_logger::log(
-    const std::string &text,
-    logger::severity severity) const noexcept
-{
-
-    //Вынести отдельно запись в файл и запись в консоль
-    //Сделать поверх еще два метода - один сейчас который алгоритм (конкретный) а второй со свитчем
-    //здесь использовать просто
-
-    std::string output_value = "[%s][%d %t] %m";
-    output_value.replace(output_value.find("%s"), 2, severity_to_string(severity));
-    output_value.replace(output_value.find("%m"), 2, text);
-    output_value.replace(output_value.find("%d"), 2, current_date_to_string());
-    output_value.replace(output_value.find("%t"), 2, current_time_to_string());
-
-    if (_severity_file_patches->empty()) {}
-    std::map<logger::severity, std::list<std::string>>* severity_file_patches = _severity_file_patches;
-
-
-    std::list<std::string>* file_patches = &(*severity_file_patches)[severity];
-    for (std::string patch : *file_patches)
-    {
-        std::ofstream out;
-        out.open(patch, std::ios::app);
-        out << output_value << std::endl;
-        out.close();
-    }
-   
-    for (logger::severity iteration_severity : _severity_console) 
-    {
-        if (iteration_severity == severity)
-            std::cout << output_value << std::endl;
-    }
-    
-    return this;
-    //throw not_implemented("logger const *client_logger::log(const std::string &text, logger::severity severity) const noexcept", "your code should be here...");
-}
-*/
 
 logger const* client_logger::log(
     const std::string& text,
     logger::severity severity) const noexcept
 {
-    //перебор со сравнением северити. если конкретные то == . если 
-    //минимальный то <=
+
 
     //Вынести отдельно запись в файл и запись в консоль
     //Сделать поверх еще два метода - один сейчас который алгоритм (конкретный) а второй со свитчем
     //здесь использовать просто
+    std::string output_message = _log_format;
+    output_message.replace(output_message.find("%s"), 2, severity_to_string(severity));
+    output_message.replace(output_message.find("%m"), 2, text);
+    output_message.replace(output_message.find("%d"), 2, current_date_to_string());
+    output_message.replace(output_message.find("%t"), 2, current_time_to_string());
 
-    std::string output_value = "[%s][%d %t] %m";
-    output_value.replace(output_value.find("%s"), 2, severity_to_string(severity));
-    output_value.replace(output_value.find("%m"), 2, text);
-    output_value.replace(output_value.find("%d"), 2, current_date_to_string());
-    output_value.replace(output_value.find("%t"), 2, current_time_to_string());
 
-    if (_severity_file_streams->empty()) {}
+    for (auto strm : _files_streams) 
+    {
+        std::ofstream* out = strm.second.first;
+        *out << output_message << std::endl;
+    }
+
+    /*/if (_severity_file_streams->empty()) {}
     std::map<logger::severity, std::list<std::ofstream*>>* severity_file_streams = _severity_file_streams;
     
 
@@ -108,10 +71,9 @@ logger const* client_logger::log(
     {
         *out << out << std::endl;
     }
-
+    */
 
     return this;
-    //throw not_implemented("logger const *client_logger::log(const std::string &text, logger::severity severity) const noexcept", "your code should be here...");
 }
 
 //Изменить так как было ранее - потоки чтобы использовались а не файлы

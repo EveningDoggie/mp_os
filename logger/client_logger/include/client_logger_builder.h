@@ -4,12 +4,12 @@
 #include <logger_builder.h>
 #include <client_logger.h>
 
-class client_logger_builder final:
+class client_logger_builder final :
     public logger_builder
 {
 
 protected:
-    std::ofstream* asd1;
+    std::string get_file_absolute_path(std::string);
 
 public:
 

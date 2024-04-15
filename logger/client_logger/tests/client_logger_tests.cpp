@@ -18,6 +18,7 @@ int main(
 
     client_logger_builder* builder2 = new client_logger_builder();
     logger * logger2 = builder
+        ->add_file_stream("file1.txt", logger::severity::debug)
         //->add_file_stream("file1.txt", logger::severity::debug)
         //->add_console_stream(logger::severity::debug)
         ->build();
