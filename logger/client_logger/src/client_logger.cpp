@@ -1,14 +1,12 @@
 #include <not_implemented.h>
 
 #include "../include/client_logger.h"
+#include <map>
 
-
-
+std::ofstream* client_logger::asd;
 
 client_logger::client_logger() {
-
-    _severity_file_patches = 
-        new std::map <logger::severity, std::list<std::string>>();
+    
     _severity_file_streams =
         new std::map <logger::severity, std::list<std::ofstream*>>();
 
@@ -88,6 +86,8 @@ logger const* client_logger::log(
     const std::string& text,
     logger::severity severity) const noexcept
 {
+    //перебор со сравнением северити. если конкретные то == . если 
+    //минимальный то <=
 
     //Вынести отдельно запись в файл и запись в консоль
     //Сделать поверх еще два метода - один сейчас который алгоритм (конкретный) а второй со свитчем
@@ -99,14 +99,14 @@ logger const* client_logger::log(
     output_value.replace(output_value.find("%d"), 2, current_date_to_string());
     output_value.replace(output_value.find("%t"), 2, current_time_to_string());
 
-    if (_severity_file_patches->empty()) {}
+    if (_severity_file_streams->empty()) {}
     std::map<logger::severity, std::list<std::ofstream*>>* severity_file_streams = _severity_file_streams;
     
 
     std::list<std::ofstream*>* file_streams = &(*severity_file_streams)[severity];
     for (std::ofstream *out : *file_streams)
     {
-        *out << output_value << std::endl;
+        *out << out << std::endl;
     }
 
 

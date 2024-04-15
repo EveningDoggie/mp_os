@@ -8,6 +8,9 @@ class client_logger_builder final:
     public logger_builder
 {
 
+protected:
+    std::ofstream* asd1;
+
 public:
 
     client_logger_builder();                             //конструктор

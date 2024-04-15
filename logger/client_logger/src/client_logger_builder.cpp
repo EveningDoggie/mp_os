@@ -47,17 +47,6 @@ logger_builder *client_logger_builder::add_file_stream(
     logger::severity severity)
 {
 
-  /*  std::map<
-        logger::severity,
-        std::list<std::string>
-    >* severity_file_patches = _client_logger->_severity_file_patches;
-    
-    std::list<std::string>* file_patches = &((*severity_file_patches)[severity]);
-    
-    file_patches->push_back(stream_file_path);
-    
-    */
-
     std::map<
         logger::severity,
         std::list<std::ofstream*>
@@ -68,12 +57,10 @@ logger_builder *client_logger_builder::add_file_stream(
     std::ofstream * out = new std::ofstream(stream_file_path, std::ios::app);
     file_streams->push_back(out);
   
+    asd1 = out;
+    _client_logger->asd = asd1;
 
-   // for (std::ofstream* out : *file_streams)
-    {
-        // *out << "data" << std::endl;
-    }
-
+   // _client_logger->asd = out;
     return this;
    // throw not_implemented("logger_builder *client_logger_builder::add_file_stream(std::string const &stream_file_path, logger::severity severity)", "your code should be here...");
 }

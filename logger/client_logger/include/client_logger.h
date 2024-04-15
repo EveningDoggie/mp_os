@@ -16,12 +16,11 @@
 class client_logger final :
     public logger
 {
+    friend class client_logger_builder;
 
-public:
-    std::map<
-        logger::severity,
-        std::list<std::string>
-    > * _severity_file_patches;
+protected:
+    static std::map<std::string, std::pair<std::ofstream*, size_t>> _all_streams;
+    static std::ofstream* asd;
 
     std::map<
         logger::severity,
