@@ -28,7 +28,7 @@ protected:
    
 private:
 
-    std::string _log_format;
+    std::string _log_format = "[%s][%d %t] %m";
 
     std::string string_format(std::string output_message, logger::severity severity, std::string msg) const;
 

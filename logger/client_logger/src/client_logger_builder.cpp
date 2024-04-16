@@ -72,17 +72,11 @@ logger_builder *client_logger_builder::add_file_stream(
     return this;
   }
 
-
-
 logger_builder *client_logger_builder::add_console_stream(
     logger::severity severity)
 {
-    /*
-    std::list<logger::severity>* severities = &_client_logger->_severity_console;
-    severities->push_back(severity);
-    */
+    _client_logger->_console_streams.insert(severity);
     return this;
-    //throw not_implemented("logger_builder *client_logger_builder::add_console_stream(logger::severity severity)", "your code should be here...");
 }
 
 logger_builder* client_logger_builder::transform_with_configuration(

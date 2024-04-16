@@ -9,6 +9,7 @@ class client_logger_builder final :
 {
 
 private:
+
     std::string get_file_absolute_path(std::string);
 
 public:

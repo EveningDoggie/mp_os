@@ -6,8 +6,14 @@
     ]
   },
   "ExpandedNodes": [
-    ""
+    "",
+    "\\logger",
+    "\\logger\\client_logger",
+    "\\logger\\client_logger\\include",
+    "\\logger\\client_logger\\src",
+    "\\logger\\client_logger\\tests",
+    "\\logger\\server_logger"
   ],
-  "SelectedNode": "\\CMakeSettings.json",
+  "SelectedNode": "\\logger\\client_logger\\tests\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

@@ -1,17 +1,18 @@
 # ninja log v5
-33	564	7349844375455313	common/CMakeFiles/mp_os_cmmn.dir/src/operation_not_supported.cpp.obj	426ab95d390a081f
-55	1023	7349844380132198	logger/logger/CMakeFiles/mp_os_lggr_lggr.dir/src/logger.cpp.obj	988201ea4d19213e
 23	1438	7349844384303297	_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj	a9723e0d7f31ad8
-28	572	7349844375605349	common/CMakeFiles/mp_os_cmmn.dir/src/not_implemented.cpp.obj	42704b5677066fde
+55	1023	7349844380132198	logger/logger/CMakeFiles/mp_os_lggr_lggr.dir/src/logger.cpp.obj	988201ea4d19213e
+33	564	7349844375455313	common/CMakeFiles/mp_os_cmmn.dir/src/operation_not_supported.cpp.obj	426ab95d390a081f
+17	2488	7349844394760552	_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	167d48ef3b89dfc7
+29	601	7349911770760850	logger/client_logger/CMakeFiles/mp_os_lggr_clnt_lggr.dir/src/client_logger.cpp.obj	22a8ec373e66b1b8
 20	190	7349844555125315	lib/gtest.lib	dc508a5cbff1a3d3
 572	935	7349844378181434	common/mp_os_cmmn.lib	abe6cc1adafbd186
-17	2488	7349844394760552	_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	167d48ef3b89dfc7
-20	577	7349889898329286	logger/client_logger/CMakeFiles/mp_os_lggr_clnt_lggr.dir/src/client_logger.cpp.obj	22a8ec373e66b1b8
-30	533	7349889897892033	logger/client_logger/tests/CMakeFiles/mp_os_lggr_clnt_lggr_tests.dir/client_logger_tests.cpp.obj	f60e267fa62eca6e
+28	572	7349844375605349	common/CMakeFiles/mp_os_cmmn.dir/src/not_implemented.cpp.obj	42704b5677066fde
+43	548	7349911770240070	logger/client_logger/tests/CMakeFiles/mp_os_lggr_clnt_lggr_tests.dir/client_logger_tests.cpp.obj	f60e267fa62eca6e
 566	1238	7349844382323555	logger/logger/CMakeFiles/mp_os_lggr_lggr.dir/src/logger_builder.cpp.obj	b167c4e2dd3c046f
 190	244	7349844555859642	lib/gtest_main.lib	9e83c595181bc5ef
 31	542	7349844558885468	logger/logger/CMakeFiles/mp_os_lggr_lggr.dir/src/logger_guardant.cpp.obj	3e959117476da752
 543	618	7349844559618591	logger/logger/mp_os_lggr_lggr.lib	79499cc1c2c4b256
-25	613	7349889898681104	logger/client_logger/CMakeFiles/mp_os_lggr_clnt_lggr.dir/src/client_logger_builder.cpp.obj	7c59948b578721c
-614	679	7349889899338138	logger/client_logger/mp_os_lggr_clnt_lggr.lib	52a5402a86030891
-679	960	7349889901242642	logger/client_logger/tests/mp_os_lggr_clnt_lggr_tests.exe	b5456d3115958ab
+34	637	7349911771117383	logger/client_logger/CMakeFiles/mp_os_lggr_clnt_lggr.dir/src/client_logger_builder.cpp.obj	7c59948b578721c
+637	706	7349911771761360	logger/client_logger/mp_os_lggr_clnt_lggr.lib	52a5402a86030891
+706	1066	7349911774446996	logger/client_logger/tests/mp_os_lggr_clnt_lggr_tests.exe	b5456d3115958ab
+6	1503	7349913539454297	build.ninja	4774e0efd0fae771

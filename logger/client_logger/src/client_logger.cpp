@@ -6,7 +6,7 @@
 std::map<std::string, std::pair<std::ofstream*, size_t>> client_logger::_files_streams_all;
 
 client_logger::client_logger() {
-    _log_format = "[%s][%d %t] %m";
+    
 }
 
 client_logger::client_logger(
@@ -52,16 +52,21 @@ logger const* client_logger::log(
     const std::string& text,
     logger::severity severity) const noexcept
 {
+    std::string msg = string_format(_log_format, severity, text);
+
     for (auto strm : _files_streams) 
     {
         std::ofstream* out = strm.second.first;
         if (strm.second.second.find(severity) != strm.second.second.end()) 
         {
-            *out << string_format(_log_format, severity, text) << std::endl;
+            *out << msg << std::endl;
         }
+    }
+
+    if (_console_streams.find(severity) != _console_streams.end())
+    {
+        std::cout << msg << std::endl;
     }
 
     return this;
 }
-
-//Изменить так как было ранее - потоки чтобы использовались а не файлы
