@@ -2774,7 +2774,7 @@ build logger\install\local: phony logger\CMakeFiles\install\local.util
 build cmake_object_order_depends_target_mp_os_lggr_clnt_lggr: phony || cmake_object_order_depends_target_mp_os_cmmn cmake_object_order_depends_target_mp_os_lggr_lggr
 
 build logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir\src\client_logger.cpp.obj: CXX_COMPILER__mp_os_lggr_clnt_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\client_logger\src\client_logger.cpp || cmake_object_order_depends_target_mp_os_lggr_clnt_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\client_logger\.\include -IC:\Extensions\Ortem\mp_os\common\.\include -IC:\Extensions\Ortem\mp_os\logger\logger\.\include -IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\json-src\include
   OBJECT_DIR = logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir
   OBJECT_FILE_DIR = logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir\src
@@ -2782,7 +2782,7 @@ build logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir\src\client_logger
   TARGET_PDB = logger\client_logger\mp_os_lggr_clnt_lggr.pdb
 
 build logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir\src\client_logger_builder.cpp.obj: CXX_COMPILER__mp_os_lggr_clnt_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\client_logger\src\client_logger_builder.cpp || cmake_object_order_depends_target_mp_os_lggr_clnt_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\client_logger\.\include -IC:\Extensions\Ortem\mp_os\common\.\include -IC:\Extensions\Ortem\mp_os\logger\logger\.\include -IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\json-src\include
   OBJECT_DIR = logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir
   OBJECT_FILE_DIR = logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir\src
@@ -2875,7 +2875,7 @@ build logger\client_logger\install\local: phony logger\client_logger\CMakeFiles\
 build cmake_object_order_depends_target_mp_os_lggr_clnt_lggr_tests: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main cmake_object_order_depends_target_mp_os_cmmn cmake_object_order_depends_target_mp_os_lggr_clnt_lggr cmake_object_order_depends_target_mp_os_lggr_lggr
 
 build logger\client_logger\tests\CMakeFiles\mp_os_lggr_clnt_lggr_tests.dir\client_logger_tests.cpp.obj: CXX_COMPILER__mp_os_lggr_clnt_lggr_tests_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\client_logger\tests\client_logger_tests.cpp || cmake_object_order_depends_target_mp_os_lggr_clnt_lggr_tests
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\common\.\include -IC:\Extensions\Ortem\mp_os\logger\logger\.\include -IC:\Extensions\Ortem\mp_os\logger\client_logger\.\include -IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\json-src\include -external:IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\googletest-src\googletest\include -external:IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\googletest-src\googletest -external:W0
   OBJECT_DIR = logger\client_logger\tests\CMakeFiles\mp_os_lggr_clnt_lggr_tests.dir
   OBJECT_FILE_DIR = logger\client_logger\tests\CMakeFiles\mp_os_lggr_clnt_lggr_tests.dir
@@ -3028,7 +3028,7 @@ build _deps\json-build\install\local: phony _deps\json-build\CMakeFiles\install\
 build cmake_object_order_depends_target_mp_os_lggr_lggr: phony || logger\logger\CMakeFiles\mp_os_lggr_lggr.dir
 
 build logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src\logger.cpp.obj: CXX_COMPILER__mp_os_lggr_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\logger\src\logger.cpp || cmake_object_order_depends_target_mp_os_lggr_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\logger\.\include
   OBJECT_DIR = logger\logger\CMakeFiles\mp_os_lggr_lggr.dir
   OBJECT_FILE_DIR = logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src
@@ -3036,7 +3036,7 @@ build logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src\logger.cpp.obj: CXX_COMPI
   TARGET_PDB = logger\logger\mp_os_lggr_lggr.pdb
 
 build logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src\logger_builder.cpp.obj: CXX_COMPILER__mp_os_lggr_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\logger\src\logger_builder.cpp || cmake_object_order_depends_target_mp_os_lggr_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\logger\.\include
   OBJECT_DIR = logger\logger\CMakeFiles\mp_os_lggr_lggr.dir
   OBJECT_FILE_DIR = logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src
@@ -3044,7 +3044,7 @@ build logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src\logger_builder.cpp.obj: C
   TARGET_PDB = logger\logger\mp_os_lggr_lggr.pdb
 
 build logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src\logger_guardant.cpp.obj: CXX_COMPILER__mp_os_lggr_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\logger\src\logger_guardant.cpp || cmake_object_order_depends_target_mp_os_lggr_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\logger\.\include
   OBJECT_DIR = logger\logger\CMakeFiles\mp_os_lggr_lggr.dir
   OBJECT_FILE_DIR = logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\src
@@ -3137,7 +3137,7 @@ build logger\logger\install\local: phony logger\logger\CMakeFiles\install\local.
 build cmake_object_order_depends_target_mp_os_lggr_srvr_lggr: phony || cmake_object_order_depends_target_mp_os_cmmn cmake_object_order_depends_target_mp_os_lggr_lggr
 
 build logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir\src\server_logger.cpp.obj: CXX_COMPILER__mp_os_lggr_srvr_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\server_logger\src\server_logger.cpp || cmake_object_order_depends_target_mp_os_lggr_srvr_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++20 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\server_logger\.\include -IC:\Extensions\Ortem\mp_os\common\.\include -IC:\Extensions\Ortem\mp_os\logger\logger\.\include -IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\json-src\include
   OBJECT_DIR = logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir
   OBJECT_FILE_DIR = logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir\src
@@ -3145,7 +3145,7 @@ build logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir\src\server_logger
   TARGET_PDB = logger\server_logger\mp_os_lggr_srvr_lggr.pdb
 
 build logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir\src\server_logger_builder.cpp.obj: CXX_COMPILER__mp_os_lggr_srvr_lggr_unscanned_Debug C$:\Extensions\Ortem\mp_os\logger\server_logger\src\server_logger_builder.cpp || cmake_object_order_depends_target_mp_os_lggr_srvr_lggr
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++14 -MDd
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++20 -MDd
   INCLUDES = -IC:\Extensions\Ortem\mp_os\logger\server_logger\.\include -IC:\Extensions\Ortem\mp_os\common\.\include -IC:\Extensions\Ortem\mp_os\logger\logger\.\include -IC:\Extensions\Ortem\mp_os\out\build\x64-Debug\_deps\json-src\include
   OBJECT_DIR = logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir
   OBJECT_FILE_DIR = logger\server_logger\CMakeFiles\mp_os_lggr_srvr_lggr.dir\src

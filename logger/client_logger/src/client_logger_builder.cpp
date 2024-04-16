@@ -1,7 +1,7 @@
 #include <not_implemented.h>
 
 #include "../include/client_logger_builder.h"
-
+#include <stdlib.h>
 
 client_logger* _client_logger;
 
@@ -53,7 +53,6 @@ logger_builder *client_logger_builder::add_file_stream(
     auto files_streams_all_pair_ptr = &((*files_streams_all_ptr)[absolute_path]);
     auto files_streams_pair_ptr = &((*files_streams_ptr)[absolute_path]);
 
-
     if (file_not_yet_contained)
     {
         files_streams_all_pair_ptr->first = new std::ofstream(absolute_path, std::ios::app);
@@ -68,7 +67,8 @@ logger_builder *client_logger_builder::add_file_stream(
 
     files_streams_pair_ptr->first = files_streams_all_pair_ptr->first;
     files_streams_pair_ptr->second.insert(severity);
-
+    
+    saved_patches.insert(absolute_path);
     return this;
   }
 
@@ -88,16 +88,30 @@ logger_builder* client_logger_builder::transform_with_configuration(
 
 logger_builder *client_logger_builder::clear()
 {
-    throw not_implemented("logger_builder *client_logger_builder::clear()", "your code should be here...");
+    _client_logger->_console_streams.clear();
+    _client_logger->_files_streams.clear();
+
+    for (auto path : saved_patches)
+    {
+        std::ofstream* out = _client_logger->_files_streams_all[path].first;
+        out->close();
+        delete out;
+
+        _client_logger->_files_streams_all.erase(path);
+    }
+
+    saved_patches.clear();
+    return this;
 }
 
 logger *client_logger_builder::build() const
 {
-    return _client_logger;
-   // throw not_implemented("logger *client_logger_builder::build() const", "your code should be here...");
+    auto ref = _client_logger;
+    _client_logger = NULL;
+    return ref;
 }
 
 std::string client_logger_builder::get_file_absolute_path(std::string str)
 {
-    return str;
+    return std::filesystem::absolute(str).string();
 }

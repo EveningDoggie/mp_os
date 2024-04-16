@@ -3,10 +3,16 @@
 
 #include <logger_builder.h>
 #include <client_logger.h>
+#include <filesystem>
+#include <set>
 
 class client_logger_builder final :
     public logger_builder
 {
+
+private:
+
+    std::set<std::string> saved_patches;
 
 private:
 

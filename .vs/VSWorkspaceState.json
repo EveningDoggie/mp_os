@@ -12,7 +12,7 @@
     "\\logger\\client_logger\\include",
     "\\logger\\client_logger\\src",
     "\\logger\\client_logger\\tests",
-    "\\logger\\server_logger"
+    "\\logger\\logger"
   ],
   "SelectedNode": "\\logger\\client_logger\\tests\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
