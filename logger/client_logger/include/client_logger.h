@@ -22,13 +22,13 @@ protected:
 
     static std::map<std::string, std::pair<std::ofstream*, size_t>> _files_streams_all;
 
-    std::map<std::string, std::pair<std::ofstream*, std::set<logger::severity>>> _files_streams;
+    std::map<std::string, std::pair<std::ofstream*, std::set<logger::severity>>> _files_streams_local;
    
-    std::set<logger::severity> _console_streams;
+    std::set<logger::severity> _console_streams_local;
+
+    std::string _log_format_mask = "[%s][%d %t] %m";
    
 private:
-
-    std::string _log_format = "[%s][%d %t] %m";
 
     std::string string_format(std::string output_message, logger::severity severity, std::string msg) const;
 

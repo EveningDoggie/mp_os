@@ -5,7 +5,8 @@
 
 std::map<std::string, std::pair<std::ofstream*, size_t>> client_logger::_files_streams_all;
 
-client_logger::client_logger() {
+client_logger::client_logger() 
+{
     
 }
 
@@ -35,8 +36,18 @@ client_logger &client_logger::operator=(
 
 client_logger::~client_logger() noexcept
 {
-   // delete _severity_file_patches; //+чистка внутри
-   throw not_implemented("client_logger::~client_logger() noexcept", "your code should be here...");
+   for (auto file_stream : _files_streams_local)
+   { 
+       auto stream_data = &_files_streams_all[file_stream.first];
+
+       if (stream_data->second == 1)
+       {
+           stream_data->first->close();
+           delete stream_data->first;
+           _files_streams_all.erase(file_stream.first);
+       }
+       else stream_data->second--;
+   }
 }
 
 std::string client_logger::string_format(std::string output_message, logger::severity severity, std::string msg) const
@@ -52,9 +63,9 @@ logger const* client_logger::log(
     const std::string& text,
     logger::severity severity) const noexcept
 {
-    std::string msg = string_format(_log_format, severity, text);
+    std::string msg = string_format(_log_format_mask, severity, text);
 
-    for (auto strm : _files_streams) 
+    for (auto strm : _files_streams_local) 
     {
         std::ofstream* out = strm.second.first;
         if (strm.second.second.find(severity) != strm.second.second.end()) 
@@ -63,7 +74,7 @@ logger const* client_logger::log(
         }
     }
 
-    if (_console_streams.find(severity) != _console_streams.end())
+    if (_console_streams_local.find(severity) != _console_streams_local.end())
     {
         std::cout << msg << std::endl;
     }

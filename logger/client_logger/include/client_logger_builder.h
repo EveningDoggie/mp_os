@@ -12,7 +12,7 @@ class client_logger_builder final :
 
 private:
 
-    std::set<std::string> saved_patches;
+    std::set<std::string> _saved_patches;
 
 private:
 
@@ -37,17 +37,27 @@ public:
     ~client_logger_builder() noexcept override;         //деструктор
 
 public:
-
+    logger_builder* set_message_mask(
+        std::string const& format_mask);
+    
     logger_builder *add_file_stream(
         std::string const &stream_file_path,
         logger::severity severity) override;
 
+    logger_builder* add_file_stream(
+        std::string const& stream_file_path,
+        std::set<logger::severity> severity);
+
     logger_builder *add_console_stream(
         logger::severity severity) override;
 
+    logger_builder* add_console_stream(
+        std::set<logger::severity> severity);
+
+    std::set<logger::severity> get_set_from_minimal_severity(logger::severity);
+
     logger_builder* transform_with_configuration(
-        std::string const &configuration_file_path,
-        std::string const &configuration_path) override;
+        std::string const &configuration_file_path) override;
 
     logger_builder *clear() override;
 
