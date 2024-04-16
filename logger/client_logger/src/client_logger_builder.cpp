@@ -1,9 +1,6 @@
 #include <not_implemented.h>
 
 #include "../include/client_logger_builder.h"
-#include <iostream>
-#include <filesystem>
-namespace fs = std::filesystem;
 
 
 client_logger* _client_logger;
@@ -49,18 +46,19 @@ logger_builder *client_logger_builder::add_file_stream(
     std::string const &stream_file_path,
     logger::severity severity)
 {
-    if (stream_file_path.empty()) throw "Empty file path argument";
     std::string absolute_path = get_file_absolute_path(stream_file_path);
-    std::map<std::string, std::pair<std::ofstream*, size_t>>* files_streams_all_ptr = &_client_logger->_files_streams_all;
-    std::pair<std::ofstream*, size_t>* files_streams_all_pair_ptr = &(_client_logger->_files_streams_all)[absolute_path];
-    std::pair<std::ofstream*, std::set<logger::severity>>* files_streams_pair_ptr = &(_client_logger->_files_streams)[absolute_path];
+    auto files_streams_all_ptr = &_client_logger->_files_streams_all;
+    auto files_streams_ptr = &_client_logger->_files_streams;
+    auto file_not_yet_contained = files_streams_all_ptr->find(absolute_path) == files_streams_all_ptr->end();
+    auto files_streams_all_pair_ptr = &((*files_streams_all_ptr)[absolute_path]);
+    auto files_streams_pair_ptr = &((*files_streams_ptr)[absolute_path]);
 
-    if (files_streams_all_ptr->find(absolute_path) == files_streams_all_ptr->end())
+
+    if (file_not_yet_contained)
     {
-        files_streams_all_pair_ptr->first = new std::ofstream(absolute_path, std::ios::app); 
+        files_streams_all_pair_ptr->first = new std::ofstream(absolute_path, std::ios::app);
         files_streams_all_pair_ptr->second = 0;
-
-        if (!files_streams_all_pair_ptr->first->is_open())
+        if (files_streams_all_pair_ptr->first->is_open() == false)
         {
             delete files_streams_all_pair_ptr->first;
             throw "File not found at this path";
