@@ -7,12 +7,10 @@
   },
   "ExpandedNodes": [
     "",
-    "\\logger",
     "\\logger\\client_logger",
     "\\logger\\client_logger\\include",
     "\\logger\\client_logger\\src",
     "\\logger\\client_logger\\tests"
   ],
-  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

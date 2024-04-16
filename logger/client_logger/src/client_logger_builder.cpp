@@ -1,9 +1,10 @@
 #include <not_implemented.h>
 
 #include "../include/client_logger_builder.h"
-#include <filesystem>
 #include <iostream>
+#include <filesystem>
 namespace fs = std::filesystem;
+
 
 client_logger* _client_logger;
 
@@ -48,29 +49,27 @@ logger_builder *client_logger_builder::add_file_stream(
     std::string const &stream_file_path,
     logger::severity severity)
 {
+    if (stream_file_path.empty()) throw "Empty file path argument";
     std::string absolute_path = get_file_absolute_path(stream_file_path);
-    std::ofstream* out;
-    std::map<std::string, std::pair<std::ofstream*, size_t>>* streams_all_ptr = &_client_logger->_files_streams_all;
- 
-   
-    //if dont open then error
-    if (streams_all_ptr->find(absolute_path) == streams_all_ptr->end())
-    {
-        out = new std::ofstream(absolute_path, std::ios::app);
-        (*streams_all_ptr)[absolute_path].first = out;
-        (*streams_all_ptr)[absolute_path].second = 0;
-    }
-    else
-    {
-        out = (*streams_all_ptr)[absolute_path].first;
-        (*streams_all_ptr)[absolute_path].second++;
-    }
-    
+    std::map<std::string, std::pair<std::ofstream*, size_t>>* files_streams_all_ptr = &_client_logger->_files_streams_all;
+    std::pair<std::ofstream*, size_t>* files_streams_all_pair_ptr = &(_client_logger->_files_streams_all)[absolute_path];
+    std::pair<std::ofstream*, std::set<logger::severity>>* files_streams_pair_ptr = &(_client_logger->_files_streams)[absolute_path];
 
-    std::set<logger::severity> severitys;
-    severitys.insert(severity);
-    std::pair<std::ofstream*, std::set<logger::severity>> file_meta(out, severitys);
-    (_client_logger->_files_streams)[absolute_path] = file_meta;
+    if (files_streams_all_ptr->find(absolute_path) == files_streams_all_ptr->end())
+    {
+        files_streams_all_pair_ptr->first = new std::ofstream(absolute_path, std::ios::app); 
+        files_streams_all_pair_ptr->second = 0;
+
+        if (!files_streams_all_pair_ptr->first->is_open())
+        {
+            delete files_streams_all_pair_ptr->first;
+            throw "File not found at this path";
+        }
+    }
+    else files_streams_all_pair_ptr->second++;
+
+    files_streams_pair_ptr->first = files_streams_all_pair_ptr->first;
+    files_streams_pair_ptr->second.insert(severity);
 
     return this;
   }

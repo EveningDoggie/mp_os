@@ -8,7 +8,7 @@ class client_logger_builder final :
     public logger_builder
 {
 
-protected:
+private:
     std::string get_file_absolute_path(std::string);
 
 public:

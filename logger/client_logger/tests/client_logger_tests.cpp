@@ -27,7 +27,7 @@ int main(
 
 
     logger1->log("sdaf1", logger::severity::debug);
-    logger2->log("sdaf2", logger::severity::debug);
+    logger2->log("sdaf2", logger::severity::critical);
 
     std::cout << "ok";
     int a;

@@ -39,39 +39,27 @@ client_logger::~client_logger() noexcept
    throw not_implemented("client_logger::~client_logger() noexcept", "your code should be here...");
 }
 
+std::string client_logger::string_format(std::string output_message, logger::severity severity, std::string msg) const
+{
+    output_message.replace(output_message.find("%s"), 2, severity_to_string(severity));
+    output_message.replace(output_message.find("%m"), 2, msg);
+    output_message.replace(output_message.find("%d"), 2, current_date_to_string());
+    output_message.replace(output_message.find("%t"), 2, current_time_to_string());
+    return output_message;
+}
 
 logger const* client_logger::log(
     const std::string& text,
     logger::severity severity) const noexcept
 {
-
-
-    //Вынести отдельно запись в файл и запись в консоль
-    //Сделать поверх еще два метода - один сейчас который алгоритм (конкретный) а второй со свитчем
-    //здесь использовать просто
-    std::string output_message = _log_format;
-    output_message.replace(output_message.find("%s"), 2, severity_to_string(severity));
-    output_message.replace(output_message.find("%m"), 2, text);
-    output_message.replace(output_message.find("%d"), 2, current_date_to_string());
-    output_message.replace(output_message.find("%t"), 2, current_time_to_string());
-
-
     for (auto strm : _files_streams) 
     {
         std::ofstream* out = strm.second.first;
-        *out << output_message << std::endl;
+        if (strm.second.second.find(severity) != strm.second.second.end()) 
+        {
+            *out << string_format(_log_format, severity, text) << std::endl;
+        }
     }
-
-    /*/if (_severity_file_streams->empty()) {}
-    std::map<logger::severity, std::list<std::ofstream*>>* severity_file_streams = _severity_file_streams;
-    
-
-    std::list<std::ofstream*>* file_streams = &(*severity_file_streams)[severity];
-    for (std::ofstream *out : *file_streams)
-    {
-        *out << out << std::endl;
-    }
-    */
 
     return this;
 }

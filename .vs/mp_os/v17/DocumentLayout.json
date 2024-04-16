@@ -15,24 +15,8 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\include\\client_logger.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lifem\\Downloads\\client_logger_builder (1).cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\src\\client_logger.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\tests\\client_logger_tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\tests\\client_logger_tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lifem\\Downloads\\client_logger (1).h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lifem\\Downloads\\client_logger_builder (1).h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lifem\\Downloads\\client_logger (1).cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,33 +26,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 211,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "client_logger_tests.cpp",
               "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\tests\\client_logger_tests.cpp",
               "RelativeDocumentMoniker": "logger\\client_logger\\tests\\client_logger_tests.cpp",
               "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\tests\\client_logger_tests.cpp",
               "RelativeToolTip": "logger\\client_logger\\tests\\client_logger_tests.cpp",
-              "ViewState": "AQIAABIAAAAAAAAAAAAxwB4AAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-15T09:24:07.542Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "client_logger.cpp",
-              "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger.cpp",
-              "RelativeDocumentMoniker": "logger\\client_logger\\src\\client_logger.cpp",
-              "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger.cpp",
-              "RelativeToolTip": "logger\\client_logger\\src\\client_logger.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAC0AAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-04-10T16:27:59.387Z",
               "IsPinned": true,
               "EditorCaption": ""
             },
@@ -80,7 +50,7 @@
               "RelativeDocumentMoniker": "logger\\client_logger\\src\\client_logger_builder.cpp",
               "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger_builder.cpp",
               "RelativeToolTip": "logger\\client_logger\\src\\client_logger_builder.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAUAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-15T09:24:52.745Z",
               "IsPinned": true,
@@ -94,9 +64,9 @@
               "RelativeDocumentMoniker": "logger\\client_logger\\include\\client_logger.h",
               "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger.h",
               "RelativeToolTip": "logger\\client_logger\\include\\client_logger.h",
-              "ViewState": "AQIAACsAAAAAAAAAAAAAADYAAAAEAAAA",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAACMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-15T09:21:22.815Z",
+              "WhenOpened": "2024-04-16T11:06:44.516Z",
               "EditorCaption": ""
             },
             {
@@ -107,82 +77,9 @@
               "RelativeDocumentMoniker": "logger\\client_logger\\include\\client_logger_builder.h",
               "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger_builder.h",
               "RelativeToolTip": "logger\\client_logger\\include\\client_logger_builder.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAA0AAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAHAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-04-15T09:24:47.759Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "291a2e8e-9999-473c-9546-5b1967acb275",
-        "Display": 0,
-        "X": 145,
-        "Y": 54,
-        "Width": 1210,
-        "Height": 744,
-        "WindowState": 0
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "client_logger (1).cpp",
-              "DocumentMoniker": "C:\\Users\\lifem\\Downloads\\client_logger (1).cpp",
-              "RelativeDocumentMoniker": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger (1).cpp",
-              "ToolTip": "C:\\Users\\lifem\\Downloads\\client_logger (1).cpp",
-              "RelativeToolTip": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger (1).cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-04-15T09:43:20.016Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "client_logger_builder (1).cpp",
-              "DocumentMoniker": "C:\\Users\\lifem\\Downloads\\client_logger_builder (1).cpp",
-              "RelativeDocumentMoniker": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger_builder (1).cpp",
-              "ToolTip": "C:\\Users\\lifem\\Downloads\\client_logger_builder (1).cpp",
-              "RelativeToolTip": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger_builder (1).cpp",
-              "ViewState": "AQIAACEAAAAAAAAAAAAAAC0AAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-04-15T09:31:39.592Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "client_logger_builder (1).h",
-              "DocumentMoniker": "C:\\Users\\lifem\\Downloads\\client_logger_builder (1).h",
-              "RelativeDocumentMoniker": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger_builder (1).h",
-              "ToolTip": "C:\\Users\\lifem\\Downloads\\client_logger_builder (1).h",
-              "RelativeToolTip": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger_builder (1).h",
-              "ViewState": "AQIAABgAAAAAAAAAAAAAABgAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-15T09:31:03.364Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "client_logger (1).h",
-              "DocumentMoniker": "C:\\Users\\lifem\\Downloads\\client_logger (1).h",
-              "RelativeDocumentMoniker": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger (1).h",
-              "ToolTip": "C:\\Users\\lifem\\Downloads\\client_logger (1).h",
-              "RelativeToolTip": "..\\..\\..\\Users\\lifem\\Downloads\\client_logger (1).h",
-              "ViewState": "AQIAADYAAAAAAAAAAAAAABUAAABNAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-04-15T09:22:22.01Z",
               "EditorCaption": ""
             }
           ]
