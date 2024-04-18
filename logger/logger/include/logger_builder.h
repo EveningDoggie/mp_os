@@ -16,8 +16,22 @@ public:
         std::string const &stream_file_path,
         logger::severity severity) = 0;
 
+    virtual logger_builder* add_file_stream_minimal_severity(
+        std::string const& stream_file_path,
+        logger::severity severity) = 0;
+
+    virtual logger_builder* add_file_stream(
+        std::string const& stream_file_path,
+        std::set<logger::severity> severity) = 0;
+
     virtual logger_builder *add_console_stream(
         logger::severity severity) = 0;
+
+    virtual logger_builder* add_console_stream_minimal_severity(
+        logger::severity severity) = 0;
+
+    virtual logger_builder* add_console_stream(
+        std::set<logger::severity> severity) = 0;
 
     virtual logger_builder* transform_with_configuration(
         std::string const &configuration_file_path) = 0;
@@ -34,3 +48,6 @@ protected:
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_LOGGER_BUILDER_H
+
+
+

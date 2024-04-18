@@ -5,6 +5,7 @@
 #include <client_logger.h>
 #include <filesystem>
 #include <set>
+#include <map>
 
 class client_logger_builder final :
     public logger_builder
@@ -12,8 +13,11 @@ class client_logger_builder final :
 
 private:
 
-    std::set<std::string> _saved_patches;
-    client_logger * _client_logger;
+    std::map<std::string, std::set<logger::severity>> _files_streams;
+
+    std::set<logger::severity> _console_streams;
+
+    std::string _log_format_mask = "[%s][%d %t] %m";
 
 private:
 
@@ -21,21 +25,21 @@ private:
 
 public:
 
-    client_logger_builder();                             //конструктор
+    client_logger_builder();                             
 
     client_logger_builder(
-        client_logger_builder const &other);            //конструктор
+        client_logger_builder const &other);           
 
     client_logger_builder &operator=(
-        client_logger_builder const &other);            //
+        client_logger_builder const &other);            
 
     client_logger_builder(
-        client_logger_builder &&other) noexcept;        //конструктор - переслать на тот что выше
+        client_logger_builder &&other) noexcept;       
 
     client_logger_builder &operator=(
-        client_logger_builder &&other) noexcept;          //переслпть на верхний
+        client_logger_builder &&other) noexcept;         
 
-    ~client_logger_builder() noexcept override;         //деструктор
+    ~client_logger_builder() noexcept override;        
 
 public:
     
@@ -43,12 +47,19 @@ public:
         std::string const &stream_file_path,
         logger::severity severity) override;
 
+    logger_builder* add_file_stream_minimal_severity(
+        std::string const& stream_file_path,
+        logger::severity severity);
+
     logger_builder* add_file_stream(
         std::string const& stream_file_path,
         std::set<logger::severity> severity);
 
     logger_builder *add_console_stream(
         logger::severity severity) override;
+
+    logger_builder* add_console_stream_minimal_severity(
+        logger::severity severity);
 
     logger_builder* add_console_stream(
         std::set<logger::severity> severity);

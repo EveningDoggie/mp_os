@@ -7,8 +7,47 @@ std::map<std::string, std::pair<std::ofstream*, size_t>> client_logger::_files_s
 
 client_logger::client_logger() 
 {
-    
+
 }
+
+client_logger::client_logger(
+    std::map<std::string, std::set<logger::severity>> files_streams_local,
+    std::set<logger::severity> console_streams_local,
+    std::string log_format_mask
+)
+{
+
+    _log_format_mask = log_format_mask;
+    _console_streams_local = console_streams_local;
+
+    for (auto file_stream : files_streams_local)
+    {
+        auto path = &file_stream.first;
+        auto severitys = &file_stream.second;
+        std::ofstream* out;
+
+        if (_files_streams_all.find(*path) == _files_streams_all.end())
+        {
+            out = new std::ofstream(*path, std::ios::app);
+            if (out->is_open() == false)
+            {
+                delete out;
+                throw "File not found at this path";
+            }
+
+            _files_streams_all[*path].first = out;
+            _files_streams_all[*path].second = 1;
+        } 
+        else
+        {
+            out = _files_streams_all[*path].first;
+            _files_streams_all[*path].second++;
+        }
+
+        _files_streams_local[*path] = std::pair{ out, *severitys };
+    }
+}
+
 
 client_logger::client_logger(
     client_logger const &other)
@@ -23,6 +62,7 @@ client_logger &client_logger::operator=(
 {
     if (&other == this)
     {
+        clear_files_streams_all_data();
         client_logger(other);
     }
 
@@ -42,6 +82,7 @@ client_logger &client_logger::operator=(
 {
     if (&other == this)
     {
+        clear_files_streams_all_data();
         client_logger(other);
     }
 
@@ -50,27 +91,22 @@ client_logger &client_logger::operator=(
 
 client_logger::~client_logger() noexcept
 {
-   for (auto file_stream : _files_streams_local)
-   { 
-       auto stream_data = &_files_streams_all[file_stream.first];
-
-       if (stream_data->second == 1)
-       {
-           stream_data->first->close();
-           delete stream_data->first;
-           _files_streams_all.erase(file_stream.first);
-       }
-       else stream_data->second--;
-   }
+    clear_files_streams_all_data();
 }
 
-std::string client_logger::string_format(std::string output_message, logger::severity severity, std::string msg) const
+void client_logger::clear_files_streams_all_data() 
 {
-    output_message.replace(output_message.find("%s"), 2, severity_to_string(severity));
-    output_message.replace(output_message.find("%m"), 2, msg);
-    output_message.replace(output_message.find("%d"), 2, current_date_to_string());
-    output_message.replace(output_message.find("%t"), 2, current_time_to_string());
-    return output_message;
+    for (auto file_stream : _files_streams_local)
+    {
+        auto stream_data = &_files_streams_all[file_stream.first];
+        if (stream_data->second == 1)
+        {
+            stream_data->first->close();
+            delete stream_data->first;
+            _files_streams_all.erase(file_stream.first);
+        }
+        else stream_data->second--;
+    }
 }
 
 logger const* client_logger::log(
@@ -95,4 +131,13 @@ logger const* client_logger::log(
 
     
     return this;
+}
+
+std::string client_logger::string_format(std::string output_message, logger::severity severity, std::string msg) const
+{
+    output_message.replace(output_message.find("%s"), 2, severity_to_string(severity));
+    output_message.replace(output_message.find("%m"), 2, msg);
+    output_message.replace(output_message.find("%d"), 2, current_date_to_string());
+    output_message.replace(output_message.find("%t"), 2, current_time_to_string());
+    return output_message;
 }

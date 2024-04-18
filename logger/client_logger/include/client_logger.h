@@ -18,7 +18,7 @@ class client_logger final :
 {
     friend class client_logger_builder;
 
-protected:
+private:
 
     static std::map<std::string, std::pair<std::ofstream*, size_t>> _files_streams_all;
 
@@ -33,6 +33,12 @@ private:
     std::string string_format(std::string output_message, logger::severity severity, std::string msg) const;
 
 public:
+
+    client_logger(
+        std::map<std::string, std::set<logger::severity>> _files_streams_local,
+        std::set<logger::severity> _console_streams_local,
+        std::string _log_format_mask
+    );
 
     client_logger();
 
@@ -49,6 +55,8 @@ public:
         client_logger &&other) noexcept; 
 
     ~client_logger() noexcept final;
+
+    void clear_files_streams_all_data();
 
 public:
 
