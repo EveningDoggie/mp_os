@@ -13,25 +13,39 @@ client_logger::client_logger()
 client_logger::client_logger(
     client_logger const &other)
 {
-    throw not_implemented("client_logger::client_logger(client_logger const &other)", "your code should be here...");
+       _log_format_mask = other._log_format_mask;
+       _console_streams_local = other._console_streams_local;
+       _files_streams_local = other._files_streams_local;
 }
 
 client_logger &client_logger::operator=(
     client_logger const &other)
 {
-    throw not_implemented("client_logger &client_logger::operator=(client_logger const &other)", "your code should be here...");
+    if (&other == this)
+    {
+        client_logger(other);
+    }
+
+    return *this;
 }
 
 client_logger::client_logger(
     client_logger &&other) noexcept
 {
-    throw not_implemented("client_logger::client_logger(client_logger &&other) noexcept", "your code should be here...");
+    _log_format_mask = std::move(other._log_format_mask);
+    _console_streams_local = std::move(other._console_streams_local);
+    _files_streams_local = std::move(other._files_streams_local);
 }
 
 client_logger &client_logger::operator=(
     client_logger &&other) noexcept
 {
-    throw not_implemented("client_logger &client_logger::operator=(client_logger &&other) noexcept", "your code should be here...");
+    if (&other == this)
+    {
+        client_logger(other);
+    }
+
+    return *this;
 }
 
 client_logger::~client_logger() noexcept
@@ -79,5 +93,6 @@ logger const* client_logger::log(
         std::cout << msg << std::endl;
     }
 
+    
     return this;
 }

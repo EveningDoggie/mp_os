@@ -13,6 +13,7 @@ class client_logger_builder final :
 private:
 
     std::set<std::string> _saved_patches;
+    client_logger * _client_logger;
 
 private:
 
@@ -37,8 +38,6 @@ public:
     ~client_logger_builder() noexcept override;         //деструктор
 
 public:
-    logger_builder* set_message_mask(
-        std::string const& format_mask);
     
     logger_builder *add_file_stream(
         std::string const &stream_file_path,

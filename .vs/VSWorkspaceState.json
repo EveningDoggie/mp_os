@@ -9,14 +9,12 @@
     "",
     "\\logger",
     "\\logger\\client_logger",
+    "\\logger\\client_logger\\include",
     "\\logger\\client_logger\\src",
     "\\logger\\client_logger\\tests",
-    "\\logger\\logger",
-    "\\logger\\logger\\include",
     "\\logger\\logger\\src",
-    "\\logger\\server_logger",
     "\\logger\\server_logger\\include"
   ],
-  "SelectedNode": "\\logger\\logger\\src\\logger.cpp",
+  "SelectedNode": "\\logger\\client_logger\\src\\client_logger.cpp",
   "PreviewInSolutionExplorer": false
 }

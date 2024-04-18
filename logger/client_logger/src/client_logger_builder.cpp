@@ -3,7 +3,6 @@
 #include "../include/client_logger_builder.h"
 #include <stdlib.h>
 
-client_logger* _client_logger;
 
 client_logger_builder::client_logger_builder()
 {
@@ -13,33 +12,49 @@ client_logger_builder::client_logger_builder()
 client_logger_builder::client_logger_builder(
     client_logger_builder const &other)
 {
-    throw not_implemented("client_logger_builder::client_logger_builder(client_logger_builder const &other)", "your code should be here...");
+    _client_logger = new client_logger(*other._client_logger);
+    _saved_patches = other._saved_patches;
 }
 
 client_logger_builder &client_logger_builder::operator=(
     client_logger_builder const &other)
 {
-    throw not_implemented("client_logger_builder &client_logger_builder::operator=(client_logger_builder const &other)", "your code should be here...");
+    if (&other != this)
+    {
+        delete _client_logger;
+        client_logger_builder(other);
+    }
+    
+    return *this;
 }
 
 client_logger_builder::client_logger_builder(
     client_logger_builder &&other) noexcept
 {
-    throw not_implemented("client_logger_builder::client_logger_builder(client_logger_builder &&other) noexcept", "your code should be here...");
+    _client_logger = other._client_logger;
+    other._client_logger = NULL;
+
+    _saved_patches = std::move(other._saved_patches);
 }
 
 client_logger_builder &client_logger_builder::operator=(
     client_logger_builder &&other) noexcept
 {
-    throw not_implemented("client_logger_builder &client_logger_builder::operator=(client_logger_builder &&other) noexcept", "your code should be here...");
+    if (&other != this)
+    {
+        delete _client_logger;
+        client_logger_builder(other);
+    }
+
+    return *this;
 }
 
 client_logger_builder::~client_logger_builder() noexcept
 {
     if (_client_logger != NULL)
     {
-       // clear();
-       // delete _client_logger;
+        clear();
+        delete _client_logger;
     }
 }
 
@@ -91,7 +106,7 @@ std::set<logger::severity> client_logger_builder::get_set_from_minimal_severity(
     switch (severity)
     {
         case logger::severity::trace: severitys.insert(logger::severity::trace);
-        case logger::severity::debug: severitys.insert(logger::severity::debug);
+        case logger::severity::debug: severitys.insert(logger::severity::debug); 
         case logger::severity::information: severitys.insert(logger::severity::information);
         case logger::severity::warning: severitys.insert(logger::severity::warning);
         case logger::severity::error: severitys.insert(logger::severity::error);
@@ -140,7 +155,7 @@ logger_builder *client_logger_builder::clear()
 logger *client_logger_builder::build() const
 {
     auto ref = _client_logger;
-    _client_logger = NULL;
+   // _client_logger = NULL;
     return ref;
 }
 
@@ -148,14 +163,6 @@ std::string client_logger_builder::get_file_absolute_path(std::string str)
 {
     return std::filesystem::absolute(str).string();
 }
-
-logger_builder* client_logger_builder::set_message_mask(
-    std::string const& format_mask)
-{
-    _client_logger->_log_format_mask = format_mask;
-    return this;
-}
-
 
 logger_builder* client_logger_builder::transform_with_configuration(
     std::string const& configuration_file_path)
@@ -177,26 +184,29 @@ logger_builder* client_logger_builder::transform_with_configuration(
                 catch (const char* error_message) { throw "incorrect data in logger configuration file"; }
 
                 add_file_stream(path, severity);
-            }
-
-            if (line.find("mask:") == 0)
-                set_message_mask(line.erase(0, 5));
+                continue;
+            }           
             
             if (line.find("path:") == 0)
             {
-                path = line.erase(0, 5);
+                _client_logger->_log_format_mask = line.erase(0, 5);
                 last_string_is_path = true;
+                continue;
             }
-            else last_string_is_path = false;
+            else
+            {
+                last_string_is_path = false;
+                continue;
+            }
+
+            if (line.find("mask:") == 0)
+            {
+                _client_logger->_log_format_mask = line.erase(0, 5);
+                continue;
+            }
         }
     }
     
     in.close();   
     return this;
-
-    //mask: [% s] [% d % t] % m
-
-    //path : file1_config.txt
-    //minimal_severity : debug
-
 }

@@ -43,10 +43,10 @@ public:
         client_logger const &other);
 
     client_logger(
-        client_logger &&other) noexcept;   //конструктор - переслать на тот что выше
+        client_logger &&other) noexcept;   
 
     client_logger &operator=(
-        client_logger &&other) noexcept;  //переслпть на верхний
+        client_logger &&other) noexcept; 
 
     ~client_logger() noexcept final;
 
