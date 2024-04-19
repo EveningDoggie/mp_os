@@ -124,28 +124,45 @@ logger_builder* client_logger_builder::transform_with_configuration(
     std::string path;
     logger::severity severity;
     bool last_string_is_path = false;
+    bool last_string_is_console = false;
 
     if (!in.is_open()) throw "Input configuration file is can't be opened";
     else
     {
         while (std::getline(in, line))
         {
-            if (line.find("minimal_severity:") == 0 && last_string_is_path)
+
+            if (last_string_is_path || last_string_is_console)
             {
-                try { severity = string_to_severity(line.erase(0, 17)); }
+                try
+                {
+                    if (line.find("severity:") == 0)
+                    {
+                        severity = string_to_severity(line.erase(0, line.find_first_of(":") + 1));
+                        if (last_string_is_path) add_file_stream(path, severity);
+                        if (last_string_is_console) add_console_stream(severity);
+                    }
+
+                    if (line.find("minimal_severity:") == 0)
+                    {
+                        severity = string_to_severity(line.erase(0, line.find_first_of(":") + 1));
+                        if (last_string_is_path) add_file_stream_minimal_severity(path, severity);
+                        if (last_string_is_console) add_console_stream_minimal_severity(severity);
+                    }
+
+                    continue;
+                }
                 catch (const char* error_message) { throw "incorrect data in logger configuration file"; }
 
-                add_file_stream(path, severity);
-                continue;
-            }           
-
+            }
+            
             if (line.find("mask:") == 0)
             {
-                _log_format_mask = line.erase(0, 5);
-                continue;
+                change_message_mask(line.erase(0, 5));
             }
 
             last_string_is_path = line.find("path:") == 0;
+            last_string_is_console = line.find("console:") == 0;
         }
     }
     
@@ -164,13 +181,20 @@ std::set<logger::severity> client_logger_builder::get_set_from_minimal_severity(
     std::set<logger::severity> severitys;
     switch (severity)
     {
-    case logger::severity::trace: severitys.insert(logger::severity::trace);
-    case logger::severity::debug: severitys.insert(logger::severity::debug);
-    case logger::severity::information: severitys.insert(logger::severity::information);
-    case logger::severity::warning: severitys.insert(logger::severity::warning);
-    case logger::severity::error: severitys.insert(logger::severity::error);
-    case logger::severity::critical: severitys.insert(logger::severity::critical);
+        case logger::severity::trace: severitys.insert(logger::severity::trace);
+        case logger::severity::debug: severitys.insert(logger::severity::debug);
+        case logger::severity::information: severitys.insert(logger::severity::information);
+        case logger::severity::warning: severitys.insert(logger::severity::warning);
+        case logger::severity::error: severitys.insert(logger::severity::error);
+        case logger::severity::critical: severitys.insert(logger::severity::critical);
     }
     return severitys;
 }
 
+
+logger_builder* client_logger_builder::change_message_mask(
+    std::string const& mask)
+{
+    _log_format_mask = mask;
+    return this;
+}

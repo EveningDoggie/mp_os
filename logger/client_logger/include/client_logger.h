@@ -26,7 +26,7 @@ private:
    
     std::set<logger::severity> _console_streams_local;
 
-    std::string _log_format_mask = "[%s][%d %t] %m";
+    std::string _log_format_mask;
    
 private:
 
@@ -56,7 +56,8 @@ public:
 
     ~client_logger() noexcept final;
 
-    void clear_files_streams_all_data();
+    void clear_streams_all();
+
 
 public:
 

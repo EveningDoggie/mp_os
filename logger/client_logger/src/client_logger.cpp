@@ -7,7 +7,7 @@ std::map<std::string, std::pair<std::ofstream*, size_t>> client_logger::_files_s
 
 client_logger::client_logger() 
 {
-
+    _log_format_mask  = "[%s][%d %t] %m";
 }
 
 client_logger::client_logger(
@@ -16,7 +16,6 @@ client_logger::client_logger(
     std::string log_format_mask
 )
 {
-
     _log_format_mask = log_format_mask;
     _console_streams_local = console_streams_local;
 
@@ -29,11 +28,12 @@ client_logger::client_logger(
         if (_files_streams_all.find(*path) == _files_streams_all.end())
         {
             out = new std::ofstream(*path, std::ios::app);
-            if (out->is_open() == false)
+
+            if (out==NULL || out->is_open() == false)
             {
-                delete out;
-                throw "File not found at this path";
-            }
+                clear_streams_all();                                  //delete out
+                throw "File not found at this path";                  // _files_streams_all.erase(*path);
+            }                                                         // continue;
 
             _files_streams_all[*path].first = out;
             _files_streams_all[*path].second = 1;
@@ -62,7 +62,7 @@ client_logger &client_logger::operator=(
 {
     if (&other == this)
     {
-        clear_files_streams_all_data();
+        clear_streams_all();
         client_logger(other);
     }
 
@@ -82,7 +82,7 @@ client_logger &client_logger::operator=(
 {
     if (&other == this)
     {
-        clear_files_streams_all_data();
+        clear_streams_all();
         client_logger(other);
     }
 
@@ -91,18 +91,21 @@ client_logger &client_logger::operator=(
 
 client_logger::~client_logger() noexcept
 {
-    clear_files_streams_all_data();
+    clear_streams_all();
 }
 
-void client_logger::clear_files_streams_all_data() 
+void client_logger::clear_streams_all() 
 {
     for (auto file_stream : _files_streams_local)
     {
         auto stream_data = &_files_streams_all[file_stream.first];
         if (stream_data->second == 1)
         {
-            stream_data->first->close();
-            delete stream_data->first;
+            if (stream_data->first != NULL) 
+            {
+                stream_data->first->close();
+                delete stream_data->first;
+            }
             _files_streams_all.erase(file_stream.first);
         }
         else stream_data->second--;

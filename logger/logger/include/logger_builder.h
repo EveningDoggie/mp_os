@@ -36,6 +36,9 @@ public:
     virtual logger_builder* transform_with_configuration(
         std::string const &configuration_file_path) = 0;
 
+    virtual logger_builder* change_message_mask(
+        std::string const& mask) = 0;
+
     virtual logger_builder *clear() = 0;
 
     virtual logger *build() const = 0;

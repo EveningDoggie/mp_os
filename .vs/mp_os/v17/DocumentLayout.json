@@ -1,12 +1,104 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Extensions\\Ortem\\mp_os\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\tests\\client_logger_tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\tests\\client_logger_tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger_builder.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\src\\client_logger_builder.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\src\\client_logger.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\include\\client_logger.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger_builder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:logger\\client_logger\\include\\client_logger_builder.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 211,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "client_logger_tests.cpp",
+              "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\tests\\client_logger_tests.cpp",
+              "RelativeDocumentMoniker": "logger\\client_logger\\tests\\client_logger_tests.cpp",
+              "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\tests\\client_logger_tests.cpp",
+              "RelativeToolTip": "logger\\client_logger\\tests\\client_logger_tests.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-19T08:50:14.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "client_logger_builder.cpp",
+              "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger_builder.cpp",
+              "RelativeDocumentMoniker": "logger\\client_logger\\src\\client_logger_builder.cpp",
+              "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger_builder.cpp",
+              "RelativeToolTip": "logger\\client_logger\\src\\client_logger_builder.cpp",
+              "ViewState": "AQIAAI0AAAAAAAAAAAAvwJoAAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-19T08:40:46.817Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "client_logger_builder.h",
+              "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger_builder.h",
+              "RelativeDocumentMoniker": "logger\\client_logger\\include\\client_logger_builder.h",
+              "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger_builder.h",
+              "RelativeToolTip": "logger\\client_logger\\include\\client_logger_builder.h",
+              "ViewState": "AQIAADkAAAAAAAAAAAAAAA8AAABEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-04-18T22:49:33.409Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "client_logger.h",
+              "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger.h",
+              "RelativeDocumentMoniker": "logger\\client_logger\\include\\client_logger.h",
+              "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\include\\client_logger.h",
+              "RelativeToolTip": "logger\\client_logger\\include\\client_logger.h",
+              "ViewState": "AQIAADAAAAAAAAAAAAAAADoAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-04-19T08:47:23.992Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "client_logger.cpp",
+              "DocumentMoniker": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger.cpp",
+              "RelativeDocumentMoniker": "logger\\client_logger\\src\\client_logger.cpp",
+              "ToolTip": "C:\\Extensions\\Ortem\\mp_os\\logger\\client_logger\\src\\client_logger.cpp",
+              "RelativeToolTip": "logger\\client_logger\\src\\client_logger.cpp",
+              "ViewState": "AQIAABUAAAAAAAAAAAAvwCIAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-18T22:49:36.331Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
