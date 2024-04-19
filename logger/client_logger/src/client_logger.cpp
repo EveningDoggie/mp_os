@@ -96,6 +96,8 @@ client_logger::~client_logger() noexcept
 
 void client_logger::clear_streams_all() 
 {
+    _mutex.lock();
+
     for (auto file_stream : _files_streams_local)
     {
         auto stream_data = &_files_streams_all[file_stream.first];
@@ -110,6 +112,8 @@ void client_logger::clear_streams_all()
         }
         else stream_data->second--;
     }
+
+    _mutex.unlock();
 }
 
 logger const* client_logger::log(

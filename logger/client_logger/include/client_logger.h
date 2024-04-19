@@ -12,11 +12,11 @@
 #include <iomanip>
 #include <fstream>
 #include <set>
+#include <mutex>
 
 class client_logger final :
     public logger
 {
-    friend class client_logger_builder;
 
 private:
 
@@ -27,6 +27,8 @@ private:
     std::set<logger::severity> _console_streams_local;
 
     std::string _log_format_mask;
+
+    std::mutex _mutex;
    
 private:
 
