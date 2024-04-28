@@ -3,47 +3,88 @@
 #include "../include/allocator_global_heap.h"
 
 allocator_global_heap::allocator_global_heap(
-    logger *logger)
+    logger *logger):
+    _logger(logger)
 {
-    throw not_implemented("allocator_global_heap::allocator_global_heap(logger *)", "your code should be here...");
+    
 }
 
 allocator_global_heap::~allocator_global_heap()
 {
-    throw not_implemented("allocator_global_heap::~allocator_global_heap()", "your code should be here...");
+    
 }
 
-allocator_global_heap::allocator_global_heap(
-    allocator_global_heap &&other) noexcept
-{
-    throw not_implemented("allocator_global_heap::allocator_global_heap(allocator_global_heap &&) noexcept", "your code should be here...");
-}
 
-allocator_global_heap &allocator_global_heap::operator=(
-    allocator_global_heap &&other) noexcept
-{
-    throw not_implemented("allocator_global_heap &allocator_global_heap::operator=(allocator_global_heap &&) noexcept", "your code should be here...");
-}
-
-[[nodiscard]] void *allocator_global_heap::allocate(
+[[nodiscard]] void * allocator_global_heap::allocate(
     size_t value_size,
     size_t values_count)
 {
-    throw not_implemented("[[nodiscard]] void *allocator_global_heap::allocate(size_t, size_t)", "your code should be here...");
+    debug_with_guard("Called method [[nodiscard]] void *allocator_global_heap::allocate(size_t value_size, size_t values_count)");
+
+    try
+    {
+        auto block_size = sizeof(allocator_global_heap*) + sizeof(size_t) + values_count * value_size;
+        auto allocate_pointer = ::operator new (block_size);
+
+        auto allocator_object_ptr = reinterpret_cast<allocator_global_heap**>(allocate_pointer);
+        *allocator_object_ptr = this;
+
+        auto block_size_ptr = reinterpret_cast<size_t*>(allocator_object_ptr+1);
+        *block_size_ptr = block_size;
+        
+        auto data_start = block_size_ptr + 1;
+
+        debug_with_guard("Successfully executed method [[nodiscard]] void *allocator_global_heap::allocate(size_t value_size, size_t values_count)");
+        return data_start;
+
+    }
+    catch (std::bad_alloc const &ex)
+    {
+        error_with_guard(std::string("Failed to perfom method [[nodiscard]] void *allocator_global_heap::allocate(size_t value_size, size_t values_count): exception of type std::badalloc with an error: ")  + ex.what());
+        debug_with_guard(std::string("Cancel execute method [[nodiscard]] void *allocator_global_heap::allocate(size_t value_size, size_t values_count) with exception of type std::badalloc with an error: ") + ex.what());
+    }
 }
 
 void allocator_global_heap::deallocate(
     void *at)
 {
-    throw not_implemented("void allocator_global_heap::deallocate(void *)", "your code should be here...");
+    debug_with_guard("Called method void allocator_global_heap::deallocate(void* at)");
+
+    auto block_size_ptr = reinterpret_cast<size_t*>(at) - 1;
+    auto allocator_object_ptr = reinterpret_cast<allocator_global_heap**>(block_size_ptr)-1;
+    
+
+    std::string bytes_str;
+    auto char_ptr = reinterpret_cast<unsigned char*>(at);
+    for (int i = 0; i < *block_size_ptr; ++i)
+    {
+        bytes_str += std::to_string(*char_ptr);
+        ++char_ptr;
+    }
+    debug_with_guard(std::string("Block state before deallocation: ")+bytes_str);
+
+
+    if (*allocator_object_ptr != this)
+    {
+        
+        error_with_guard(std::string("Failed to perfom method void allocator_global_heap::deallocate: exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
+        debug_with_guard(std::string("Cancel execute method void allocator_global_heap::deallocate with exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
+        throw std::logic_error("Block can't be deallocated: invalid pointer");
+    }
+
+
+    ::operator delete(allocator_object_ptr);
+
+    debug_with_guard("Successfully executed method void allocator_global_heap::deallocate(void* at) ");
+
 }
 
 inline logger *allocator_global_heap::get_logger() const
 {
-    throw not_implemented("inline logger *allocator_global_heap::get_logger() const", "your code should be here...");
+    return _logger;
 }
 
 inline std::string allocator_global_heap::get_typename() const noexcept
 {
-    throw not_implemented("inline std::string allocator_global_heap::get_typename() const noexcept", "your code should be here...");
+    return "allocator_global_heap";
 }

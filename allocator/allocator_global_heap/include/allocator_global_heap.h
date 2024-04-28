@@ -23,17 +23,6 @@ public:
     
     ~allocator_global_heap() override;
     
-    allocator_global_heap(
-        allocator_global_heap const &other) = delete;
-    
-    allocator_global_heap &operator=(
-        allocator_global_heap const &other) = delete;
-    
-    allocator_global_heap(
-        allocator_global_heap &&other) noexcept;
-    
-    allocator_global_heap &operator=(
-        allocator_global_heap &&other) noexcept;
 
 public:
     
@@ -44,10 +33,6 @@ public:
     void deallocate(
         void *at) override;
 
-public:
-    
-    void foo()
-    {};
 
 private:
     
