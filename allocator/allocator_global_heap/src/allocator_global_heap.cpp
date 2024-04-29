@@ -23,19 +23,18 @@ allocator_global_heap::~allocator_global_heap()
 
     try
     {
-        auto block_size = sizeof(allocator_global_heap*) + sizeof(size_t) + values_count * value_size;
-        auto allocate_pointer = ::operator new (block_size);
+        size_t size = values_count * value_size;
+        auto result = ::operator new (sizeof(allocator*) + sizeof(size_t) + size);
 
-        auto allocator_object_ptr = reinterpret_cast<allocator_global_heap**>(allocate_pointer);
+        allocator ** allocator_object_ptr = reinterpret_cast<allocator**>(result);
         *allocator_object_ptr = this;
 
-        auto block_size_ptr = reinterpret_cast<size_t*>(allocator_object_ptr+1);
-        *block_size_ptr = block_size;
+        size_t * block_size_ptr = reinterpret_cast<size_t*>(allocator_object_ptr+1);
+        *block_size_ptr = size;
         
-        auto data_start = block_size_ptr + 1;
-
         debug_with_guard("Successfully executed method [[nodiscard]] void *allocator_global_heap::allocate(size_t value_size, size_t values_count)");
-        return data_start;
+        
+        return reinterpret_cast<void *>(block_size_ptr + 1);
 
     }
     catch (std::bad_alloc const &ex)
@@ -50,8 +49,8 @@ void allocator_global_heap::deallocate(
 {
     debug_with_guard("Called method void allocator_global_heap::deallocate(void* at)");
 
-    auto block_size_ptr = reinterpret_cast<size_t*>(at) - 1;
-    auto allocator_object_ptr = reinterpret_cast<allocator_global_heap**>(block_size_ptr)-1;
+    size_t * block_size_ptr = reinterpret_cast<size_t*>(at) - 1;
+    allocator ** allocator_object_ptr = reinterpret_cast<allocator**>(block_size_ptr)-1;
     
 
     std::string bytes_str;
@@ -66,12 +65,10 @@ void allocator_global_heap::deallocate(
 
     if (*allocator_object_ptr != this)
     {
-        
         error_with_guard(std::string("Failed to perfom method void allocator_global_heap::deallocate: exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
         debug_with_guard(std::string("Cancel execute method void allocator_global_heap::deallocate with exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
         throw std::logic_error("Block can't be deallocated: invalid pointer");
     }
-
 
     ::operator delete(allocator_object_ptr);
 
