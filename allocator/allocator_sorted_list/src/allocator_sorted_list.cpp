@@ -46,7 +46,6 @@ allocator_sorted_list::allocator_sorted_list(
 {
     if(logger!=nullptr) logger->debug("Called method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode)");
 
-
     if (space_size < get_free_block_metadata_size()) //если будет меньше - не сможем записать ни один блок
     {
         if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): Can't initializate allocator: too low memory"));
@@ -66,8 +65,9 @@ allocator_sorted_list::allocator_sorted_list(
     }
     catch (std::bad_alloc const& ex)
     {
-        
-        throw;
+        if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
+        if (logger != nullptr) logger->debug(std::string("Cancel execute method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
+        throw std::bad_alloc();
     }
 
 
@@ -111,18 +111,18 @@ allocator_sorted_list::allocator_sorted_list(
     std::lock_guard<std::mutex> lock(get_sync_object());
 
     size_t size = value_size * values_count + get_free_block_metadata_size();
-    if (size > get_space_size())  //если меньше памяти чем у нас вообще есть
+    if (size > get_space_size())  //если больше памяти чем у нас вообще есть
     {
         error_with_guard(get_typename() + ": can't allocate memory");
         throw std::bad_alloc();
     }
 
+
     void* current_block = get_first_free_block_address();
     void* previous_block = nullptr;
     void* current_target = nullptr;
     void* previous_target = nullptr;
-    if (current_block == nullptr) throw;
-    size_t targetblock_size = get_free_block_size(current_block);
+    size_t size_target = get_free_block_size(current_block);
 
     while (current_block != nullptr)
     {
@@ -130,12 +130,12 @@ allocator_sorted_list::allocator_sorted_list(
         allocator_with_fit_mode::fit_mode fit_mode = get_fit_mode();
 
         bool firstfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::first_fit;
-        bool thebestfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::the_best_fit && block_size < targetblock_size;
-        bool theworstfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::the_worst_fit && block_size > targetblock_size;
+        bool thebestfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::the_best_fit && block_size < size_target;
+        bool theworstfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::the_worst_fit && block_size > size_target;
 
         if (block_size >= size && (firstfit_condition || thebestfit_condition || theworstfit_condition))
         {
-            targetblock_size = get_free_block_size(current_block);
+            size_target = get_free_block_size(current_block);
             current_target = current_block;
             previous_target = previous_block;
             if (firstfit_condition || thebestfit_condition && block_size == size) break;
@@ -145,16 +145,19 @@ allocator_sorted_list::allocator_sorted_list(
         current_block = get_free_block_next_block_ptr(current_block);
     }
  
-    if (current_target == nullptr) //подходящих блоков не найдено
+    if (current_target == nullptr)
     {
-        throw;
+        //error: not found
     }
     
-    const size_t deviation = get_free_block_minimum_size();
-    size_t negation = targetblock_size - size;
+    static const size_t deviation = get_free_block_minimum_size(); //отрезанный кусок должен включать метаданные и не слишком малое значение (оптимизация из Кнута)
+    size_t negation = size_target - size;
    
-    if (negation == 0 || negation < deviation) //если размер равен требуемому или отрезаемый кусок слишком мал удалить блок из списка свободных
+
+    //ЕСЛИ БЛОК ПЕРВЫЙ; Если блок в середине; если блок в конце
+    if (negation == 0 || negation < deviation)
     {
+        //удалить блок из списка свободных полностью
         if (previous_target != nullptr)
             set_free_block_next_block_ptr(previous_target, get_free_block_next_block_ptr(current_target));
         else
@@ -164,16 +167,16 @@ allocator_sorted_list::allocator_sorted_list(
     {
         //располовинить
         set_free_block_size(current_target, size);
-        void * negations_right_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current_target) + size);
-
-        set_free_block_size(negations_right_block, negation-get_free_block_metadata_size());
-        set_free_block_trusted_memory_ptr(negations_right_block);
-        set_free_block_next_block_ptr(negations_right_block, get_free_block_next_block_ptr(current_target));
+        void* next = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current_target) + size);
+        set_free_block_size(next, negation);
+        set_free_block_trusted_memory(next);
+        set_free_block_next_block_ptr(next, get_free_block_next_block_ptr(current_target));
 
         if (previous_target != nullptr)
-            set_free_block_next_block_ptr(previous_target, negations_right_block);
+            set_free_block_next_block_ptr(previous_target, next);
         else
-            set_first_free_block_address(negations_right_block);
+            set_first_free_block_address(next);
+
     }
 }
 
@@ -212,7 +215,7 @@ inline void * allocator_sorted_list::get_free_block_next_block_ptr(void * free_b
         + sizeof(size_t));
 }
 
-inline void* allocator_sorted_list::get_free_block_trusted_memory_ptr(void* free_block) const
+inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const
 {
     return *reinterpret_cast<void**>(
         reinterpret_cast<unsigned char*>(free_block)
@@ -220,7 +223,7 @@ inline void* allocator_sorted_list::get_free_block_trusted_memory_ptr(void* free
         + sizeof(void*));
 }
 
-inline void allocator_sorted_list::set_free_block_trusted_memory_ptr(void* free_block) const
+inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const
 {
     *reinterpret_cast<void**>(
         reinterpret_cast<unsigned char*>(free_block)
