@@ -6,14 +6,26 @@ allocator_global_heap::allocator_global_heap(
     logger *logger):
     _logger(logger)
 {
-    
+
 }
 
-allocator_global_heap::~allocator_global_heap()
+allocator_global_heap::allocator_global_heap(
+    allocator_global_heap&& other) noexcept
 {
-    
+    _logger = std::move(other._logger);
+    other._logger = nullptr;
 }
 
+allocator_global_heap& allocator_global_heap::operator=(
+    allocator_global_heap&& other) noexcept
+{
+    if (&other == this)
+    {
+        allocator_global_heap(other);
+    }
+
+    return *this;
+}
 
 [[nodiscard]] void * allocator_global_heap::allocate(
     size_t value_size,
@@ -47,13 +59,20 @@ allocator_global_heap::~allocator_global_heap()
 void allocator_global_heap::deallocate(
     void *at)
 {
-    debug_with_guard("Called method void allocator_global_heap::deallocate(void* at)");
 
-    size_t * block_size_ptr = reinterpret_cast<size_t*>(at) - 1;
-    allocator ** allocator_object_ptr = reinterpret_cast<allocator**>(block_size_ptr)-1;
+    auto * block_start = reinterpret_cast<unsigned char *>(at) - sizeof(size_t) - sizeof(allocator *);
     
+    if (*reinterpret_cast<allocator **>(block_start) != this)
+    {
+        std::cout << this << "\n";
+        error_with_guard(std::string("Failed to perfom method void allocator_global_heap::deallocate: exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
+        debug_with_guard(std::string("Cancel execute method void allocator_global_heap::deallocate with exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
+        throw std::logic_error("Block can't be deallocated: invalid allocator");
+    }
+
 
     std::string bytes_str;
+    size_t * block_size_ptr = reinterpret_cast<size_t*>(reinterpret_cast<allocator**>(block_start) + 1);
     auto char_ptr = reinterpret_cast<unsigned char*>(at);
     for (int i = 0; i < *block_size_ptr; ++i)
     {
@@ -62,15 +81,7 @@ void allocator_global_heap::deallocate(
     }
     debug_with_guard(std::string("Block state before deallocation: ")+bytes_str);
 
-
-    if (*allocator_object_ptr != this)
-    {
-        error_with_guard(std::string("Failed to perfom method void allocator_global_heap::deallocate: exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
-        debug_with_guard(std::string("Cancel execute method void allocator_global_heap::deallocate with exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
-        throw std::logic_error("Block can't be deallocated: invalid pointer");
-    }
-
-    ::operator delete(allocator_object_ptr);
+    ::operator delete(block_start);
 
     debug_with_guard("Successfully executed method void allocator_global_heap::deallocate(void* at) ");
 
@@ -85,3 +96,4 @@ inline std::string allocator_global_heap::get_typename() const noexcept
 {
     return "allocator_global_heap";
 }
+

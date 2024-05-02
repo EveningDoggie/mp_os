@@ -21,8 +21,19 @@ public:
     explicit allocator_global_heap(
         logger *logger = nullptr);
     
-    ~allocator_global_heap() override;
+    ~allocator_global_heap() = default ;
     
+    allocator_global_heap(
+        allocator_global_heap const& other) = delete;
+
+    allocator_global_heap& operator=(
+        allocator_global_heap const& other) = delete;
+
+    allocator_global_heap(
+        allocator_global_heap&& other) noexcept;
+
+    allocator_global_heap& operator=(
+        allocator_global_heap&& other) noexcept;
 
 public:
     
@@ -31,7 +42,7 @@ public:
         size_t values_count) override;
     
     void deallocate(
-        void *at) override;
+        void *at);
 
 
 private:
