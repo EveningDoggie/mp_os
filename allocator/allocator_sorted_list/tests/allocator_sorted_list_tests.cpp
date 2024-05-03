@@ -38,6 +38,7 @@ TEST(allocatorSortedListPositiveTests, test1)
         {
             "allocator_sorted_list_tests_logs_positive_test_1.txt",
                 logger::severity::debug
+
         }
     });
     

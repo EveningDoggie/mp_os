@@ -16,7 +16,7 @@ public:
         std::string const &stream_file_path,
         logger::severity severity) = 0;
 
-    virtual logger_builder* add_file_stream_minimal_severity(
+    virtual logger_builder* add_file_stream_current_severity(
         std::string const& stream_file_path,
         logger::severity severity) = 0;
 
@@ -27,7 +27,7 @@ public:
     virtual logger_builder *add_console_stream(
         logger::severity severity) = 0;
 
-    virtual logger_builder* add_console_stream_minimal_severity(
+    virtual logger_builder* add_console_stream_current_severity(
         logger::severity severity) = 0;
 
     virtual logger_builder* add_console_stream(

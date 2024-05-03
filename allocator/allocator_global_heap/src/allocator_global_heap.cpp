@@ -12,14 +12,14 @@ allocator_global_heap::allocator_global_heap(
 allocator_global_heap::allocator_global_heap(
     allocator_global_heap&& other) noexcept
 {
-    _logger = std::move(other._logger);
+    _logger = other._logger;
     other._logger = nullptr;
 }
 
 allocator_global_heap& allocator_global_heap::operator=(
     allocator_global_heap&& other) noexcept
 {
-    if (&other == this)
+    if (&other != this)
     {
         allocator_global_heap(other);
     }
@@ -64,10 +64,10 @@ void allocator_global_heap::deallocate(
     
     if (*reinterpret_cast<allocator **>(block_start) != this)
     {
-        std::cout << this << "\n";
+        //std::cout << this << "\n";
         error_with_guard(std::string("Failed to perfom method void allocator_global_heap::deallocate: exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
         debug_with_guard(std::string("Cancel execute method void allocator_global_heap::deallocate with exception of type std::badalloc with an error: block can't be deallocated: invalid pointer"));
-        throw std::logic_error("Block can't be deallocated: invalid allocator");
+        throw std::logic_error("block can't be deallocated: invalid allocator");
     }
 
 

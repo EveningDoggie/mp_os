@@ -31,9 +31,9 @@ client_logger_builder &client_logger_builder::operator=(
 client_logger_builder::client_logger_builder(
     client_logger_builder &&other) noexcept
 {
-    _files_streams = std::move(other._files_streams);
-    _console_streams = std::move(other._console_streams);
-    _log_format_mask = std::move(other._log_format_mask);
+    _files_streams =  other._files_streams;
+    _console_streams =  other._console_streams;
+    _log_format_mask =  other._log_format_mask;
 }
 
 client_logger_builder &client_logger_builder::operator=(
@@ -55,14 +55,14 @@ client_logger_builder::~client_logger_builder() noexcept
 logger_builder* client_logger_builder::add_console_stream(
     logger::severity severity)
 {
-    _console_streams.insert(severity);
+    add_console_stream(get_set_from_minimal_severity(severity));
     return this;
 }
 
-logger_builder* client_logger_builder::add_console_stream_minimal_severity(
+logger_builder* client_logger_builder::add_console_stream_current_severity(
     logger::severity severity)
 {
-    add_console_stream(get_set_from_minimal_severity(severity));
+    _console_streams.insert(severity);
     return this;
 }
 
@@ -77,16 +77,17 @@ logger_builder* client_logger_builder::add_file_stream(
     std::string const& stream_file_path,
     logger::severity severity)
 {
-    _files_streams[get_file_absolute_path(stream_file_path)]
-        .insert(severity);
+    add_file_stream(stream_file_path, get_set_from_minimal_severity(severity));
     return this;
 }
 
-logger_builder* client_logger_builder::add_file_stream_minimal_severity(
+logger_builder* client_logger_builder::add_file_stream_current_severity(
     std::string const& stream_file_path,
     logger::severity severity)
 {
-    add_file_stream(stream_file_path, get_set_from_minimal_severity(severity));
+    _files_streams[get_file_absolute_path(stream_file_path)]
+        .insert(severity);
+    
     return this;
 }
 
@@ -136,18 +137,18 @@ logger_builder* client_logger_builder::transform_with_configuration(
             {
                 try
                 {
-                    if (line.find("severity:") == 0)
+                    if (line.find("current_severity:") == 0)
                     {
                         severity = string_to_severity(line.erase(0, line.find_first_of(":") + 1));
-                        if (last_string_is_path) add_file_stream(path, severity);
-                        if (last_string_is_console) add_console_stream(severity);
+                        if (last_string_is_path) add_file_stream_current_severity(path, severity);
+                        if (last_string_is_console) add_console_stream_current_severity(severity);
                     }
 
                     if (line.find("minimal_severity:") == 0)
                     {
                         severity = string_to_severity(line.erase(0, line.find_first_of(":") + 1));
-                        if (last_string_is_path) add_file_stream_minimal_severity(path, severity);
-                        if (last_string_is_console) add_console_stream_minimal_severity(severity);
+                        if (last_string_is_path) add_file_stream(path, severity);
+                        if (last_string_is_console) add_console_stream(severity);
                     }
 
                     continue;

@@ -31,9 +31,9 @@ client_logger::client_logger(
 
             if (out==NULL || out->is_open() == false)
             {
-                clear_streams_all();                                  //delete out
-                throw "File not found at this path";                  // _files_streams_all.erase(*path);
-            }                                                         // continue;
+                clear_streams_all();                                  
+                throw "File not found at this path";                 
+            }                                                         
 
             _files_streams_all[*path].first = out;
             _files_streams_all[*path].second = 1;
@@ -60,7 +60,7 @@ client_logger::client_logger(
 client_logger &client_logger::operator=(
     client_logger const &other)
 {
-    if (&other == this)
+    if (&other != this)
     {
         clear_streams_all();
         client_logger(other);
@@ -72,15 +72,15 @@ client_logger &client_logger::operator=(
 client_logger::client_logger(
     client_logger &&other) noexcept
 {
-    _log_format_mask = std::move(other._log_format_mask);
-    _console_streams_local = std::move(other._console_streams_local);
-    _files_streams_local = std::move(other._files_streams_local);
+    _log_format_mask =  other._log_format_mask;
+    _console_streams_local =  other._console_streams_local;
+    _files_streams_local =  other._files_streams_local;
 }
 
 client_logger &client_logger::operator=(
     client_logger &&other) noexcept
 {
-    if (&other == this)
+    if (&other != this)
     {
         clear_streams_all();
         client_logger(other);

@@ -24,10 +24,10 @@ public:
     ~allocator_sorted_list() override;
     
     allocator_sorted_list(
-        allocator_sorted_list const &other);
+        allocator_sorted_list const &other) = delete;
     
     allocator_sorted_list &operator=(
-        allocator_sorted_list const &other);
+        allocator_sorted_list const &other) = delete;
     
     allocator_sorted_list(
         allocator_sorted_list &&other) noexcept;
@@ -93,8 +93,6 @@ private:
 
     inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const;
 
-    inline void* allocator_sorted_list::get_free_block_data(void* free_block) const;
-
     size_t allocator_sorted_list::get_free_block_minimum_size() const;
 
     void get_target_blocks_pointers_firstfit(size_t target_size, void* &current_target, void* &previous_target);
@@ -109,6 +107,9 @@ private:
 
     inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const;
 
+    void allocator_sorted_list::log_blocks_info() const;
+
+    inline void allocator_sorted_list::set_allocator(allocator* a) const;
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_ALLOCATOR_ALLOCATOR_SORTED_LIST_H
