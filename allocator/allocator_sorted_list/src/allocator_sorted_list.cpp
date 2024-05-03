@@ -72,6 +72,7 @@ allocator_sorted_list::allocator_sorted_list(
     
     try
     {
+        if (logger != nullptr) logger->warning("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): metadata added. Method ");
         _trusted_memory =
             parent_allocator != nullptr ?
             parent_allocator->allocate(space_size_with_metadata, 1) :
@@ -212,13 +213,16 @@ void allocator_sorted_list::deallocate(
 
     if (at == nullptr) 
     {
-        //throw
+        error_with_guard(get_typename() + ": can't deallocate memory - null pointer");
+        throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
     }
 
     void * at_trusted_memory_ptr = get_free_block_trusted_memory(at); 
     if (get_allocator() != *reinterpret_cast<allocator**>(at_trusted_memory_ptr)) //туда ли возвращаем
     {
-        throw std::logic_error("");
+        error_with_guard(get_typename() + ": can't deallocate memory - another allocator pointer");
+        throw std::logic_error(get_typename() + ": can't deallocate memory - another allocator pointer");
+
     };
 
 
