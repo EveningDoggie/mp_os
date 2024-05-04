@@ -154,7 +154,7 @@ allocator_sorted_list::allocator_sorted_list(
     void* current_target = nullptr;
     void* previous_target = nullptr;
     size_t size_optimal = 0;
-    if(current_block!=nullptr) get_free_block_size(current_block);
+    if(current_block!=nullptr) size_optimal=get_free_block_size(current_block);
     
     while (current_block != nullptr)
     {
@@ -248,7 +248,7 @@ void allocator_sorted_list::deallocate(
         throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
     }
 
-    //ïðîâåðèòü òàêæå äèàïàçîí ïàìÿòè
+    //если возвращаем не тот диапазон памяти
     auto* memory_start = reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
     auto* memory_end = memory_start + get_space_size();
     if (at < memory_start || at>memory_end)
@@ -258,16 +258,8 @@ void allocator_sorted_list::deallocate(
         throw std::logic_error(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
     }
 
-
     void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - get_free_block_metadata_size());
-
-    void* at_trusted_memory_ptr = get_free_block_trusted_memory(target_block);
-    if (get_allocator() != *reinterpret_cast<allocator**>(at_trusted_memory_ptr)) //òóäà ëè âîçâðàùàåì
-    {
-        error_with_guard(get_typename() + ": can't deallocate memory - another allocator pointer");
-        debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - null pointer");
-        throw std::logic_error(get_typename() + ": can't deallocate memory - another allocator pointer");
-    };
+    
 
 
     void* next_block = get_first_free_block_address();
@@ -279,29 +271,26 @@ void allocator_sorted_list::deallocate(
     }
 
 
-    set_free_block_next_block_ptr(target_block, next_block); //óñòàíàâëèâàåì ññûëêó íà ñëåä áëîê èëè íà êîíåö ïàìÿòè
-    if (previous_block == nullptr) //åñëè ïåðåä öåëåâûì áëîêîì íåò ñâîáîäíûõ áëîêîâ òî çàïèøåì â íà÷àëî. èíà÷å â ïðåäûäóùèé áëîê
+    set_free_block_next_block_ptr(target_block, next_block); //установка ссылки на следующий элемент или на конец списка
+    if (previous_block == nullptr) //если весь список забит (nullptr) то установить ссылку на текущий иначе менять прошлый элемент
         set_first_free_block_address(target_block);
     else
         set_free_block_next_block_ptr(previous_block, target_block);
 
 
-    //ïðîâåðêà ïðàâîé ãðàíèöû
+    //Проверка правой границы
     if (next_block != nullptr && next_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(target_block) + get_free_block_size(target_block) + get_free_block_metadata_size()))
     {
         *reinterpret_cast<size_t*>(target_block) += (get_free_block_size(next_block) + get_free_block_metadata_size());
         set_free_block_next_block_ptr(target_block, get_free_block_next_block_ptr(next_block));
     }
 
-    //ïðîâåðêà ëåâîé ãðàíèöû
+    //Проверка левой границы
     if (previous_block != nullptr && target_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(previous_block) + get_free_block_size(previous_block) + get_free_block_metadata_size()))
     {
         *reinterpret_cast<size_t*>(previous_block) += (get_free_block_size(target_block) + get_free_block_metadata_size());
         set_free_block_next_block_ptr(previous_block, get_free_block_next_block_ptr(target_block));
     }
-
-
-
 
 
 

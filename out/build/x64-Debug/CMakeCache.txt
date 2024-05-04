@@ -846,7 +846,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Python
-FIND_PACKAGE_MESSAGE_DETAILS_Python:INTERNAL=[C:/Users/lifem/AppData/Local/Programs/Python/Python312/python.exe][cfound components: Interpreter ][v3.12.2()]
+FIND_PACKAGE_MESSAGE_DETAILS_Python:INTERNAL=[C:/Users/lifem/AppData/Local/Programs/Python/Python312/python.exe][cfound components: Interpreter ][v3.12.3()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 NLOHMANN_JSON_CONFIG_INSTALL_DIR:INTERNAL=share/cmake/nlohmann_json
@@ -859,7 +859,7 @@ _Python_Development_REASON_FAILURE:INTERNAL=
 //Path to a program.
 _Python_EXECUTABLE:INTERNAL=C:/Users/lifem/AppData/Local/Programs/Python/Python312/python.exe
 //Python Properties
-_Python_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;2;64;32;;cp312-win_amd64;;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib\site-packages;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib\site-packages
+_Python_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;3;64;32;;cp312-win_amd64;;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib\site-packages;C:\Users\lifem\AppData\Local\Programs\Python\Python312\Lib\site-packages
 _Python_INTERPRETER_SIGNATURE:INTERNAL=d3d6c3fb8821b1cb8c2643107b2fbbf7
 //NumPy reason failure
 _Python_NumPy_REASON_FAILURE:INTERNAL=
