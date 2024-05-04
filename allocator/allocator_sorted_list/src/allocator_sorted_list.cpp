@@ -1,11 +1,10 @@
-#include <not_implemented.h>
+п»ї#include <not_implemented.h>
 #include <mutex>
 #include "../include/allocator_sorted_list.h"
 #include <functional>
-//в других проектах тоже везде втыкнуть логгер. там где нельзя - нижнего типа
-//также удалять перед присваиванием и перемещением если надо
-//изменить условие
-//проверить вспомогательыне методы
+//РІ РґСЂСѓРіРёС… РїСЂРѕРµРєС‚Р°С… С‚РѕР¶Рµ РІРµР·РґРµ РІС‚С‹РєРЅСѓС‚СЊ Р»РѕРіРіРµСЂ. С‚Р°Рј РіРґРµ РЅРµР»СЊР·СЏ - РЅРёР¶РЅРµРіРѕ С‚РёРїР°
+//С‚Р°РєР¶Рµ СѓРґР°Р»СЏС‚СЊ РїРµСЂРµРґ РїСЂРёСЃРІР°РёРІР°РЅРёРµРј Рё РїРµСЂРµРјРµС‰РµРЅРёРµРј РµСЃР»Рё РЅР°РґРѕ
+
 
 void allocator_sorted_list::deallocate_object_fields()
 {
@@ -21,7 +20,7 @@ void allocator_sorted_list::deallocate_object_fields()
         else
             ::delete a;
 
-        _trusted_memory = nullptr; //после удаления не забывать
+        _trusted_memory = nullptr; //РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ РЅРµ Р·Р°Р±С‹РІР°С‚СЊ
     }
 
     if (logger != nullptr) logger->trace("Successfully executed method void allocator_sorted_list::deallocate_object_fields()");
@@ -40,7 +39,7 @@ allocator_sorted_list::~allocator_sorted_list()
 allocator_sorted_list::allocator_sorted_list(
     allocator_sorted_list &&other) noexcept
 {
-    //ВНИМАТЕЛЬНО! там не объект текущий а то откуда выделялась память. не надо set_allocator(this);
+    //Р’РќРРњРђРўР•Р›Р¬РќРћ! С‚Р°Рј РЅРµ РѕР±СЉРµРєС‚ С‚РµРєСѓС‰РёР№ Р° С‚Рѕ РѕС‚РєСѓРґР° РІС‹РґРµР»СЏР»Р°СЃСЊ РїР°РјСЏС‚СЊ. РЅРµ РЅР°РґРѕ set_allocator(this);
 
     _trusted_memory = other._trusted_memory;
     other._trusted_memory = nullptr;
@@ -56,8 +55,8 @@ allocator_sorted_list &allocator_sorted_list::operator=(
 
     if (&other != this)     
     {   
-        deallocate_object_fields();                   //НЕ ССЫЛАТЬСЯ ТУТ НА КОНСТРУКТОР. Объект уже есть. Это плохо
-        _trusted_memory = other._trusted_memory;      //не забывать тут чистить
+        deallocate_object_fields();                   //РќР• РЎРЎР«Р›РђРўР¬РЎРЇ РўРЈРў РќРђ РљРћРќРЎРўР РЈРљРўРћР . РћР±СЉРµРєС‚ СѓР¶Рµ РµСЃС‚СЊ. Р­С‚Рѕ РїР»РѕС…Рѕ
+        _trusted_memory = other._trusted_memory;      //РЅРµ Р·Р°Р±С‹РІР°С‚СЊ С‚СѓС‚ С‡РёСЃС‚РёС‚СЊ
         other._trusted_memory = nullptr;
     }
     
@@ -74,7 +73,7 @@ allocator_sorted_list::allocator_sorted_list(
     if(logger!=nullptr) logger->debug("Called method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with request: memory:" + std::to_string(space_size) + ", metadata:"+std::to_string(get_allocator_metadata_size()));
 
     
-    if (space_size < get_free_block_metadata_size()) //если будет меньше - не сможем записать ни один блок
+    if (space_size < get_free_block_metadata_size()) //РµСЃР»Рё Р±СѓРґРµС‚ РјРµРЅСЊС€Рµ - РЅРµ СЃРјРѕР¶РµРј Р·Р°РїРёСЃР°С‚СЊ РЅРё РѕРґРёРЅ Р±Р»РѕРє
     {
         if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): Can't initializate allocator: too low memory"));
         if (logger != nullptr) logger->debug(std::string("Cancel with error execute method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): Can't initializate allocator: too low memory"));
@@ -94,7 +93,7 @@ allocator_sorted_list::allocator_sorted_list(
     {
         if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
         if (logger != nullptr) logger->debug(std::string("Cancel with error execute method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
-        throw;//просто throw если тот же тип
+        throw;//РїСЂРѕСЃС‚Рѕ throw РµСЃР»Рё С‚РѕС‚ Р¶Рµ С‚РёРї
     }
 
 
@@ -108,13 +107,13 @@ allocator_sorted_list::allocator_sorted_list(
     *space_size_ptr = space_size;
 
     std::mutex* sync_object_ptr = reinterpret_cast<std::mutex*>(space_size_ptr + 1);
-    allocator::construct(sync_object_ptr); //аналогично new (sync_object_space) std::mutex();
+    allocator::construct(sync_object_ptr); //Р°РЅР°Р»РѕРіРёС‡РЅРѕ new (sync_object_space) std::mutex();
 
     allocator_with_fit_mode::fit_mode* fit_mode_ptr = reinterpret_cast<allocator_with_fit_mode::fit_mode*>(sync_object_ptr + 1);
     *fit_mode_ptr = allocate_fit_mode;
 
     void ** first_free_block_ptr = reinterpret_cast<void**>(fit_mode_ptr + 1);
-    *first_free_block_ptr = reinterpret_cast<void*>(first_free_block_ptr+1); //ссылка на первый свободный блок
+    *first_free_block_ptr = reinterpret_cast<void*>(first_free_block_ptr+1); //СЃСЃС‹Р»РєР° РЅР° РїРµСЂРІС‹Р№ СЃРІРѕР±РѕРґРЅС‹Р№ Р±Р»РѕРє
 
 
     
@@ -142,7 +141,7 @@ allocator_sorted_list::allocator_sorted_list(
     size_t required_data_size = value_size * values_count;
     warning_with_guard("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): free block metadata added");
 
-    if (required_data_size > get_space_size())  //если надо больше памяти чем у нас вообще есть (здесь проверяем остаток свободной!!! оптимизация)
+    if (required_data_size > get_space_size())  //РµСЃР»Рё РЅР°РґРѕ Р±РѕР»СЊС€Рµ РїР°РјСЏС‚Рё С‡РµРј Сѓ РЅР°СЃ РІРѕРѕР±С‰Рµ РµСЃС‚СЊ (Р·РґРµСЃСЊ РїСЂРѕРІРµСЂСЏРµРј РѕСЃС‚Р°С‚РѕРє СЃРІРѕР±РѕРґРЅРѕР№!!! РѕРїС‚РёРјРёР·Р°С†РёСЏ)
     {
         error_with_guard(get_typename() + ": can't allocate memory - requested memory is more than heap");
         debug_with_guard("Cancel with error method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count): can't allocate memory - requested memory is more than heap");
@@ -150,35 +149,53 @@ allocator_sorted_list::allocator_sorted_list(
     }
 
 
-    void* current_block = get_first_free_block_address(); //был лишний код - не надо проверять на нулл - не приведет к оптимизации. тк цикл сразу же скипнется
+    void* current_block = get_first_free_block_address(); //Р±С‹Р» Р»РёС€РЅРёР№ РєРѕРґ - РЅРµ РЅР°РґРѕ РїСЂРѕРІРµСЂСЏС‚СЊ РЅР° РЅСѓР»Р» - РЅРµ РїСЂРёРІРµРґРµС‚ Рє РѕРїС‚РёРјРёР·Р°С†РёРё. С‚Рє С†РёРєР» СЃСЂР°Р·Сѓ Р¶Рµ СЃРєРёРїРЅРµС‚СЃСЏ
     void* previous_block = nullptr;
     void* current_target = nullptr;
     void* previous_target = nullptr;
-    size_t size_optimal = get_free_block_size(current_block);
+    size_t size_optimal = 0;
+    if(current_block!=nullptr) get_free_block_size(current_block);
     
     while (current_block != nullptr)
     {
         size_t current_block_size = get_free_block_size(current_block);
         allocator_with_fit_mode::fit_mode fit_mode = get_fit_mode();
 
-        //лучше свитч или большое условие
-        bool firstfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::first_fit;
-        bool thebestfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::the_best_fit && current_block_size <= size_optimal;
-        bool theworstfit_condition = fit_mode == allocator_with_fit_mode::fit_mode::the_worst_fit && current_block_size >= size_optimal;
-
-        if (current_block_size >= required_data_size && (firstfit_condition || thebestfit_condition || theworstfit_condition))
+        //Р»СѓС‡С€Рµ СЃРІРёС‚С‡ РёР»Рё Р±РѕР»СЊС€РѕРµ СѓСЃР»РѕРІРёРµ
+        if (current_block_size >= required_data_size)
         {
-            size_optimal = current_block_size;
-            current_target = current_block;
-            previous_target = previous_block;
-            if (firstfit_condition || thebestfit_condition && current_block_size == required_data_size) break;
+            bool belonging_СЃondition = false;
+            bool break_condition = false;
+
+            switch (fit_mode)
+            {
+                case allocator_with_fit_mode::fit_mode::first_fit: 
+                    belonging_СЃondition = true;
+                    break_condition = true;
+                    break;
+                case allocator_with_fit_mode::fit_mode::the_best_fit: 
+                    belonging_СЃondition = current_block_size <= size_optimal;
+                    if (current_block_size == required_data_size) break_condition = true;
+                    break;
+                case allocator_with_fit_mode::fit_mode::the_worst_fit: 
+                    belonging_СЃondition = current_block_size >= size_optimal;
+                    break;
+            }
+
+            if(belonging_СЃondition)
+            {
+                size_optimal = current_block_size;
+                current_target = current_block;
+                previous_target = previous_block;
+                if (break_condition) break;
+            }
         };
 
         previous_block = current_block;
         current_block = get_free_block_next_block_ptr(current_block);
     }
  
-    if (current_target == nullptr) //подходящих блоков не найдено
+    if (current_target == nullptr) //РїРѕРґС…РѕРґСЏС‰РёС… Р±Р»РѕРєРѕРІ РЅРµ РЅР°Р№РґРµРЅРѕ
     {
         error_with_guard(get_typename() + ": can't allocate memory - no free memory");
         debug_with_guard("Cancel with error method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count): can't allocate memory - no free memory");
@@ -186,9 +203,9 @@ allocator_sorted_list::allocator_sorted_list(
     }
 
     size_t right_block_size = size_optimal - required_data_size;
-    if (right_block_size < get_free_block_minimum_size()) //отдать весь блок, если размер правого блока = 0 или меньше допустимого (мета+минЗнач - оптимизация из кнута)
+    if (right_block_size < get_free_block_minimum_size()) //РѕС‚РґР°С‚СЊ РІРµСЃСЊ Р±Р»РѕРє, РµСЃР»Рё СЂР°Р·РјРµСЂ РїСЂР°РІРѕРіРѕ Р±Р»РѕРєР° = 0 РёР»Рё РјРµРЅСЊС€Рµ РґРѕРїСѓСЃС‚РёРјРѕРіРѕ (РјРµС‚Р°+РјРёРЅР—РЅР°С‡ - РѕРїС‚РёРјРёР·Р°С†РёСЏ РёР· РєРЅСѓС‚Р°)
     {
-        //удалить блок из списка свободных
+        //СѓРґР°Р»РёС‚СЊ Р±Р»РѕРє РёР· СЃРїРёСЃРєР° СЃРІРѕР±РѕРґРЅС‹С…
         warning_with_guard("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): a small remainder from the neighboring block is given to the requested one");
         if (previous_target != nullptr)
             set_free_block_next_block_ptr(previous_target, get_free_block_next_block_ptr(current_target));
@@ -197,7 +214,7 @@ allocator_sorted_list::allocator_sorted_list(
     }
     else
     {
-        //разбить на два
+        //СЂР°Р·Р±РёС‚СЊ РЅР° РґРІР°
         set_free_block_size(current_target, required_data_size);
         void* subtraction_right_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current_target) + get_free_block_metadata_size() + required_data_size);
         set_free_block_size(subtraction_right_block, right_block_size - get_free_block_metadata_size());
@@ -223,15 +240,15 @@ void allocator_sorted_list::deallocate(
 
     std::lock_guard<std::mutex> lock(get_sync_object());
     debug_with_guard("Called method: void allocator_sorted_list::deallocate(void* at)");
-    
-    if (at == nullptr) 
+
+    if (at == nullptr)
     {
         error_with_guard(get_typename() + ": can't deallocate memory - null pointer");
         debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - null pointer");
         throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
     }
 
-    //проверить также диапазон памяти
+    //ГЇГ°Г®ГўГҐГ°ГЁГІГј ГІГ ГЄГ¦ГҐ Г¤ГЁГ ГЇГ Г§Г®Г­ ГЇГ Г¬ГїГІГЁ
     auto* memory_start = reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
     auto* memory_end = memory_start + get_space_size();
     if (at < memory_start || at>memory_end)
@@ -244,8 +261,8 @@ void allocator_sorted_list::deallocate(
 
     void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - get_free_block_metadata_size());
 
-    void * at_trusted_memory_ptr = get_free_block_trusted_memory(target_block);
-    if (get_allocator() != *reinterpret_cast<allocator**>(at_trusted_memory_ptr)) //туда ли возвращаем
+    void* at_trusted_memory_ptr = get_free_block_trusted_memory(target_block);
+    if (get_allocator() != *reinterpret_cast<allocator**>(at_trusted_memory_ptr)) //ГІГіГ¤Г  Г«ГЁ ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬
     {
         error_with_guard(get_typename() + ": can't deallocate memory - another allocator pointer");
         debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - null pointer");
@@ -255,34 +272,34 @@ void allocator_sorted_list::deallocate(
 
     void* next_block = get_first_free_block_address();
     void* previous_block = nullptr;
-    while (next_block!=nullptr && next_block<target_block)
+    while (next_block != nullptr && next_block < target_block)
     {
         previous_block = next_block;
         next_block = get_free_block_next_block_ptr(next_block);
     }
- 
-   
-    set_free_block_next_block_ptr(target_block, next_block); //устанавливаем ссылку на след блок или на конец памяти
-    if (previous_block == nullptr) //если перед целевым блоком нет свободных блоков то запишем в начало. иначе в предыдущий блок
+
+
+    set_free_block_next_block_ptr(target_block, next_block); //ГіГ±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГ¬ Г±Г±Г»Г«ГЄГі Г­Г  Г±Г«ГҐГ¤ ГЎГ«Г®ГЄ ГЁГ«ГЁ Г­Г  ГЄГ®Г­ГҐГ¶ ГЇГ Г¬ГїГІГЁ
+    if (previous_block == nullptr) //ГҐГ±Г«ГЁ ГЇГҐГ°ГҐГ¤ Г¶ГҐГ«ГҐГўГ»Г¬ ГЎГ«Г®ГЄГ®Г¬ Г­ГҐГІ Г±ГўГ®ГЎГ®Г¤Г­Г»Гµ ГЎГ«Г®ГЄГ®Гў ГІГ® Г§Г ГЇГЁГёГҐГ¬ Гў Г­Г Г·Г Г«Г®. ГЁГ­Г Г·ГҐ Гў ГЇГ°ГҐГ¤Г»Г¤ГіГ№ГЁГ© ГЎГ«Г®ГЄ
         set_first_free_block_address(target_block);
-    else  
+    else
         set_free_block_next_block_ptr(previous_block, target_block);
 
 
-    //проверка правой границы
+    //ГЇГ°Г®ГўГҐГ°ГЄГ  ГЇГ°Г ГўГ®Г© ГЈГ°Г Г­ГЁГ¶Г»
     if (next_block != nullptr && next_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(target_block) + get_free_block_size(target_block) + get_free_block_metadata_size()))
     {
         *reinterpret_cast<size_t*>(target_block) += (get_free_block_size(next_block) + get_free_block_metadata_size());
         set_free_block_next_block_ptr(target_block, get_free_block_next_block_ptr(next_block));
     }
 
-    //проверка левой границы
+    //ГЇГ°Г®ГўГҐГ°ГЄГ  Г«ГҐГўГ®Г© ГЈГ°Г Г­ГЁГ¶Г»
     if (previous_block != nullptr && target_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(previous_block) + get_free_block_size(previous_block) + get_free_block_metadata_size()))
     {
         *reinterpret_cast<size_t*>(previous_block) += (get_free_block_size(target_block) + get_free_block_metadata_size());
         set_free_block_next_block_ptr(previous_block, get_free_block_next_block_ptr(target_block));
     }
-    
+
 
 
 
@@ -379,7 +396,7 @@ inline void allocator_sorted_list::set_fit_mode(
 
 size_t allocator_sorted_list::get_allocator_metadata_size() const
 {
-    //аллокатор, логгер, размер кучи, мьютекс, фитмод, указатель на 1 элемент
+    //Р°Р»Р»РѕРєР°С‚РѕСЂ, Р»РѕРіРіРµСЂ, СЂР°Р·РјРµСЂ РєСѓС‡Рё, РјСЊСЋС‚РµРєСЃ, С„РёС‚РјРѕРґ, СѓРєР°Р·Р°С‚РµР»СЊ РЅР° 1 СЌР»РµРјРµРЅС‚
     //allocator*, logger*, size_t, mutex, allocator_with_fit_mode::fit_mode, void*
     //size_ptr, void* trusted, void* next
     return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(void*);
@@ -420,14 +437,14 @@ inline void allocator_sorted_list::set_first_free_block_address(void* pointer)
 
 size_t allocator_sorted_list::get_free_block_metadata_size() const
 {
-    return sizeof(size_t) + sizeof(void*) * 2; //размер блока, начало памяти, указатель на след свободный
+    return sizeof(size_t) + sizeof(void*) * 2; //СЂР°Р·РјРµСЂ Р±Р»РѕРєР°, РЅР°С‡Р°Р»Рѕ РїР°РјСЏС‚Рё, СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃР»РµРґ СЃРІРѕР±РѕРґРЅС‹Р№
 }
 
 size_t allocator_sorted_list::get_free_block_minimum_size() const
 {
     trace_with_guard("Called method size_t allocator_sorted_list::get_free_block_minimum_size() const");
     trace_with_guard("Successfully executed method size_t allocator_sorted_list::get_free_block_minimum_size() const");
-    return 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
+    return get_free_block_metadata_size()+ 8; //РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РєСѓСЃРѕРє РґРѕР»Р¶РµРЅ РІРєР»СЋС‡Р°С‚СЊ С…РѕС‚СЊ СЃРєРѕР»СЊРєРѕ С‚Рѕ РјР°Р»РѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ (РѕРїС‚РёРјРёР·Р°С†РёСЏ РёР· РєРЅСѓС‚Р°: РѕР±С‹С‡РЅРѕ Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РѕС‚ 8 РґРѕ 10 Р±)
 }
 
 
@@ -502,29 +519,30 @@ std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_
         return state;
     }
 
-    auto* memory_start =
+    void* memory_start = reinterpret_cast<void*>(
         reinterpret_cast<unsigned char*>(_trusted_memory) +
-        get_allocator_metadata_size();
+        get_allocator_metadata_size());
     if (current_block != memory_start)
     {
         size_t size = reinterpret_cast<unsigned char*>(current_block)
-            - memory_start - get_free_block_metadata_size();
+            - reinterpret_cast<unsigned char*>(memory_start) - get_free_block_metadata_size();
         allocator_test_utils::block_info current_info{ size, true };
         state.push_back(current_info);
     }
 
     while (current_block != nullptr)
     {
-        if (current_block!=get_first_free_block_address())
+        if (previous_block!=nullptr)
         {
-            size_t size = 
-                reinterpret_cast<unsigned char*>(current_block) - 
-                reinterpret_cast<unsigned char*>(previous_block) -
-                get_free_block_metadata_size();
+            size_t size =
+                reinterpret_cast<unsigned char*>(current_block) -
+                (reinterpret_cast<unsigned char*>(previous_block) +
+                get_free_block_metadata_size() +
+                get_free_block_size(previous_block) + 
+                get_free_block_metadata_size());
 
-            allocator_test_utils::block_info current_info{ size, true };
-            state.push_back(current_info);
-        
+            allocator_test_utils::block_info current_info2{ size, true };
+            state.push_back(current_info2);
         }
 
         allocator_test_utils::block_info current_info { get_free_block_size(current_block), false};
@@ -534,13 +552,13 @@ std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_
         current_block = get_free_block_next_block_ptr(current_block);
     }
     
-    auto* memory_end = memory_start + get_space_size();
+    void* memory_end = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(memory_start) + get_space_size());
     auto* last_free_block_end = 
         reinterpret_cast<unsigned char*>(previous_block) +
         get_free_block_metadata_size() + get_free_block_size(previous_block);
     if (memory_end != last_free_block_end)
     {
-        size_t size = memory_end - last_free_block_end - get_free_block_metadata_size();
+        size_t size = reinterpret_cast<unsigned char*>(memory_end) - last_free_block_end - get_free_block_metadata_size();
         allocator_test_utils::block_info current_info{size, true };
         state.push_back(current_info);
     }
@@ -571,7 +589,7 @@ void allocator_sorted_list::log_blocks_info() const
 
 size_t allocator_sorted_list::get_avalaible_size() const
 {
-    //можно упростить : хранить размер доступной памяти; также хранить размер большего блока
+    //РјРѕР¶РЅРѕ СѓРїСЂРѕСЃС‚РёС‚СЊ : С…СЂР°РЅРёС‚СЊ СЂР°Р·РјРµСЂ РґРѕСЃС‚СѓРїРЅРѕР№ РїР°РјСЏС‚Рё; С‚Р°РєР¶Рµ С…СЂР°РЅРёС‚СЊ СЂР°Р·РјРµСЂ Р±РѕР»СЊС€РµРіРѕ Р±Р»РѕРєР°
     debug_with_guard("Called method size_t allocator_sorted_list::get_avalaible_size() const");
 
     size_t avalaible_size = 0;
