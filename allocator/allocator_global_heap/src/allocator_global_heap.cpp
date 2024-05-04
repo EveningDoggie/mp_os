@@ -12,8 +12,7 @@ allocator_global_heap::allocator_global_heap(
 allocator_global_heap::allocator_global_heap(
     allocator_global_heap&& other) noexcept
 {
-    _logger = other._logger;
-    other._logger = nullptr;
+    move_from_other(std::move(other));
 }
 
 allocator_global_heap& allocator_global_heap::operator=(
@@ -21,10 +20,16 @@ allocator_global_heap& allocator_global_heap::operator=(
 {
     if (&other != this)
     {
-        allocator_global_heap(other);
+        move_from_other(std::move(other));
     }
 
     return *this;
+}
+
+void allocator_global_heap::move_from_other(allocator_global_heap&& other)
+{
+    _logger = other._logger;
+    other._logger = nullptr;
 }
 
 [[nodiscard]] void * allocator_global_heap::allocate(

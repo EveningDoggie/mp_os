@@ -60,6 +60,9 @@ public:
 
     void clear_streams_all();
 
+    void copy_from_other(client_logger const& other);
+
+    void move_from_other(client_logger&& other);
 
 public:
 

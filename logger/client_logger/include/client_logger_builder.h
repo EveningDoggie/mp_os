@@ -39,7 +39,11 @@ public:
     client_logger_builder &operator=(
         client_logger_builder &&other) noexcept;         
 
-    ~client_logger_builder() noexcept override;        
+    ~client_logger_builder() noexcept override;      
+
+    void copy_from_other(client_logger_builder const& other);
+
+    void move_from_other(client_logger_builder&& other);
 
 public:
     

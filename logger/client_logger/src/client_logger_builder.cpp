@@ -12,9 +12,7 @@ client_logger_builder::client_logger_builder()
 client_logger_builder::client_logger_builder(
     client_logger_builder const &other)
 {
-    _files_streams = other._files_streams;
-    _console_streams = other._console_streams;
-    _log_format_mask = other._log_format_mask;
+    copy_from_other(other);
 }
 
 client_logger_builder &client_logger_builder::operator=(
@@ -22,7 +20,7 @@ client_logger_builder &client_logger_builder::operator=(
 {
     if (&other != this)
     {
-        client_logger_builder(other);
+        copy_from_other(other);
     }
     
     return *this;
@@ -31,9 +29,7 @@ client_logger_builder &client_logger_builder::operator=(
 client_logger_builder::client_logger_builder(
     client_logger_builder &&other) noexcept
 {
-    _files_streams =  other._files_streams;
-    _console_streams =  other._console_streams;
-    _log_format_mask =  other._log_format_mask;
+    move_from_other(std::move(other));
 }
 
 client_logger_builder &client_logger_builder::operator=(
@@ -41,10 +37,24 @@ client_logger_builder &client_logger_builder::operator=(
 {
     if (&other != this)
     {
-        client_logger_builder(other);
+        move_from_other(std::move(other));
     }
 
     return *this;
+}
+
+void client_logger_builder::copy_from_other(client_logger_builder const& other)
+{
+    _files_streams = other._files_streams;
+    _console_streams = other._console_streams;
+    _log_format_mask = other._log_format_mask;
+}
+
+void client_logger_builder::move_from_other(client_logger_builder && other)
+{
+    _files_streams = other._files_streams;
+    _console_streams = other._console_streams;
+    _log_format_mask = other._log_format_mask;
 }
 
 client_logger_builder::~client_logger_builder() noexcept

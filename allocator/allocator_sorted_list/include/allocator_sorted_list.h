@@ -35,6 +35,8 @@ public:
     allocator_sorted_list &operator=(
         allocator_sorted_list &&other) noexcept;
 
+    void deallocate_object_fields();
+
 public:
     
     explicit allocator_sorted_list(
@@ -70,46 +72,52 @@ private:
     inline logger *get_logger() const override;
 
 private:
-    
+
     inline std::string get_typename() const noexcept override;
     
-    inline size_t get_allocator_metadata_size() const;
+private:
 
-    inline size_t get_free_block_metadata_size() const;
+    inline void allocator_sorted_list::set_allocator(allocator* a) const;
+
+    inline size_t& get_space_size() const;
 
     inline std::mutex& get_sync_object() const;
+
+    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
+
+    inline size_t get_allocator_metadata_size() const;
+
+private:
 
     inline void* get_first_free_block_address() const;
 
     inline void allocator_sorted_list::set_first_free_block_address(void* pointer);
 
-    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
+private:
 
-    inline size_t& get_space_size() const;
-
-    inline size_t& allocator_sorted_list::get_free_block_size(void* free_block)  const;
-
-    inline void* allocator_sorted_list::get_free_block_next_block_ptr(void* free_block) const;
-
-    inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const;
+    inline size_t get_free_block_metadata_size() const;
 
     size_t allocator_sorted_list::get_free_block_minimum_size() const;
 
-    void get_target_blocks_pointers_firstfit(size_t target_size, void* &current_target, void* &previous_target);
-
-    void get_target_blocks_pointers_bestfit(size_t target_size, void* &current_target, void* &previous_target);
-
-    void get_target_blocks_pointers_worstfit(size_t target_size, void* &current_target, void* &previous_target);
-
-    inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_block, void* ptr) const;
+    inline size_t& allocator_sorted_list::get_free_block_size(void* free_block)  const;
 
     inline void allocator_sorted_list::set_free_block_size(void* free_block, size_t size) const;
 
+    inline void* allocator_sorted_list::get_free_block_next_block_ptr(void* free_block) const;
+
+    inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_block, void* ptr) const;
+
+    inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const;
+
     inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const;
+
+private: 
 
     void allocator_sorted_list::log_blocks_info() const;
 
-    inline void allocator_sorted_list::set_allocator(allocator* a) const;
+    void allocator_sorted_list::log_avalaible_size_info() const;
+
+    size_t allocator_sorted_list::get_avalaible_size() const;
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_ALLOCATOR_ALLOCATOR_SORTED_LIST_H
