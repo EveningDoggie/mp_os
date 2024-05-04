@@ -427,7 +427,7 @@ size_t allocator_sorted_list::get_free_block_minimum_size() const
 {
     trace_with_guard("Called method size_t allocator_sorted_list::get_free_block_minimum_size() const");
     trace_with_guard("Successfully executed method size_t allocator_sorted_list::get_free_block_minimum_size() const");
-    return get_free_block_metadata_size() + 8; //минимальный кусок должен включать метаданные и хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
+    return 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
 }
 
 
