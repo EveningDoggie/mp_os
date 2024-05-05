@@ -5,6 +5,7 @@
 //в других проектах тоже везде втыкнуть логгер. там где нельзя - нижнего типа
 //также удалять перед присваиванием и перемещением если надо
 
+#pragma region Main methods
 
 void allocator_sorted_list::deallocate_object_fields()
 {
@@ -113,7 +114,10 @@ allocator_sorted_list::allocator_sorted_list(
     *fit_mode_ptr = allocate_fit_mode;
 
     void ** first_free_block_ptr = reinterpret_cast<void**>(fit_mode_ptr + 1);
-    *first_free_block_ptr = reinterpret_cast<void*>(first_free_block_ptr+1); //ссылка на первый свободный блок
+    size_t* avalaible_size = reinterpret_cast<size_t*>(first_free_block_ptr + 1);
+
+    *first_free_block_ptr = reinterpret_cast<void*>(avalaible_size+1); //ссылка на первый свободный блок
+    *avalaible_size = space_size - get_free_block_metadata_size();
 
 
     
@@ -141,7 +145,7 @@ allocator_sorted_list::allocator_sorted_list(
     size_t required_data_size = value_size * values_count;
     warning_with_guard("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): free block metadata added");
 
-    if (required_data_size > get_space_size())  //если надо больше памяти чем у нас вообще есть (здесь проверяем остаток свободной!!! оптимизация)
+    if (required_data_size > get_avalaible_size())  //если надо больше памяти чем у нас вообще есть (здесь проверяем остаток свободной!!! оптимизация)
     {
         error_with_guard(get_typename() + ": can't allocate memory - requested memory is more than heap");
         debug_with_guard("Cancel with error method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count): can't allocate memory - requested memory is more than heap");
@@ -211,6 +215,8 @@ allocator_sorted_list::allocator_sorted_list(
             set_free_block_next_block_ptr(previous_target, get_free_block_next_block_ptr(current_target));
         else
             set_first_free_block_address(get_free_block_next_block_ptr(current_target));
+
+        increase_avalaible_size(-size_optimal);
     }
     else
     {
@@ -225,6 +231,8 @@ allocator_sorted_list::allocator_sorted_list(
             set_free_block_next_block_ptr(previous_target, subtraction_right_block);
         else
             set_first_free_block_address(subtraction_right_block);
+
+        increase_avalaible_size(-(required_data_size+get_free_block_metadata_size()));
     }
 
     debug_with_guard("Successfully executed method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count)");
@@ -249,9 +257,7 @@ void allocator_sorted_list::deallocate(
     }
 
     //если возвращаем не тот диапазон памяти
-    auto* memory_start = reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
-    auto* memory_end = memory_start + get_space_size();
-    if (at < memory_start || at>memory_end)
+    if (at < get_memory_start() || at>get_memory_end())
     {
         error_with_guard(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
         debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - the pointer referenced an invalid memory locationr");
@@ -259,8 +265,7 @@ void allocator_sorted_list::deallocate(
     }
 
     void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - get_free_block_metadata_size());
-    
-
+    increase_avalaible_size(get_free_block_size(target_block));
 
     void* next_block = get_first_free_block_address();
     void* previous_block = nullptr;
@@ -281,16 +286,21 @@ void allocator_sorted_list::deallocate(
     //Проверка правой границы
     if (next_block != nullptr && next_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(target_block) + get_free_block_size(target_block) + get_free_block_metadata_size()))
     {
-        *reinterpret_cast<size_t*>(target_block) += (get_free_block_size(next_block) + get_free_block_metadata_size());
+        *reinterpret_cast<size_t*>(target_block) += get_free_block_size(next_block) + get_free_block_metadata_size();
         set_free_block_next_block_ptr(target_block, get_free_block_next_block_ptr(next_block));
+        increase_avalaible_size(get_free_block_metadata_size());
     }
+
+
 
     //Проверка левой границы
     if (previous_block != nullptr && target_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(previous_block) + get_free_block_size(previous_block) + get_free_block_metadata_size()))
     {
         *reinterpret_cast<size_t*>(previous_block) += (get_free_block_size(target_block) + get_free_block_metadata_size());
         set_free_block_next_block_ptr(previous_block, get_free_block_next_block_ptr(target_block));
+        increase_avalaible_size(get_free_block_metadata_size());
     }
+   
 
 
 
@@ -299,10 +309,9 @@ void allocator_sorted_list::deallocate(
     information_with_guard("Free avalaible size: " + std::to_string(get_avalaible_size()));
 }
 
+#pragma endregion
 
-
-
-#pragma region Metadata main methods
+#pragma region Metadata allocator methods
 
 inline std::string allocator_sorted_list::get_typename() const noexcept
 {
@@ -345,6 +354,39 @@ inline size_t& allocator_sorted_list::get_space_size() const
         + sizeof(logger*));
 }
 
+inline size_t& allocator_sorted_list::get_avalaible_size() const
+{
+    trace_with_guard("Called method inline size_t& allocator_sorted_list::get_avalaible_size() const");
+    trace_with_guard("Successfully executed method inline size_t& allocator_sorted_list::get_avalaible_size() const");
+    
+    return *reinterpret_cast<size_t*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)
+        + sizeof(allocator_with_fit_mode::fit_mode)
+        + sizeof(size_t));
+}
+
+
+inline void allocator_sorted_list::increase_avalaible_size(int value) const
+{
+    trace_with_guard("Called method inline void allocator_sorted_list::increase_avalaible_size(int value) const");
+    trace_with_guard("Successfully executed method inline void allocator_sorted_list::increase_avalaible_size(int value) const");
+    
+    *reinterpret_cast<size_t*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)
+        + sizeof(allocator_with_fit_mode::fit_mode)
+        + sizeof(size_t)) += value;
+   
+}
+
+
 inline std::mutex& allocator_sorted_list::get_sync_object() const
 {
     trace_with_guard("Called method inline std::mutex& allocator_sorted_list::get_sync_object() const");
@@ -385,11 +427,24 @@ inline void allocator_sorted_list::set_fit_mode(
 
 size_t allocator_sorted_list::get_allocator_metadata_size() const
 {
-    //аллокатор, логгер, размер кучи, мьютекс, фитмод, указатель на 1 элемент
+    //аллокатор, логгер, размер кучи, мьютекс, фитмод, указатель на 1 элемент, свободное пространство
     //allocator*, logger*, size_t, mutex, allocator_with_fit_mode::fit_mode, void*
-    //size_ptr, void* trusted, void* next
-    return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(void*);
+    //size_ptr, void* trusted, void* next, size_t
+    return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(void*) + sizeof(size_t);
 }
+
+void* allocator_sorted_list::get_memory_end() const
+{
+
+    return reinterpret_cast<unsigned char*>(get_memory_start()) + get_space_size();
+}
+
+void* allocator_sorted_list::get_memory_start() const
+{
+    return reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
+}
+
+
 #pragma endregion
 
 #pragma region Metadata first_free_block methods
@@ -492,7 +547,7 @@ inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_bloc
 }
 #pragma endregion
 
-#pragma region log
+#pragma region Log
 
 std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_info() const noexcept
 {
@@ -508,9 +563,7 @@ std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_
         return state;
     }
 
-    void* memory_start = reinterpret_cast<void*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory) +
-        get_allocator_metadata_size());
+    void* memory_start = get_memory_start();
     if (current_block != memory_start)
     {
         size_t size = reinterpret_cast<unsigned char*>(current_block)
@@ -541,7 +594,7 @@ std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_
         current_block = get_free_block_next_block_ptr(current_block);
     }
     
-    void* memory_end = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(memory_start) + get_space_size());
+    void* memory_end = get_memory_end();
     auto* last_free_block_end = 
         reinterpret_cast<unsigned char*>(previous_block) +
         get_free_block_metadata_size() + get_free_block_size(previous_block);
@@ -574,28 +627,5 @@ void allocator_sorted_list::log_blocks_info() const
     debug_with_guard("Successfully executed method void allocator_sorted_list::log_blocks_info() const");
 }
 
-
-
-size_t allocator_sorted_list::get_avalaible_size() const
-{
-    //можно упростить : хранить размер доступной памяти; также хранить размер большего блока
-    debug_with_guard("Called method size_t allocator_sorted_list::get_avalaible_size() const");
-
-    size_t avalaible_size = 0;
-    void* current_block = get_first_free_block_address();
-    void* previous_block = nullptr;
-    if (current_block == nullptr) return 0;
-   
-    while (current_block != nullptr)
-    {
-        avalaible_size += get_free_block_size(current_block);
-
-        previous_block = current_block;
-        current_block = get_free_block_next_block_ptr(current_block);
-    }
-
-    debug_with_guard("Successfully executed method size_t allocator_sorted_list::get_avalaible_size() const");
-    return avalaible_size;
-}
-
 #pragma endregion
+
