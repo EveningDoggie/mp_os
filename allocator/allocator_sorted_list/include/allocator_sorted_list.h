@@ -75,7 +75,7 @@ private:
 
     inline allocator* get_allocator() const override;
 
-    inline void set_allocator(allocator* a) const;
+    inline void set_allocator(allocator* a);
 
     inline std::mutex& get_sync_object() const;
 
@@ -100,15 +100,15 @@ private:
 
     inline size_t& get_free_block_size(void* free_block)  const;
 
-    inline void set_free_block_size(void* free_block, size_t size) const;
+    inline void set_free_block_size(void* free_block, size_t size);
 
     inline void* get_free_block_next_block_ptr(void* free_block) const;
 
-    inline void set_free_block_next_block_ptr(void* free_block, void* ptr) const;
+    inline void set_free_block_next_block_ptr(void* free_block, void* ptr);
 
     inline void* get_free_block_trusted_memory(void* free_block) const;
 
-    inline void set_free_block_trusted_memory(void* free_block) const;
+    inline void set_free_block_trusted_memory(void* free_block);
 
 
 public:

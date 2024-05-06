@@ -57,6 +57,9 @@ public:
     void deallocate(
         void *at) override;
 
+private:
+
+    void * add_finded_block_to_occupied_list(void* previous_block, void* next_block, size_t size_optimal);
 
 public:
 
@@ -79,7 +82,7 @@ private:
 
     inline allocator* get_allocator() const override;
 
-    inline void set_allocator(allocator* a) const;
+    inline void set_allocator(allocator* a);
 
     inline std::mutex& get_sync_object() const;
 
@@ -104,15 +107,19 @@ private:
 
     inline size_t& get_occupied_block_size(void* occupied_block)  const;
 
-    inline void set_occupied_block_size(void* occupied_block, size_t size) const;
+    inline void set_occupied_block_size(void* occupied_block, size_t size);
 
     inline void* get_occupied_block_next_block_ptr(void* occupied_block) const;
 
-    inline void set_occupied_block_next_block_ptr(void* occupied_block, void* ptr) const;
+    inline void set_occupied_block_next_block_ptr(void* occupied_block, void* ptr);
+
+    inline void* get_occupied_block_previous_block_ptr(void* occupied_block) const;
+
+    inline void set_occupied_block_previous_block_ptr(void* occupied_block, void* ptr);
 
     inline void* get_occupied_block_trusted_memory(void* occupied_block) const;
 
-    inline void set_occupied_block_trusted_memory(void* fre) const;
+    inline void set_occupied_block_trusted_memory(void* fre);
 
 
 public:
@@ -125,6 +132,7 @@ private:
 
     void log_avalaible_size_info() const;
 
+    void log_current_block_reference_info(void* current) const;
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_ALLOCATOR_ALLOCATOR_BOUNDARY_TAGS_H

@@ -73,18 +73,12 @@ allocator_sorted_list::allocator_sorted_list(
 {
     if(logger!=nullptr) logger->debug("Called method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with request: memory:" + std::to_string(space_size) + ", metadata:"+std::to_string(get_allocator_metadata_size()));
 
-    
-    if (space_size < get_free_block_metadata_size()) //если будет меньше - не сможем записать ни один блок
-    {
-        if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): Can't initializate allocator: too low memory"));
-        if (logger != nullptr) logger->debug(std::string("Cancel with error execute method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): Can't initializate allocator: too low memory"));
-        throw std::logic_error("Can't initializate allocator: too low memory");
-    }
-
+    space_size += get_free_block_metadata_size();
     size_t space_size_with_metadata = space_size + get_allocator_metadata_size();
+
     try
     {
-        if (logger != nullptr) logger->warning("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): allocator's metadata added");
+        if (logger != nullptr) logger->warning("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): allocator's metadata and free block metadata added");
         _trusted_memory =
             parent_allocator != nullptr ?
             parent_allocator->allocate(space_size_with_metadata, 1) :
@@ -152,7 +146,7 @@ allocator_sorted_list::allocator_sorted_list(
         throw std::bad_alloc();
     }
 
-
+    allocator_with_fit_mode::fit_mode fit_mode = get_fit_mode();
     void* current_block = get_first_free_block_address(); //был лишний код - не надо проверять на нулл - не приведет к оптимизации. тк цикл сразу же скипнется
     void* previous_block = nullptr;
     void* current_target = nullptr;
@@ -163,7 +157,6 @@ allocator_sorted_list::allocator_sorted_list(
     while (current_block != nullptr)
     {
         size_t current_block_size = get_free_block_size(current_block);
-        allocator_with_fit_mode::fit_mode fit_mode = get_fit_mode();
 
         //лучше свитч или большое условие
         if (current_block_size >= required_data_size)
@@ -207,7 +200,7 @@ allocator_sorted_list::allocator_sorted_list(
     }
 
     size_t right_block_size = size_optimal - required_data_size;
-    if (right_block_size < get_free_block_minimum_size()) //отдать весь блок, если размер правого блока = 0 или меньше допустимого (мета+минЗнач - оптимизация из кнута)
+    if (right_block_size <= get_free_block_minimum_size()) //отдать весь блок, если размер правого блока = 0 или меньше допустимого (мета+минЗнач - оптимизация из кнута)
     {
         //удалить блок из списка свободных
         warning_with_guard("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): a small remainder from the neighboring block is given to the requested one");
@@ -277,7 +270,7 @@ void allocator_sorted_list::deallocate(
 
 
     set_free_block_next_block_ptr(target_block, next_block); //установка ссылки на следующий элемент или на конец списка
-    if (previous_block == nullptr) //если весь список забит (nullptr) то установить ссылку на текущий иначе менять прошлый элемент
+    if (previous_block == nullptr) //если левого элемента нет то ставим ссылку на текущий. если есть то записываем эту ссылку в него
         set_first_free_block_address(target_block);
     else
         set_free_block_next_block_ptr(previous_block, target_block);
@@ -290,8 +283,6 @@ void allocator_sorted_list::deallocate(
         set_free_block_next_block_ptr(target_block, get_free_block_next_block_ptr(next_block));
         increase_avalaible_size(get_free_block_metadata_size());
     }
-
-
 
     //Проверка левой границы
     if (previous_block != nullptr && target_block == reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(previous_block) + get_free_block_size(previous_block) + get_free_block_metadata_size()))
@@ -336,7 +327,7 @@ inline allocator* allocator_sorted_list::get_allocator() const
     return *reinterpret_cast<allocator**>(_trusted_memory);
 }
 
-inline void allocator_sorted_list::set_allocator(allocator* a) const
+inline void allocator_sorted_list::set_allocator(allocator* a)
 {
     trace_with_guard("Called method inline void allocator_sorted_list::set_allocator(allocator * a) const");
     *reinterpret_cast<allocator**>(_trusted_memory) = a;
@@ -499,7 +490,7 @@ inline size_t& allocator_sorted_list::get_free_block_size(void * free_block) con
     return *reinterpret_cast<size_t*>(free_block);
 }
 
-inline void allocator_sorted_list::set_free_block_size(void* free_block, size_t size) const
+inline void allocator_sorted_list::set_free_block_size(void* free_block, size_t size)
 {
     trace_with_guard("Called method inline void allocator_sorted_list::set_free_block_size(void* free_block, size_t size) const");
     trace_with_guard("Successfully executed method inline void allocator_sorted_list::set_free_block_size(void* free_block, size_t size) const");
@@ -516,7 +507,7 @@ inline void* allocator_sorted_list::get_free_block_next_block_ptr(void* free_blo
         + sizeof(void*));
 }
 
-inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_block, void * ptr) const
+inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_block, void * ptr)
 {
     trace_with_guard("Called method inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_block, void * ptr) const");
     trace_with_guard("Successfully executed method inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_block, void * ptr) const");
@@ -537,7 +528,7 @@ inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_blo
         + sizeof(size_t));
 }
 
-inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const
+inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) 
 {
     trace_with_guard("Called method inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const");
     trace_with_guard("Successfully executed method inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const");
@@ -582,9 +573,12 @@ std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_
                 get_free_block_metadata_size() +
                 get_free_block_size(previous_block) + 
                 get_free_block_metadata_size());
-
-            allocator_test_utils::block_info current_info2{ size, true };
-            state.push_back(current_info2);
+           
+            if (size != 0)
+            {
+                allocator_test_utils::block_info current_info2{ size, true };
+                state.push_back(current_info2);
+            }
         }
 
         allocator_test_utils::block_info current_info { get_free_block_size(current_block), false};

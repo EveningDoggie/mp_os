@@ -35,7 +35,7 @@ TEST(positiveTests, test1)
         {
             {
                 "allocator_boundary_tags_tests_logs_positive_test_plain_usage.txt",
-                logger::severity::information
+                logger::severity::debug
             }
         });
     allocator *subject = new allocator_boundary_tags(sizeof(int) * 40, nullptr, logger, allocator_with_fit_mode::fit_mode::first_fit);
@@ -73,7 +73,7 @@ TEST(positiveTests, test2)
         {
             {
                 "allocator_boundary_tags_tests_logs_false_positive_test_1.txt",
-                logger::severity::information
+                logger::severity::debug
             }
         });
     allocator *allocator_instance = new allocator_boundary_tags(sizeof(unsigned char) * 3000, nullptr, logger_instance, allocator_with_fit_mode::fit_mode::first_fit);
@@ -84,11 +84,11 @@ TEST(positiveTests, test2)
     first_block = reinterpret_cast<char *>(allocator_instance->allocate(sizeof(char), 999));
     auto actual_blocks_state = dynamic_cast<allocator_test_utils *>(allocator_instance)->get_blocks_info();
     std::vector<allocator_test_utils::block_info> expected_blocks_state
-        {
-            { .block_size = 1000 + sizeof(allocator::block_size_t) + sizeof(allocator::block_pointer_t) * 2, .is_block_occupied = true },
-            { .block_size = 1000 + sizeof(allocator::block_size_t) + sizeof(allocator::block_pointer_t) * 2, .is_block_occupied = true },
-            { .block_size = 3000 - (1000 + sizeof(allocator::block_size_t) + sizeof(allocator::block_pointer_t)) * 2, .is_block_occupied = false }
-        };
+    {
+        { .block_size = 1000 + sizeof(allocator::block_size_t) + sizeof(allocator::block_pointer_t) * 2, .is_block_occupied = true },
+        { .block_size = 1000 + sizeof(allocator::block_size_t) + sizeof(allocator::block_pointer_t) * 2, .is_block_occupied = true },
+        { .block_size = 3000 - (1000 + sizeof(allocator::block_size_t) + sizeof(allocator::block_pointer_t)) * 2, .is_block_occupied = false }
+    };
     
     ASSERT_EQ(actual_blocks_state.size(), expected_blocks_state.size());
     for (int i = 0; i < actual_blocks_state.size(); i++)
@@ -109,7 +109,7 @@ TEST(falsePositiveTests, test1)
         {
             {
                 "allocator_boundary_tags_tests_logs_false_positive_test_2.txt",
-                logger::severity::information
+                logger::severity::debug
             }
         });
     allocator *allocator_instance = new allocator_boundary_tags(3000, nullptr, logger_instance, allocator_with_fit_mode::fit_mode::first_fit);
