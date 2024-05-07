@@ -1,6 +1,11 @@
 #include <not_implemented.h>
 #include "../include/allocator_buddies_system.h"
 
+//ВАЖНО. ПЕРЕПРОВЕРИТЬ ВСЕ.
+//В БЛОКЕ ХРАНИТСЯ СТЕПЕНЬ В 1 БИТЕ
+//В АЛЛОКАТОРЕ ХОРАНИТСЯ ТОЖЕ СТЕПЕНЬ НО В SIZE_T
+
+
 //+
 #pragma region Object methods
 
@@ -99,6 +104,7 @@ allocator_buddies_system::allocator_buddies_system(
     *logger_ptr = logger;
 
     size_t* space_size_ptr = reinterpret_cast<size_t*>(logger_ptr + 1);
+    //!!!!!!!!! хранить степень. в size_t
     *space_size_ptr = space_size;
 
     std::mutex* sync_object_ptr = reinterpret_cast<std::mutex*>(space_size_ptr + 1);
@@ -291,12 +297,12 @@ void* allocator_buddies_system::get_memory_end() const
 #pragma endregion
 
 //+
-#pragma region Metadata first_occupied_block methods
+#pragma region Metadata first_free_block methods
 
-inline void* allocator_buddies_system::get_first_occupied_block_address() const
+inline void* allocator_buddies_system::get_first_free_block_address() const
 {
-    trace_with_guard("Called method inline void* allocator_buddies_system::get_first_occupied_block_address() const");
-    trace_with_guard("Successfully executed method inline void* allocator_buddies_system::get_first_occupied_block_address() const");
+    trace_with_guard("Called method inline void* allocator_buddies_system::get_first_free_block_address() const");
+    trace_with_guard("Successfully executed method inline void* allocator_buddies_system::get_first_free_block_address() const");
     return *reinterpret_cast<void**>(
         reinterpret_cast<unsigned char*>(_trusted_memory)
         + sizeof(allocator*)
@@ -306,10 +312,10 @@ inline void* allocator_buddies_system::get_first_occupied_block_address() const
         + sizeof(allocator_with_fit_mode::fit_mode));
 }
 
-inline void allocator_buddies_system::set_first_occupied_block_address(void* pointer)
+inline void allocator_buddies_system::set_first_free_block_address(void* pointer)
 {
-    trace_with_guard("Called method inline void allocator_buddies_system::set_first_occupied_block_address(void * pointer)");
-    trace_with_guard("Successfully executed method inline void allocator_buddies_system::set_first_occupied_block_address(void * pointer)");
+    trace_with_guard("Called method inline void allocator_buddies_system::set_first_free_block_address(void * pointer)");
+    trace_with_guard("Successfully executed method inline void allocator_buddies_system::set_first_free_block_address(void * pointer)");
     *reinterpret_cast<void**>(
         reinterpret_cast<unsigned char*>(_trusted_memory)
         + sizeof(allocator*)
@@ -380,7 +386,7 @@ inline size_t& allocator_buddies_system::get_block_pow(void* block) const
     size_t size = 0;
     for (int i = 0; i < 7; i++) {
         int value = 1 << i;
-        size += value * get_bit_in_byte(block, value); //по сути двойка в степени умноженная на бит (1 или 0)
+        size += value * get_bit_from_byte(block, value); //по сути двойка в степени умноженная на бит (1 или 0)
     }
     return size;
 }
@@ -391,7 +397,7 @@ inline bool allocator_buddies_system::get_block_flag(void* block) const
     trace_with_guard("Called method inline size_t& allocator_buddies_system::get_block_flag(void * block) const");
     trace_with_guard("Successfully executed method inline size_t& allocator_buddies_system::get_block_flag(void * block) const");
 
-    return get_bit_in_byte(block, 1 << 7);
+    return get_bit_from_byte(block, 1 << 7);
 }
 
 inline void allocator_buddies_system::set_block_flag(void* block, bool flag)
@@ -567,20 +573,21 @@ inline void allocator_buddies_system::set_bit_in_byte(void* block, size_t shift_
         *reinterpret_cast<char*>(block) &= ~shift_mask;
 }
 
-inline bool allocator_buddies_system::get_bit_in_byte(void* block, size_t shift_mask) const
+inline bool allocator_buddies_system::get_bit_from_byte(void* block, size_t shift_mask) const
 {
     return (*reinterpret_cast<char*>(block) & shift_mask)>0;
 }
 
-size_t allocator_buddies_system::print_byte(void* block) const
+std::string allocator_buddies_system::byte_to_string(void* block) const
 {
+    std::string str = "";
     int charBytesCount = 8;
     for (int i = 0; i < 8; i++) {
         int mask = 1 << i;
         int byteCode = *reinterpret_cast<char*>(block) & mask;
-        std::cout << (byteCode > 0) ? '1' : '0';
+        str+=(byteCode > 0) ? '1' : '0';
     }
-    return 1;
+    return str;
 }
 
 #pragma endregion

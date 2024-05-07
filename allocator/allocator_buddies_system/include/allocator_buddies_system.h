@@ -117,9 +117,9 @@ private:
 
 private:
 
-    inline void* get_first_occupied_block_address() const;
+    inline void* get_first_free_block_address() const;
 
-    inline void set_first_occupied_block_address(void* pointer);
+    inline void set_first_free_block_address(void* pointer);
 
 #pragma endregion
 
@@ -176,11 +176,11 @@ private:
 
     inline size_t get_value_from_pow(size_t pow) const;
 
-    inline bool get_bit_in_byte(void* block, size_t shift_mask) const;
+    inline bool get_bit_from_byte(void* block, size_t shift_mask) const;
 
     inline void set_bit_in_byte(void* block, size_t shift_mask, bool byte);
 
-    size_t print_byte(void* block) const;
+    std::string byte_to_string(void* block) const
 
 #pragma endregion
 
