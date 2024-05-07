@@ -18,7 +18,7 @@ void allocator_boundary_tags::deallocate_object_fields()
         else
             ::delete a;
 
-        _trusted_memory = nullptr; //после удаления не забывать
+        _trusted_memory = nullptr; 
     }
 
     if (logger != nullptr) logger->trace("Successfully executed method void allocator_boundary_tags::deallocate_object_fields()");
@@ -51,8 +51,8 @@ allocator_boundary_tags &allocator_boundary_tags::operator=(
 
     if (&other != this)
     {
-        deallocate_object_fields();                   //НЕ ССЫЛАТЬСЯ ТУТ НА КОНСТРУКТОР. Объект уже есть. Это плохо
-        _trusted_memory = other._trusted_memory;      //не забывать тут чистить
+        deallocate_object_fields();                  
+        _trusted_memory = other._trusted_memory;     
         other._trusted_memory = nullptr;
     }
 
@@ -89,7 +89,7 @@ allocator_boundary_tags::allocator_boundary_tags(
     {
         if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
         if (logger != nullptr) logger->debug(std::string("Cancel with error execute method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
-        throw;//просто throw если тот же тип
+        throw;
     }
 
 
@@ -103,7 +103,7 @@ allocator_boundary_tags::allocator_boundary_tags(
     *space_size_ptr = space_size;
 
     std::mutex* sync_object_ptr = reinterpret_cast<std::mutex*>(space_size_ptr + 1);
-    allocator::construct(sync_object_ptr); //аналогично new (sync_object_space) std::mutex();
+    allocator::construct(sync_object_ptr); 
 
     allocator_with_fit_mode::fit_mode* fit_mode_ptr = reinterpret_cast<allocator_with_fit_mode::fit_mode*>(sync_object_ptr + 1);
     *fit_mode_ptr = allocate_fit_mode;
@@ -491,10 +491,20 @@ inline void allocator_boundary_tags::set_first_occupied_block_address(void* poin
 
 #pragma region Metadata occupied_block methods
 
+inline size_t allocator_boundary_tags::get_occupied_block_metadata_size() const
+{
+    return sizeof(size_t) + sizeof(void*) * 3; //размер блока, начало памяти, указатель на след занятый, указатель на предыдущий занятый
+}
+
+inline size_t allocator_boundary_tags::get_occupied_block_minimum_size() const
+{
+    trace_with_guard("Called method size_t allocator_boundary_tags::get_occupied_block_minimum_size() const");
+    trace_with_guard("Successfully executed method size_t allocator_boundary_tags::get_occupied_block_minimum_size() const");
+    return get_occupied_block_metadata_size() + 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
+}
 
 inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const
 {
-
     trace_with_guard("Called method inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const");
     trace_with_guard("Successfully executed method inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const");
     return *reinterpret_cast<void**>(
@@ -510,19 +520,6 @@ inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occ
         reinterpret_cast<unsigned char*>(occupied_block)
         + sizeof(size_t)) = _trusted_memory;
 }
-
-size_t allocator_boundary_tags::get_occupied_block_metadata_size() const
-{
-    return sizeof(size_t) + sizeof(void*) * 3; //размер блока, начало памяти, указатель на след занятый, указатель на предыдущий занятый
-}
-
-size_t allocator_boundary_tags::get_occupied_block_minimum_size() const
-{
-    trace_with_guard("Called method size_t allocator_boundary_tags::get_occupied_block_minimum_size() const");
-    trace_with_guard("Successfully executed method size_t allocator_boundary_tags::get_occupied_block_minimum_size() const");
-    return get_occupied_block_metadata_size() + 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
-}
-
 
 inline size_t& allocator_boundary_tags::get_occupied_block_size(void* occupied_block) const
 {

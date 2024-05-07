@@ -110,7 +110,7 @@ private:
 #pragma endregion
 
 
-#pragma region Metadata first_free_block methods
+#pragma region Metadata occupied_free_block methods
 
 private:
 
@@ -121,19 +121,19 @@ private:
 #pragma endregion
 
 
-#pragma region Metadata free_block methods
+#pragma region Metadata occupied_block methods
 
 private:
-    
+
+    inline size_t get_occupied_block_minimum_size() const;
+
+    inline size_t& get_occupied_block_size(void* occupied_block)  const;
+
     inline void* get_occupied_block_trusted_memory(void* occupied_block) const;
 
     inline void set_occupied_block_trusted_memory(void* free);
 
     inline size_t get_occupied_block_metadata_size() const;
-
-    size_t get_occupied_block_minimum_size() const;
-
-    inline size_t& get_occupied_block_size(void* occupied_block)  const;
 
     inline void set_occupied_block_size(void* occupied_block, size_t size);
 

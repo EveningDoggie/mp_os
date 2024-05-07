@@ -122,13 +122,13 @@ private:
 
 private:
 
+    inline size_t get_free_block_metadata_size() const;
+
+    inline size_t get_free_block_minimum_size() const;
+
     inline void* get_free_block_trusted_memory(void* free_block) const;
 
     inline void set_free_block_trusted_memory(void* free_block);
-
-    inline size_t get_free_block_metadata_size() const;
-
-    size_t get_free_block_minimum_size() const;
 
     inline size_t& get_free_block_size(void* free_block)  const;
 

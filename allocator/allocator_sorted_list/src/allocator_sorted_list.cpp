@@ -475,6 +475,18 @@ inline void allocator_sorted_list::set_first_free_block_address(void* pointer)
 
 #pragma region Metadata free_block methods
 
+inline size_t allocator_sorted_list::get_free_block_metadata_size() const
+{
+    return sizeof(size_t) + sizeof(void*) * 2; //размер блока, начало памяти, указатель на след свободный
+}
+
+inline size_t allocator_sorted_list::get_free_block_minimum_size() const
+{
+    trace_with_guard("Called method size_t allocator_sorted_list::get_free_block_minimum_size() const");
+    trace_with_guard("Successfully executed method size_t allocator_sorted_list::get_free_block_minimum_size() const");
+    return get_free_block_metadata_size() + 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
+}
+
 inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const
 {
 
@@ -493,19 +505,6 @@ inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_bloc
         reinterpret_cast<unsigned char*>(free_block)
         + sizeof(size_t)) = _trusted_memory;
 }
-
-size_t allocator_sorted_list::get_free_block_metadata_size() const
-{
-    return sizeof(size_t) + sizeof(void*) * 2; //размер блока, начало памяти, указатель на след свободный
-}
-
-size_t allocator_sorted_list::get_free_block_minimum_size() const
-{
-    trace_with_guard("Called method size_t allocator_sorted_list::get_free_block_minimum_size() const");
-    trace_with_guard("Successfully executed method size_t allocator_sorted_list::get_free_block_minimum_size() const");
-    return get_free_block_metadata_size()+ 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
-}
-
 
 inline size_t& allocator_sorted_list::get_free_block_size(void * free_block) const
 {

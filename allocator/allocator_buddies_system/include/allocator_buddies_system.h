@@ -6,6 +6,7 @@
 #include <allocator_with_fit_mode.h>
 #include <logger_guardant.h>
 #include <typename_holder.h>
+#include <mutex>
 
 class allocator_buddies_system final:
     private allocator_guardant,
@@ -22,6 +23,7 @@ private:
     void *_trusted_memory;
 
 #pragma endregion
+
 
 #pragma region Object methods
 
@@ -65,13 +67,25 @@ public:
     void deallocate(
         void *at) override;
 
+private:
+
+    void* get_buddy(void* block) const;
+
 #pragma endregion
 
 
 #pragma region Metadata allocator methods
 
 public:
-    
+
+    inline size_t get_space_size() const;
+
+    inline size_t& get_space_pow() const;
+
+    inline size_t& get_avalaible_size() const;
+
+    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
+
     inline void set_fit_mode(
         allocator_with_fit_mode::fit_mode mode) override;
 
@@ -83,6 +97,19 @@ private:
 
     inline allocator *get_allocator() const override;
 
+    inline void set_allocator(allocator* a);
+
+    void increase_avalaible_size(int value) const;
+
+    inline std::mutex& get_sync_object() const;
+
+    inline size_t get_allocator_metadata_size() const;
+
+    void* get_memory_start() const;
+
+    void* get_memory_end() const;
+
+
 #pragma endregion
 
 
@@ -90,12 +117,42 @@ private:
 
 private:
 
+    inline void* get_first_occupied_block_address() const;
+
+    inline void set_first_occupied_block_address(void* pointer);
+
 #pragma endregion
 
 
 #pragma region Metadata free_block methods
 
 private:
+
+    inline size_t get_free_block_metadata_size() const;
+
+    inline size_t get_occupied_block_metadata_size() const;
+
+    inline void* get_block_trusted_memory(void* block) const;
+
+    inline void set_block_trusted_memory(void* block);
+
+    inline size_t get_block_size(void* block)  const;
+
+    inline void set_block_pow(void* block, size_t size);
+
+    inline size_t& get_block_pow(void* block) const;
+
+    inline bool get_block_flag(void* block)  const;
+
+    inline void set_block_flag(void* block, bool flag);
+
+    inline void* get_block_next_block_ptr(void* block) const;
+
+    inline void set_block_next_block_ptr(void* block, void* ptr);
+
+    inline void* get_block_previous_block_ptr(void* occupied_block) const;
+
+    inline void set_block_previous_block_ptr(void* occupied_block, void* ptr);
 
 #pragma endregion
 
@@ -107,6 +164,23 @@ public:
     std::vector<allocator_test_utils::block_info> get_blocks_info() const noexcept override;
 
 private:
+
+    void log_blocks_info() const;
+
+#pragma endregion
+
+
+#pragma region Helpers
+
+    inline size_t get_pow_from_value(size_t value) const;
+
+    inline size_t get_value_from_pow(size_t pow) const;
+
+    inline bool get_bit_in_byte(void* block, size_t shift_mask) const;
+
+    inline void set_bit_in_byte(void* block, size_t shift_mask, bool byte);
+
+    size_t print_byte(void* block) const;
 
 #pragma endregion
 
