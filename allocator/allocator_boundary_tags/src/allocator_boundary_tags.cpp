@@ -1,8 +1,8 @@
 #include <not_implemented.h>
-
 #include "../include/allocator_boundary_tags.h"
 
-#pragma region Main methods
+
+#pragma region Object methods
 
 void allocator_boundary_tags::deallocate_object_fields()
 {
@@ -59,6 +59,12 @@ allocator_boundary_tags &allocator_boundary_tags::operator=(
     debug_with_guard("Successfully executed method allocator_boundary_tags& allocator_boundary_tags::operator=(allocator_boundary_tags && other) noexcept");
     return *this;
 }
+
+#pragma endregion
+
+
+#pragma region Memory methods
+
 
 allocator_boundary_tags::allocator_boundary_tags(
     size_t space_size,
@@ -235,7 +241,7 @@ allocator_boundary_tags::allocator_boundary_tags(
     debug_with_guard("Successfully executed method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count)");
     log_blocks_info();
     log_current_block_reference_info(current);
-    information_with_guard("occupied avalaible size: " + std::to_string(get_avalaible_size()));
+    information_with_guard("Avalaible size: " + std::to_string(get_avalaible_size()));
 
     return reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current) + get_occupied_block_metadata_size());
 
@@ -276,8 +282,10 @@ void allocator_boundary_tags::deallocate(
         throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
     }
 
-    //если возвращаем не тот диапазон памяти
-    if (at < get_memory_start() || at>get_memory_end())
+    size_t metadata_size = get_occupied_block_metadata_size();
+    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - metadata_size);
+
+    if (at < get_memory_start() || at>get_memory_end() || get_occupied_block_trusted_memory(target_block) != _trusted_memory)
     {
         error_with_guard(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
         debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - the pointer referenced an invalid memory locationr");
@@ -285,8 +293,6 @@ void allocator_boundary_tags::deallocate(
     }
 
 
-    size_t metadata_size = get_occupied_block_metadata_size();
-    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - metadata_size);
     increase_avalaible_size(get_occupied_block_size(target_block) + metadata_size);
 
     void* previous_block = get_occupied_block_previous_block_ptr(target_block);
@@ -314,6 +320,60 @@ void allocator_boundary_tags::deallocate(
 
 
 #pragma region Metadata allocator methods
+
+
+inline size_t& allocator_boundary_tags::get_space_size() const
+{
+    trace_with_guard("Called method inline size_t& allocator_boundary_tags::get_space_size() const");
+    trace_with_guard("Successfully executed method inline size_t& allocator_boundary_tags::get_space_size() const");
+
+    return *reinterpret_cast<size_t*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*));
+}
+
+inline size_t& allocator_boundary_tags::get_avalaible_size() const
+{
+    trace_with_guard("Called method inline size_t& allocator_boundary_tags::get_avalaible_size() const");
+    trace_with_guard("Successfully executed method inline size_t& allocator_boundary_tags::get_avalaible_size() const");
+
+    return *reinterpret_cast<size_t*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)
+        + sizeof(allocator_with_fit_mode::fit_mode)
+        + sizeof(size_t));
+}
+
+inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const
+{
+    trace_with_guard("Called method inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const");
+    trace_with_guard("Successfully executed method inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const");
+    return *reinterpret_cast<fit_mode*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex));
+}
+
+inline void allocator_boundary_tags::set_fit_mode(
+    allocator_with_fit_mode::fit_mode mode)
+{
+
+    debug_with_guard("Called method inline void allocator_boundary_tags::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
+    *reinterpret_cast<fit_mode*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)) = mode;
+    debug_with_guard("Successfully executed method inline void allocator_boundary_tags::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
+
+}
 
 inline std::string allocator_boundary_tags::get_typename() const noexcept
 {
@@ -345,31 +405,6 @@ inline void allocator_boundary_tags::set_allocator(allocator* a)
     debug_with_guard("Successfully executed method inline void allocator_boundary_tags::set_allocator(allocator * a) const");
 }
 
-inline size_t& allocator_boundary_tags::get_space_size() const
-{
-    trace_with_guard("Called method inline size_t& allocator_boundary_tags::get_space_size() const");
-    trace_with_guard("Successfully executed method inline size_t& allocator_boundary_tags::get_space_size() const");
-
-    return *reinterpret_cast<size_t*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*));
-}
-
-inline size_t& allocator_boundary_tags::get_avalaible_size() const
-{
-    trace_with_guard("Called method inline size_t& allocator_boundary_tags::get_avalaible_size() const");
-    trace_with_guard("Successfully executed method inline size_t& allocator_boundary_tags::get_avalaible_size() const");
-
-    return *reinterpret_cast<size_t*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*)
-        + sizeof(size_t)
-        + sizeof(std::mutex)
-        + sizeof(allocator_with_fit_mode::fit_mode)
-        + sizeof(size_t));
-}
 
 
 inline void allocator_boundary_tags::increase_avalaible_size(int value) const
@@ -399,33 +434,6 @@ inline std::mutex& allocator_boundary_tags::get_sync_object() const
         + sizeof(size_t));
 }
 
-inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const
-{
-    trace_with_guard("Called method inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const");
-    trace_with_guard("Successfully executed method inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const");
-    return *reinterpret_cast<fit_mode*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*)
-        + sizeof(size_t)
-        + sizeof(std::mutex));
-}
-
-inline void allocator_boundary_tags::set_fit_mode(
-    allocator_with_fit_mode::fit_mode mode)
-{
-
-    debug_with_guard("Called method inline void allocator_boundary_tags::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
-    *reinterpret_cast<fit_mode*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*)
-        + sizeof(size_t)
-        + sizeof(std::mutex)) = mode;
-    debug_with_guard("Successfully executed method inline void allocator_boundary_tags::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
-
-}
-
 size_t allocator_boundary_tags::get_allocator_metadata_size() const
 {
     //аллокатор, логгер, размер кучи, мьютекс, фитмод, указатель на 1 элемент, размер свободной памяти
@@ -434,16 +442,16 @@ size_t allocator_boundary_tags::get_allocator_metadata_size() const
     return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(void*) + sizeof(size_t);
 }
 
-void* allocator_boundary_tags::get_memory_end() const
-{
-    return reinterpret_cast<unsigned char*>(get_memory_start()) + get_space_size();
-}
-
 void* allocator_boundary_tags::get_memory_start() const
 {
     return reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
 }
 
+
+void* allocator_boundary_tags::get_memory_end() const
+{
+    return reinterpret_cast<unsigned char*>(get_memory_start()) + get_space_size();
+}
 
 
 #pragma endregion
@@ -482,6 +490,26 @@ inline void allocator_boundary_tags::set_first_occupied_block_address(void* poin
 
 
 #pragma region Metadata occupied_block methods
+
+
+inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const
+{
+
+    trace_with_guard("Called method inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const");
+    trace_with_guard("Successfully executed method inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const");
+    return *reinterpret_cast<void**>(
+        reinterpret_cast<unsigned char*>(occupied_block)
+        + sizeof(size_t));
+}
+
+inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occupied_block)
+{
+    trace_with_guard("Called method inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occupied_block) const");
+    trace_with_guard("Successfully executed method inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occupied_block) const");
+    *reinterpret_cast<void**>(
+        reinterpret_cast<unsigned char*>(occupied_block)
+        + sizeof(size_t)) = _trusted_memory;
+}
 
 size_t allocator_boundary_tags::get_occupied_block_metadata_size() const
 {
@@ -552,28 +580,10 @@ inline void allocator_boundary_tags::set_occupied_block_previous_block_ptr(void*
         + sizeof(void*)) = ptr;
 }
 
-inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const
-{
-
-    trace_with_guard("Called method inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const");
-    trace_with_guard("Successfully executed method inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const");
-    return *reinterpret_cast<void**>(
-        reinterpret_cast<unsigned char*>(occupied_block)
-        + sizeof(size_t));
-}
-
-inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occupied_block) 
-{
-    trace_with_guard("Called method inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occupied_block) const");
-    trace_with_guard("Successfully executed method inline void allocator_boundary_tags::set_occupied_block_trusted_memory(void* occupied_block) const");
-    *reinterpret_cast<void**>(
-        reinterpret_cast<unsigned char*>(occupied_block)
-        + sizeof(size_t)) = _trusted_memory;
-}
 #pragma endregion
 
 
-#pragma region Log
+#pragma region Log methods
 
 std::vector<allocator_test_utils::block_info> allocator_boundary_tags::get_blocks_info() const noexcept
 {
@@ -678,4 +688,3 @@ void allocator_boundary_tags::log_current_block_reference_info(void* current) co
 }
 
 #pragma endregion
-

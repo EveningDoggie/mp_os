@@ -1,11 +1,8 @@
 ﻿#include <not_implemented.h>
-#include <mutex>
 #include "../include/allocator_sorted_list.h"
 #include <functional>
-//в других проектах тоже везде втыкнуть логгер. там где нельзя - нижнего типа
-//также удалять перед присваиванием и перемещением если надо
 
-#pragma region Main methods
+#pragma region Object methods
 
 void allocator_sorted_list::deallocate_object_fields()
 {
@@ -64,6 +61,11 @@ allocator_sorted_list &allocator_sorted_list::operator=(
     debug_with_guard("Successfully executed method allocator_sorted_list& allocator_sorted_list::operator=(allocator_sorted_list && other) noexcept");
     return *this;   
 }
+
+#pragma endregion
+
+
+#pragma region Memory methods
 
 allocator_sorted_list::allocator_sorted_list(
     size_t space_size,
@@ -230,7 +232,7 @@ allocator_sorted_list::allocator_sorted_list(
 
     debug_with_guard("Successfully executed method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count)");
     log_blocks_info();
-    information_with_guard("Free avalaible size: " + std::to_string(get_avalaible_size()));
+    information_with_guard("Avalaible size: " + std::to_string(get_avalaible_size()));
     
     return reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current_target) + get_free_block_metadata_size()); 
 }
@@ -249,16 +251,18 @@ void allocator_sorted_list::deallocate(
         throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
     }
 
+    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - get_free_block_metadata_size());
+    increase_avalaible_size(get_free_block_size(target_block));
+
     //если возвращаем не тот диапазон памяти
-    if (at < get_memory_start() || at>get_memory_end())
+    if (at < get_memory_start() || at>get_memory_end() || get_free_block_trusted_memory(target_block)!=_trusted_memory)
     {
         error_with_guard(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
         debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - the pointer referenced an invalid memory locationr");
         throw std::logic_error(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
     }
 
-    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - get_free_block_metadata_size());
-    increase_avalaible_size(get_free_block_size(target_block));
+
 
     void* next_block = get_first_free_block_address();
     void* previous_block = nullptr;
@@ -302,7 +306,62 @@ void allocator_sorted_list::deallocate(
 
 #pragma endregion
 
+
 #pragma region Metadata allocator methods
+
+
+inline size_t& allocator_sorted_list::get_space_size() const
+{
+    trace_with_guard("Called method inline size_t& allocator_sorted_list::get_space_size() const");
+    trace_with_guard("Successfully executed method inline size_t& allocator_sorted_list::get_space_size() const");
+
+    return *reinterpret_cast<size_t*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*));
+}
+
+inline size_t& allocator_sorted_list::get_avalaible_size() const
+{
+    trace_with_guard("Called method inline size_t& allocator_sorted_list::get_avalaible_size() const");
+    trace_with_guard("Successfully executed method inline size_t& allocator_sorted_list::get_avalaible_size() const");
+
+    return *reinterpret_cast<size_t*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)
+        + sizeof(allocator_with_fit_mode::fit_mode)
+        + sizeof(size_t));
+}
+
+inline allocator_with_fit_mode::fit_mode allocator_sorted_list::get_fit_mode() const
+{
+    trace_with_guard("Called method inline allocator_with_fit_mode::fit_mode allocator_sorted_list::get_fit_mode() const");
+    trace_with_guard("Successfully executed method inline allocator_with_fit_mode::fit_mode allocator_sorted_list::get_fit_mode() const");
+    return *reinterpret_cast<fit_mode*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex));
+}
+
+inline void allocator_sorted_list::set_fit_mode(
+    allocator_with_fit_mode::fit_mode mode)
+{
+
+    debug_with_guard("Called method inline void allocator_sorted_list::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
+    *reinterpret_cast<fit_mode*>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)) = mode;
+    debug_with_guard("Successfully executed method inline void allocator_sorted_list::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
+
+}
 
 inline std::string allocator_sorted_list::get_typename() const noexcept
 {
@@ -334,33 +393,6 @@ inline void allocator_sorted_list::set_allocator(allocator* a)
     debug_with_guard("Successfully executed method inline void allocator_sorted_list::set_allocator(allocator * a) const");
 }
 
-inline size_t& allocator_sorted_list::get_space_size() const
-{
-    trace_with_guard("Called method inline size_t& allocator_sorted_list::get_space_size() const");
-    trace_with_guard("Successfully executed method inline size_t& allocator_sorted_list::get_space_size() const");
-
-    return *reinterpret_cast<size_t*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*));
-}
-
-inline size_t& allocator_sorted_list::get_avalaible_size() const
-{
-    trace_with_guard("Called method inline size_t& allocator_sorted_list::get_avalaible_size() const");
-    trace_with_guard("Successfully executed method inline size_t& allocator_sorted_list::get_avalaible_size() const");
-    
-    return *reinterpret_cast<size_t*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*)
-        + sizeof(size_t)
-        + sizeof(std::mutex)
-        + sizeof(allocator_with_fit_mode::fit_mode)
-        + sizeof(size_t));
-}
-
-
 inline void allocator_sorted_list::increase_avalaible_size(int value) const
 {
     trace_with_guard("Called method inline void allocator_sorted_list::increase_avalaible_size(int value) const");
@@ -377,7 +409,6 @@ inline void allocator_sorted_list::increase_avalaible_size(int value) const
    
 }
 
-
 inline std::mutex& allocator_sorted_list::get_sync_object() const
 {
     trace_with_guard("Called method inline std::mutex& allocator_sorted_list::get_sync_object() const");
@@ -389,33 +420,6 @@ inline std::mutex& allocator_sorted_list::get_sync_object() const
         + sizeof(size_t));
 }
 
-inline allocator_with_fit_mode::fit_mode allocator_sorted_list::get_fit_mode() const
-{
-    trace_with_guard("Called method inline allocator_with_fit_mode::fit_mode allocator_sorted_list::get_fit_mode() const");
-    trace_with_guard("Successfully executed method inline allocator_with_fit_mode::fit_mode allocator_sorted_list::get_fit_mode() const");
-    return *reinterpret_cast<fit_mode*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*)
-        + sizeof(size_t)
-        + sizeof(std::mutex));
-}
-
-inline void allocator_sorted_list::set_fit_mode(
-    allocator_with_fit_mode::fit_mode mode)
-{
-
-    debug_with_guard("Called method inline void allocator_sorted_list::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
-    *reinterpret_cast<fit_mode*>(
-        reinterpret_cast<unsigned char*>(_trusted_memory)
-        + sizeof(allocator*)
-        + sizeof(logger*)
-        + sizeof(size_t)
-        + sizeof(std::mutex)) = mode;
-    debug_with_guard("Successfully executed method inline void allocator_sorted_list::set_fit_mode(allocator_with_fit_mode::fit_mode mode)");
-
-}
-
 size_t allocator_sorted_list::get_allocator_metadata_size() const
 {
     //аллокатор, логгер, размер кучи, мьютекс, фитмод, указатель на 1 элемент, свободное пространство
@@ -424,19 +428,19 @@ size_t allocator_sorted_list::get_allocator_metadata_size() const
     return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(void*) + sizeof(size_t);
 }
 
+void* allocator_sorted_list::get_memory_start() const
+{
+    return reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
+}
+
 void* allocator_sorted_list::get_memory_end() const
 {
 
     return reinterpret_cast<unsigned char*>(get_memory_start()) + get_space_size();
 }
 
-void* allocator_sorted_list::get_memory_start() const
-{
-    return reinterpret_cast<unsigned char*>(_trusted_memory) + get_allocator_metadata_size();
-}
-
-
 #pragma endregion
+
 
 #pragma region Metadata first_free_block methods
 
@@ -468,7 +472,27 @@ inline void allocator_sorted_list::set_first_free_block_address(void* pointer)
 
 #pragma endregion
 
+
 #pragma region Metadata free_block methods
+
+inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const
+{
+
+    trace_with_guard("Called method inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const");
+    trace_with_guard("Successfully executed method inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const");
+    return *reinterpret_cast<void**>(
+        reinterpret_cast<unsigned char*>(free_block)
+        + sizeof(size_t));
+}
+
+inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block)
+{
+    trace_with_guard("Called method inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const");
+    trace_with_guard("Successfully executed method inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const");
+    *reinterpret_cast<void**>(
+        reinterpret_cast<unsigned char*>(free_block)
+        + sizeof(size_t)) = _trusted_memory;
+}
 
 size_t allocator_sorted_list::get_free_block_metadata_size() const
 {
@@ -518,27 +542,10 @@ inline void allocator_sorted_list::set_free_block_next_block_ptr(void* free_bloc
 }
 
 
-inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const
-{
-
-    trace_with_guard("Called method inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const");
-    trace_with_guard("Successfully executed method inline void* allocator_sorted_list::get_free_block_trusted_memory(void* free_block) const");
-    return *reinterpret_cast<void**>(
-        reinterpret_cast<unsigned char*>(free_block)
-        + sizeof(size_t));
-}
-
-inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) 
-{
-    trace_with_guard("Called method inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const");
-    trace_with_guard("Successfully executed method inline void allocator_sorted_list::set_free_block_trusted_memory(void* free_block) const");
-    *reinterpret_cast<void**>(
-        reinterpret_cast<unsigned char*>(free_block)
-        + sizeof(size_t)) = _trusted_memory;
-}
 #pragma endregion
 
-#pragma region Log
+
+#pragma region Log methods
 
 std::vector<allocator_test_utils::block_info> allocator_sorted_list::get_blocks_info() const noexcept
 {
@@ -622,4 +629,3 @@ void allocator_sorted_list::log_blocks_info() const
 }
 
 #pragma endregion
-

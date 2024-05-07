@@ -15,25 +15,40 @@ class allocator_buddies_system final:
     private typename_holder
 {
 
+#pragma region Object fields
+
 private:
     
     void *_trusted_memory;
+
+#pragma endregion
+
+#pragma region Object methods
+
+private:
+
+    void deallocate_object_fields();
 
 public:
     
     ~allocator_buddies_system() override;
     
     allocator_buddies_system(
-        allocator_buddies_system const &other);
+        allocator_buddies_system const &other) = delete;
     
     allocator_buddies_system &operator=(
-        allocator_buddies_system const &other);
+        allocator_buddies_system const &other) = delete;
     
     allocator_buddies_system(
         allocator_buddies_system &&other) noexcept;
     
     allocator_buddies_system &operator=(
         allocator_buddies_system &&other) noexcept;
+
+#pragma endregion
+
+
+#pragma region Memory methods
 
 public:
     
@@ -42,8 +57,6 @@ public:
         allocator *parent_allocator = nullptr,
         logger *logger = nullptr,
         allocator_with_fit_mode::fit_mode allocate_fit_mode = allocator_with_fit_mode::fit_mode::first_fit);
-
-public:
     
     [[nodiscard]] void *allocate(
         size_t value_size,
@@ -52,6 +65,11 @@ public:
     void deallocate(
         void *at) override;
 
+#pragma endregion
+
+
+#pragma region Metadata allocator methods
+
 public:
     
     inline void set_fit_mode(
@@ -59,20 +77,39 @@ public:
 
 private:
     
+    inline std::string get_typename() const noexcept override;
+
+    inline logger* get_logger() const override;
+
     inline allocator *get_allocator() const override;
+
+#pragma endregion
+
+
+#pragma region Metadata first_free_block methods
+
+private:
+
+#pragma endregion
+
+
+#pragma region Metadata free_block methods
+
+private:
+
+#pragma endregion
+
+
+#pragma region Log methods
 
 public:
     
     std::vector<allocator_test_utils::block_info> get_blocks_info() const noexcept override;
 
 private:
-    
-    inline logger *get_logger() const override;
 
-private:
-    
-    inline std::string get_typename() const noexcept override;
-    
+#pragma endregion
+
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_ALLOCATOR_ALLOCATOR_BUDDIES_SYSTEM_H

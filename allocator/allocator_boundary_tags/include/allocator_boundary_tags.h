@@ -16,9 +16,20 @@ class allocator_boundary_tags final:
     private typename_holder
 {
 
+#pragma region Object fields
+
 private:
     
     void *_trusted_memory;
+
+#pragma endregion
+
+
+#pragma region Object methods
+
+private:
+
+    void deallocate_object_fields();
 
 public:
     
@@ -36,9 +47,10 @@ public:
     allocator_boundary_tags &operator=(
         allocator_boundary_tags &&other) noexcept;
 
-private:
+#pragma endregion
 
-    void deallocate_object_fields();
+
+#pragma region Memory methods
 
 public:
     
@@ -47,8 +59,6 @@ public:
         allocator *parent_allocator = nullptr,
         logger *logger = nullptr,
         allocator_with_fit_mode::fit_mode allocate_fit_mode = allocator_with_fit_mode::fit_mode::first_fit);
-
-public:
     
     [[nodiscard]] void *allocate(
         size_t value_size,
@@ -61,18 +71,21 @@ private:
 
     void * add_finded_block_to_occupied_list(void* previous_block, void* next_block, size_t size_optimal);
 
+#pragma endregion
+
+
+#pragma region Metadata allocator methods
+
 public:
-
-    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
-
-    inline void set_fit_mode(
-        allocator_with_fit_mode::fit_mode mode) override;
 
     inline size_t& get_space_size() const;
 
     inline size_t& get_avalaible_size() const;
 
-    void increase_avalaible_size(int value) const; 
+    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
+
+    inline void set_fit_mode(
+        allocator_with_fit_mode::fit_mode mode) override;
 
 private:
 
@@ -84,6 +97,8 @@ private:
 
     inline void set_allocator(allocator* a);
 
+    void increase_avalaible_size(int value) const;
+
     inline std::mutex& get_sync_object() const;
 
     inline size_t get_allocator_metadata_size() const;
@@ -92,14 +107,27 @@ private:
 
     void* get_memory_end() const;
 
+#pragma endregion
+
+
+#pragma region Metadata first_free_block methods
+
 private:
 
     inline void* get_first_occupied_block_address() const;
 
     inline void set_first_occupied_block_address(void* pointer);
 
+#pragma endregion
+
+
+#pragma region Metadata free_block methods
 
 private:
+    
+    inline void* get_occupied_block_trusted_memory(void* occupied_block) const;
+
+    inline void set_occupied_block_trusted_memory(void* free);
 
     inline size_t get_occupied_block_metadata_size() const;
 
@@ -117,10 +145,10 @@ private:
 
     inline void set_occupied_block_previous_block_ptr(void* occupied_block, void* ptr);
 
-    inline void* get_occupied_block_trusted_memory(void* occupied_block) const;
+#pragma endregion
 
-    inline void set_occupied_block_trusted_memory(void* fre);
 
+#pragma region Log methods
 
 public:
 
@@ -130,9 +158,10 @@ private:
 
     void log_blocks_info() const;
 
-    void log_avalaible_size_info() const;
-
     void log_current_block_reference_info(void* current) const;
+
+#pragma endregion
+
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_ALLOCATOR_ALLOCATOR_BOUNDARY_TAGS_H

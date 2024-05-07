@@ -6,6 +6,7 @@
 #include <allocator_with_fit_mode.h>
 #include <logger_guardant.h>
 #include <typename_holder.h>
+#include <mutex>
 
 class allocator_sorted_list final:
     private allocator_guardant,
@@ -15,13 +16,22 @@ class allocator_sorted_list final:
     private typename_holder
 {
 
+#pragma region Object fields
+
 private:
     
     void *_trusted_memory;
 
-public:
-    
+#pragma endregion
+
+
+#pragma region Object methods
+
+private:
+
     void deallocate_object_fields();
+
+public:
 
     ~allocator_sorted_list() override;
     
@@ -38,6 +48,11 @@ public:
         allocator_sorted_list &&other) noexcept;
 
 
+#pragma endregion
+
+
+#pragma region Memory methods
+
 public:
     
     explicit allocator_sorted_list(
@@ -53,20 +68,21 @@ public:
     void deallocate(
         void *at) override;
 
+#pragma endregion
 
-public:
 
-    inline void set_fit_mode(
-        allocator_with_fit_mode::fit_mode mode) override;    
+#pragma region Metadata allocator methods
+public: 
     
-    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
-
     inline size_t& get_space_size() const;
 
     inline size_t& get_avalaible_size() const;
 
-    void increase_avalaible_size(int value) const;
-    
+    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
+
+    inline void set_fit_mode(
+        allocator_with_fit_mode::fit_mode mode) override;
+
 private:
 
     inline std::string get_typename() const noexcept override;
@@ -77,6 +93,8 @@ private:
 
     inline void set_allocator(allocator* a);
 
+    void increase_avalaible_size(int value) const;
+
     inline std::mutex& get_sync_object() const;
 
     inline size_t get_allocator_metadata_size() const;
@@ -86,13 +104,27 @@ private:
     void* allocator_sorted_list::get_memory_end() const;
 
 
+#pragma endregion
+
+
+#pragma region Metadata first_free_block methods
+
 private:
 
     inline void* get_first_free_block_address() const;
 
     inline void set_first_free_block_address(void* pointer);
 
+#pragma endregion
+
+
+#pragma region Metadata free_block methods
+
 private:
+
+    inline void* get_free_block_trusted_memory(void* free_block) const;
+
+    inline void set_free_block_trusted_memory(void* free_block);
 
     inline size_t get_free_block_metadata_size() const;
 
@@ -106,10 +138,11 @@ private:
 
     inline void set_free_block_next_block_ptr(void* free_block, void* ptr);
 
-    inline void* get_free_block_trusted_memory(void* free_block) const;
 
-    inline void set_free_block_trusted_memory(void* free_block);
+#pragma endregion
 
+
+#pragma region Log methods
 
 public:
 
@@ -119,7 +152,7 @@ private:
 
     void log_blocks_info() const;
 
-    void log_avalaible_size_info() const;
+#pragma endregion
 
 };
 
