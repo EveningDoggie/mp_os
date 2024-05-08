@@ -489,7 +489,7 @@ inline void allocator_boundary_tags::set_first_occupied_block_address(void* poin
 #pragma endregion
 
 
-#pragma region Metadata occupied_block methods
+#pragma region Metadata block methods
 
 inline size_t allocator_boundary_tags::get_occupied_block_metadata_size() const
 {

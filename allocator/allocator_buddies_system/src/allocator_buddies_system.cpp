@@ -1,12 +1,8 @@
 #include <not_implemented.h>
 #include "../include/allocator_buddies_system.h"
 
-//бюфмн. оепеопнбепхрэ бяе.
-//б акнйе упюмхряъ яреоемэ б 1 ахре
-//б юккнйюрнпе унпюмхряъ рнфе яреоемэ мн б SIZE_T
 
 
-//+
 #pragma region Object methods
 
 void allocator_buddies_system::deallocate_object_fields()
@@ -66,7 +62,7 @@ allocator_buddies_system &allocator_buddies_system::operator=(
 
 #pragma endregion
 
-//-
+
 #pragma region Memory methods
 
 allocator_buddies_system::allocator_buddies_system(
@@ -347,7 +343,7 @@ void* allocator_buddies_system::get_buddy(void* block) const
 
 #pragma endregion
 
-//+
+
 #pragma region Metadata allocator methods
 
 inline size_t& allocator_buddies_system::get_space_in_pow() const
@@ -484,7 +480,7 @@ void* allocator_buddies_system::get_memory_end() const
 
 #pragma endregion
 
-//+
+
 #pragma region Metadata first_free_block methods
 
 inline void* allocator_buddies_system::get_first_free_block_address() const
@@ -515,7 +511,7 @@ inline void allocator_buddies_system::set_first_free_block_address(void* pointer
 
 #pragma endregion
 
-//+
+
 #pragma region Metadata occupied_block methods
 
 inline size_t allocator_buddies_system::get_free_block_metadata_size() const
@@ -647,7 +643,7 @@ inline void allocator_buddies_system::set_block_previous_block_ptr(void* block, 
 
 #pragma endregion
 
-//-
+
 #pragma region Log
 
 std::vector<allocator_test_utils::block_info> allocator_buddies_system::get_blocks_info() const noexcept
@@ -730,7 +726,7 @@ void allocator_buddies_system::log_blocks_info() const
 
 #pragma endregion
 
-//+
+
 #pragma region Helpers
 
 inline size_t allocator_buddies_system::get_pow_from_value(size_t value) const

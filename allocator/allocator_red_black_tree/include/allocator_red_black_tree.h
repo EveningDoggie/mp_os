@@ -6,6 +6,7 @@
 #include <allocator_with_fit_mode.h>
 #include <logger_guardant.h>
 #include <typename_holder.h>
+#include <mutex>
 
 class allocator_red_black_tree final:
     private allocator_guardant,
@@ -15,9 +16,20 @@ class allocator_red_black_tree final:
     private typename_holder
 {
 
+#pragma region Object fields
+
 private:
     
     void *_trusted_memory;
+
+#pragma endregion
+
+
+#pragma region Object methods
+
+private:
+
+    void deallocate_object_fields();
 
 public:
     
@@ -34,6 +46,11 @@ public:
     
     allocator_red_black_tree &operator=(
         allocator_red_black_tree &&other) noexcept;
+
+#pragma endregion
+
+
+#pragma region Memory methods
 
 public:
     
@@ -52,27 +69,81 @@ public:
     void deallocate(
         void *at) override;
 
+#pragma endregion
+
+
+#pragma region Metadata allocator methods
+
 public:
-    
+
+    inline size_t& get_space_size() const;
+
+    inline size_t& get_avalaible_size() const;
+
+    inline allocator_with_fit_mode::fit_mode get_fit_mode() const;
+
     inline void set_fit_mode(
         allocator_with_fit_mode::fit_mode mode) override;
 
 private:
     
-    inline allocator *get_allocator() const override;
+    inline std::string get_typename() const noexcept override;
+
+    inline logger* get_logger() const override;
+
+    inline allocator* get_allocator() const override;
+
+    inline void set_allocator(allocator* a);
+
+    void increase_avalaible_size(int value) const;
+
+    inline std::mutex& get_sync_object() const;
+
+    inline size_t get_allocator_metadata_size() const;
+
+    void* get_memory_start() const;
+
+    void* get_memory_end() const;
+
+#pragma endregion
+
+
+#pragma region Metadata first_block methods
+
+private:
+
+    inline void* get_first_occupied_block_address() const;
+
+    inline void set_first_occupied_block_address(void* pointer);
+
+#pragma endregion
+
+
+#pragma region Metadata block methods
+
+private:
+
+
+#pragma endregion
+
+
+#pragma region Log methods
 
 public:
     
     std::vector<allocator_test_utils::block_info> get_blocks_info() const noexcept override;
 
 private:
-    
-    inline logger *get_logger() const override;
 
-private:
-    
-    inline std::string get_typename() const noexcept override;
-    
+        void log_blocks_info() const;
+
+#pragma endregion
+
+
+#pragma region Helpers
+
+#pragma endregion
+        
 };
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_ALLOCATOR_ALLOCATOR_RED_BLACK_TREE_H

@@ -59,7 +59,9 @@ public:
         allocator *parent_allocator = nullptr,
         logger *logger = nullptr,
         allocator_with_fit_mode::fit_mode allocate_fit_mode = allocator_with_fit_mode::fit_mode::first_fit);
-    
+ 
+public:
+
     [[nodiscard]] void *allocate(
         size_t value_size,
         size_t values_count) override;
