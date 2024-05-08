@@ -71,8 +71,6 @@ private:
 
     void* get_buddy(void* block) const;
 
-    void get_buddys_ascending_order(void* any, void*& left_buddy, void*& right_buddy) const;
-
 #pragma endregion
 
 

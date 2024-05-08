@@ -118,9 +118,8 @@ TEST(positiveTests, test3)
     delete allocator_instance;
 }
 
-TEST(falsePositiveTests, test1)
+TEST(falsePositiveTests, test1) 
 {
-    //std::cout << "\nsome value:"<<static_cast<int>(std::floor(std::log2(sizeof(allocator::block_pointer_t) * 2 + 1))) - 1 << "\n";
    // ASSERT_THROW(new allocator_buddies_system(static_cast<int>(std::floor(std::log2(sizeof(allocator::block_pointer_t) * 2 + 1))) - 1), std::logic_error);
 }
 

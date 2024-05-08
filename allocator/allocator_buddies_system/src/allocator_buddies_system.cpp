@@ -233,7 +233,8 @@ allocator_buddies_system::allocator_buddies_system(
         set_first_free_block_address(current_target_next_block);
 
 
-  //  increase_avalaible_size(get_occupied_block_size(target_block) + metadata_size);
+    increase_avalaible_size(-get_block_size(current_target));
+
     debug_with_guard("Successfully executed method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count) with\nRequired data size: " + std::to_string(required_data_size) + "; Required pow size: " + std::to_string(required_pow_size));
     log_blocks_info();
     information_with_guard("Avalaible size: " + std::to_string(get_avalaible_size()));
@@ -255,8 +256,8 @@ void allocator_buddies_system::deallocate(
         throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
     }
 
-    size_t metadata_size = get_occupied_block_metadata_size();
-    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - metadata_size);
+    size_t occupied_metadata_size = get_occupied_block_metadata_size();
+    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - occupied_metadata_size);
 
     if (target_block < get_memory_start() || target_block>get_memory_end() || get_block_trusted_memory(target_block) != _trusted_memory)
     {
@@ -265,45 +266,74 @@ void allocator_buddies_system::deallocate(
         throw std::logic_error(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
     }
 
-  
+    size_t max_pow = get_space_in_pow();
+
+    increase_avalaible_size(get_block_size(target_block));
+   
+    while (get_block_pow(target_block) != max_pow)
+    {
+        //получаем двойника и проверяем необходимые условия
+        void * buddy_block = get_buddy(target_block); 
+        size_t target_block_pow = get_block_pow(target_block);
+
+        if (target_block_pow != get_block_pow(buddy_block)) break;
+        if (get_block_flag(buddy_block)) break;
 
 
-   // increase_avalaible_size(get_occupied_block_size(target_block) + metadata_size);
+        //удаляем правый блок из списка свободных
+        void * buddy_block_next_block = get_block_next_block_ptr(buddy_block);
+        if (buddy_block_next_block != nullptr)
+            set_block_previous_block_ptr(buddy_block_next_block, get_block_previous_block_ptr(buddy_block));
+
+        void* buddy_block_previous_block = get_block_previous_block_ptr(buddy_block);
+        if (buddy_block_previous_block != nullptr)
+            set_block_next_block_ptr(buddy_block_previous_block, get_block_next_block_ptr(buddy_block));
+        else
+            set_first_free_block_address(buddy_block_next_block);
 
 
-  /*
-    void* previous_block = get_occupied_block_previous_block_ptr(target_block);
-    void* next_block = get_occupied_block_next_block_ptr(target_block);
+        //настраиваем левого двойника
+        void* left_buddy = target_block < buddy_block ? target_block : buddy_block;
+        set_block_pow(left_buddy, target_block_pow+1);
 
-    //если прошлый есть то ставим ссылку на текущий в него. иначе в начало. 
-    // автоматом проставляется nullptr если это был последний занятый (хранится в next block). ниже аналогично
+
+        //делаем левую половину ведущей
+        target_block = left_buddy;
+    }
+
+
+
+    //установить флаг свободности и вклинить в список в нужную позицию
+    set_block_flag(target_block, false);
+
+    void* next_block = get_first_free_block_address();
+    void* previous_block = nullptr;
+
+    while (next_block!=nullptr && next_block<target_block)
+    {
+        previous_block = next_block;
+        next_block = get_block_next_block_ptr(next_block);
+    }
+
+
+    if (next_block != nullptr) 
+        set_block_previous_block_ptr(next_block, target_block);
+
     if (previous_block != nullptr)
-        set_occupied_block_next_block_ptr(previous_block, next_block);
+        set_block_next_block_ptr(previous_block, target_block);
     else
-        set_first_occupied_block_address(next_block);
+        set_first_free_block_address(target_block);
 
-    if (next_block != nullptr)
-        set_occupied_block_previous_block_ptr(next_block, previous_block);
-    */
+    set_block_next_block_ptr(target_block, next_block);
+    set_block_previous_block_ptr(target_block, previous_block);
+
+   
+
+    
 
     debug_with_guard("Successfully executed method: void allocator_sorted_list::deallocate(void* at)");
     log_blocks_info();
     information_with_guard("Free avalaible size: " + std::to_string(get_avalaible_size()));
-}
-
-void allocator_buddies_system::get_buddys_ascending_order(void* any, void *& left_buddy, void*& right_buddy) const
-{
-    void* another_buddy = get_buddy(any);
-    if (another_buddy > any)
-    {
-        left_buddy = any;
-        right_buddy = another_buddy;
-    }
-    else
-    {
-        left_buddy = another_buddy;
-        right_buddy = any;
-    }
 }
 
 void* allocator_buddies_system::get_buddy(void* block) const
