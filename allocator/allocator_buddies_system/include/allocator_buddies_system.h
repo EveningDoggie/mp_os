@@ -71,6 +71,8 @@ private:
 
     void* get_buddy(void* block) const;
 
+    void get_buddys_ascending_order(void* any, void*& left_buddy, void*& right_buddy) const;
+
 #pragma endregion
 
 
@@ -80,7 +82,7 @@ public:
 
     inline size_t get_space_size() const;
 
-    inline size_t& get_space_pow() const;
+    inline size_t& get_space_in_pow() const;
 
     inline size_t& get_avalaible_size() const;
 
@@ -144,7 +146,7 @@ private:
 
     inline bool get_block_flag(void* block)  const;
 
-    inline void set_block_flag(void* block, bool flag);
+    inline void set_block_flag(void* block, bool isOccupied);
 
     inline void* get_block_next_block_ptr(void* block) const;
 
@@ -180,7 +182,7 @@ private:
 
     inline void set_bit_in_byte(void* block, size_t shift_mask, bool byte);
 
-    std::string byte_to_string(void* block) const
+    std::string byte_to_string(void* block) const;
 
 #pragma endregion
 

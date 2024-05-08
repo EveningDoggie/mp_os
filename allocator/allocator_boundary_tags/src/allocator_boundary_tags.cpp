@@ -285,7 +285,7 @@ void allocator_boundary_tags::deallocate(
     size_t metadata_size = get_occupied_block_metadata_size();
     void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - metadata_size);
 
-    if (at < get_memory_start() || at>get_memory_end() || get_occupied_block_trusted_memory(target_block) != _trusted_memory)
+    if (target_block < get_memory_start() || target_block>get_memory_end() || get_occupied_block_trusted_memory(target_block) != _trusted_memory)
     {
         error_with_guard(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
         debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - the pointer referenced an invalid memory locationr");
