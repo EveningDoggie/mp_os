@@ -345,7 +345,7 @@ inline size_t& allocator_boundary_tags::get_avalaible_size() const
         + sizeof(size_t)
         + sizeof(std::mutex)
         + sizeof(allocator_with_fit_mode::fit_mode)
-        + sizeof(size_t));
+        +sizeof(void*));
 }
 
 inline allocator_with_fit_mode::fit_mode allocator_boundary_tags::get_fit_mode() const
@@ -419,7 +419,8 @@ inline void allocator_boundary_tags::increase_avalaible_size(int value) const
         + sizeof(size_t)
         + sizeof(std::mutex)
         + sizeof(allocator_with_fit_mode::fit_mode)
-        + sizeof(size_t)) += value;
+        +sizeof(void*)
+        ) += value;
 
 }
 

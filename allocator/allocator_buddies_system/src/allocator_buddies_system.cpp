@@ -377,7 +377,7 @@ inline size_t& allocator_buddies_system::get_avalaible_size() const
         + sizeof(size_t)
         + sizeof(std::mutex)
         + sizeof(allocator_with_fit_mode::fit_mode)
-        + sizeof(size_t));
+        + sizeof(void*));
 }
 
 inline allocator_with_fit_mode::fit_mode allocator_buddies_system::get_fit_mode() const
@@ -445,7 +445,7 @@ inline void allocator_buddies_system::increase_avalaible_size(int value) const
         + sizeof(size_t)
         + sizeof(std::mutex)
         + sizeof(allocator_with_fit_mode::fit_mode)
-        + sizeof(size_t)) += value;
+        + sizeof(void*)) += value;
 }
 
 inline std::mutex& allocator_buddies_system::get_sync_object() const
@@ -512,7 +512,7 @@ inline void allocator_buddies_system::set_first_free_block_address(void* pointer
 #pragma endregion
 
 
-#pragma region Metadata occupied_block methods
+#pragma region Metadata block methods
 
 inline size_t allocator_buddies_system::get_free_block_metadata_size() const
 {
