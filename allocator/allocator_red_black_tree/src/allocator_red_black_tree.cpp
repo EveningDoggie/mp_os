@@ -2,7 +2,7 @@
 
 #include "../include/allocator_red_black_tree.h"
 
-//+
+
 #pragma region Object methods
 
 void allocator_red_black_tree::deallocate_object_fields()
@@ -63,11 +63,8 @@ allocator_red_black_tree &allocator_red_black_tree::operator=(
 
 #pragma endregion
 
-//-
+
 #pragma region Memory methods
-
-
-
 
 allocator_red_black_tree::allocator_red_black_tree(
     size_t space_size,
@@ -81,7 +78,7 @@ allocator_red_black_tree::allocator_red_black_tree(
 
     try
     {
-        if (logger != nullptr) logger->warning("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): allocator's metadata and occupied block metadata added");
+        if (logger != nullptr) logger->warning("The amount of allocated memory has been overridden in method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): allocator's metadata and occupied block metadata added");
         _trusted_memory =
             parent_allocator != nullptr ?
             parent_allocator->allocate(space_size_with_metadata, 1) :
@@ -89,8 +86,8 @@ allocator_red_black_tree::allocator_red_black_tree(
     }
     catch (std::bad_alloc const& ex)
     {
-        if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
-        if (logger != nullptr) logger->debug(std::string("Cancel with error execute method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
+        if (logger != nullptr) logger->error(std::string("Failed to perfom method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
+        if (logger != nullptr) logger->debug(std::string("Cancel with error execute method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with exception of type std::badalloc with an error: std::bad_alloc: ") + ex.what());
         throw;
     }
 
@@ -113,7 +110,10 @@ allocator_red_black_tree::allocator_red_black_tree(
     size_t* avalaible_size = reinterpret_cast<size_t*>(fit_mode_ptr + 1);
     *avalaible_size = space_size - get_occupied_block_metadata_size();
 
-    void** root = reinterpret_cast<void**>(avalaible_size + 1);
+    void** nullptr_parent = reinterpret_cast<void**>(avalaible_size + 1);
+    *nullptr_parent = nullptr;
+
+    void** root = reinterpret_cast<void**>(nullptr_parent + 1);
     *root = reinterpret_cast<void**>(root + 1);
 
     void* block = *root;
@@ -138,23 +138,155 @@ allocator_red_black_tree::allocator_red_black_tree(
     size_t values_count)
 {
     //тогда в сам блок непосредственно сохраняю размер = (общий размер всего блока - метаданные занятого). 
-//не важно что там лежат мета пустого. они порежутся при выделении
+    //не важно что там лежат мета пустого. они порежутся при выделении
     //не по костыльному с классом было бы node.parent = y;
 
 
+    std::lock_guard<std::mutex> lock(get_sync_object());
+    debug_with_guard("Called method [[nodiscard]] void* allocator_red_black_tree::allocate(size_t value_size, size_t values_count) with request: memory:" + std::to_string(value_size * values_count) + ", metadata:" + std::to_string(get_free_block_metadata_size()));
 
-    throw not_implemented("[[nodiscard]] void *allocator_red_black_tree::allocate(size_t, size_t)", "your code should be here...");
+    size_t required_data_size = value_size * values_count;
+    warning_with_guard("The amount of allocated memory has been overridden in method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): free block metadata added");
+
+    if (required_data_size > get_avalaible_size())  
+    {
+        error_with_guard(get_typename() + ": can't allocate memory - requested memory is more than heap");
+        debug_with_guard("Cancel with error method [[nodiscard]] void* allocator_red_black_tree::allocate(size_t value_size, size_t values_count): can't allocate memory - requested memory is more than heap");
+        throw std::bad_alloc();
+    }
+
+    allocator_with_fit_mode::fit_mode fit_mode = get_fit_mode();
+    void* current_target = nullptr;
+    auto compare = [](int a, int b) {return a == b ? 0 : (a > b ? 1 : -1); };
+
+    switch (fit_mode)
+    {
+        case allocator_with_fit_mode::fit_mode::first_fit:
+            current_target = tree_first(get_root(), required_data_size);
+            break;
+        case allocator_with_fit_mode::fit_mode::the_best_fit:
+            current_target = tree_search(get_root(), required_data_size, compare);
+            if(current_target==nullptr) current_target = tree_successor(get_root());
+            break;
+        case allocator_with_fit_mode::fit_mode::the_worst_fit:
+            current_target = tree_maximum(get_root());
+            break;
+    }
+
+    if (current_target == nullptr || get_block_size(current_target) < required_data_size)
+    {
+        error_with_guard(get_typename() + ": can't allocate memory - no free memory");
+        debug_with_guard("Cancel with error method [[nodiscard]] void* allocator_red_black_tree::allocate(size_t value_size, size_t values_count): can't allocate memory - no free memory");
+        throw std::bad_alloc();
+    }
+
+    void* previous_target = get_block_previous(current_target);
+    void* next_target = get_block_next(current_target);
+    size_t size_optimal = get_block_size(current_target);
+    size_t right_block_size = size_optimal - required_data_size;
+
+    if (right_block_size <= get_block_minimum_size()) 
+    {
+        //удалить блок из списка свободных
+        warning_with_guard("The amount of allocated memory has been overridden in method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): a small remainder from the neighboring block is given to the requested one");
+        tree_delete(current_target, compare);
+        increase_avalaible_size(-size_optimal);
+    }
+    else
+    {
+        //левый занятый, правый свободный
+        //левый удалить из дерева
+        //разделяем, выставляем у левого и правого пред, след
+        //у правого еще начало памяти, размер. правый добавляем в дерево
+
+        tree_delete(current_target, compare);
+
+        void* subtraction_right_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current_target) + get_occupied_block_metadata_size() + required_data_size);
+        set_block_size(subtraction_right_block, right_block_size - get_occupied_block_metadata_size());
+        set_block_trusted_memory(subtraction_right_block);
+        set_block_next(subtraction_right_block, next_target);
+        set_block_previous(subtraction_right_block, current_target);
+        set_block_next(current_target, subtraction_right_block);
+        if (next_target != nullptr)
+            set_block_previous(next_target, subtraction_right_block);
+
+        tree_insert(subtraction_right_block, compare);
+
+        increase_avalaible_size(-(required_data_size + get_occupied_block_metadata_size()));
+    }
+
+    debug_with_guard("Successfully executed method [[nodiscard]] void* allocator_red_black_tree::allocate(size_t value_size, size_t values_count)");
+    log_blocks_info();
+    information_with_guard("Avalaible size: " + std::to_string(get_avalaible_size()));
+
+    return reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(current_target) + get_occupied_block_metadata_size());
+   
 }
 
 void allocator_red_black_tree::deallocate(
     void *at)
 {
-    throw not_implemented("void allocator_red_black_tree::deallocate(void *)", "your code should be here...");
+    std::lock_guard<std::mutex> lock(get_sync_object());
+    debug_with_guard("Called method: void allocator_sorted_list::deallocate(void* at)");
+
+    if (at == nullptr)
+    {
+        error_with_guard(get_typename() + ": can't deallocate memory - null pointer");
+        debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - null pointer");
+        throw std::logic_error(get_typename() + ": can't deallocate memory - null pointer");
+    }
+
+    void* target_block = reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(at) - get_occupied_block_metadata_size());
+
+    if (target_block < get_memory_start() || target_block>get_memory_end() || get_block_trusted_memory(target_block) != _trusted_memory)
+    {
+        error_with_guard(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
+        debug_with_guard("Cancel with error method: void allocator_sorted_list::deallocate(void* at): can't deallocate memory - the pointer referenced an invalid memory locationr");
+        throw std::logic_error(get_typename() + ": can't deallocate memory - the pointer referenced an invalid memory location");
+    }
+
+
+    
+    auto compare = [](int a, int b) {return a == b ? 0 : (a > b ? 1 : -1); };
+    void* previous_block = get_block_previous(target_block);
+    void* next_block = get_block_next(target_block);
+
+    set_block_size(target_block, reinterpret_cast<unsigned char*>(next_block!=nullptr? next_block:get_memory_end())- reinterpret_cast<unsigned char*>(target_block)-get_occupied_block_metadata_size());
+    increase_avalaible_size(get_block_size(target_block));
+
+    //Проверка правой границы
+    if (next_block != nullptr && tree_is_node_exists(get_root(), next_block, compare))
+    {
+        tree_delete(next_block, compare);
+        *reinterpret_cast<size_t*>(target_block) += get_block_size(next_block) + get_occupied_block_metadata_size();
+        set_block_next(target_block, get_block_next(next_block));
+        if (get_block_next(next_block) != nullptr) 
+            set_block_previous(get_block_next(next_block), target_block);
+        increase_avalaible_size(get_occupied_block_metadata_size());
+    }
+
+    //Проверка левой границы
+    if (previous_block != nullptr && tree_is_node_exists(get_root(), previous_block, compare))
+    {
+        *reinterpret_cast<size_t*>(previous_block) += (get_block_size(target_block) + get_occupied_block_metadata_size());
+        set_block_next(previous_block, get_block_next(target_block));
+         if (get_block_next(target_block) != nullptr) 
+            set_block_previous(get_block_next(target_block), previous_block);
+        increase_avalaible_size(get_occupied_block_metadata_size());
+    }
+    else
+    {
+        tree_insert(target_block, compare);
+    }
+
+    debug_with_guard("Successfully executed method: void allocator_sorted_list::deallocate(void* at)");
+    log_blocks_info();
+    information_with_guard("Free avalaible size: " + std::to_string(get_avalaible_size()));
 }
 
 #pragma endregion
 
-//+
+
 #pragma region Metadata allocator methods
 
 inline size_t& allocator_red_black_tree::get_space_size() const
@@ -267,8 +399,9 @@ inline std::mutex& allocator_red_black_tree::get_sync_object() const
 
 size_t allocator_red_black_tree::get_allocator_metadata_size() const
 {
-    return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(size_t) + sizeof(void*);
+    return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(size_t) + sizeof(void*) + sizeof(void*);
 }
+
 
 void* allocator_red_black_tree::get_memory_start() const
 {
@@ -282,8 +415,38 @@ void* allocator_red_black_tree::get_memory_end() const
 
 #pragma endregion
 
-//+
+
 #pragma region Metadata first block methods
+
+inline void* allocator_red_black_tree::get_nullptr_parent() const
+{
+    trace_with_guard("Called method inline void* allocator_red_black_tree::get_first_occupied_block_address() const");
+    trace_with_guard("Successfully executed method inline void* allocator_red_black_tree::get_first_occupied_block_address() const");
+    return *reinterpret_cast<void**>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)
+        + sizeof(allocator_with_fit_mode::fit_mode)
+        + sizeof(size_t)
+        );
+}
+
+inline void allocator_red_black_tree::set_nullptr_parent(void* parent) const
+{
+    trace_with_guard("Called method inline void allocator_red_black_tree::set_first_occupied_block_address(void * pointer)");
+    trace_with_guard("Successfully executed method inline void allocator_red_black_tree::set_first_occupied_block_address(void * pointer)");
+    *reinterpret_cast<void**>(
+        reinterpret_cast<unsigned char*>(_trusted_memory)
+        + sizeof(allocator*)
+        + sizeof(logger*)
+        + sizeof(size_t)
+        + sizeof(std::mutex)
+        + sizeof(allocator_with_fit_mode::fit_mode)
+        + sizeof(size_t)
+        ) = parent;
+}
 
 
 inline void* allocator_red_black_tree::get_root() const
@@ -298,6 +461,7 @@ inline void* allocator_red_black_tree::get_root() const
         + sizeof(std::mutex)
         + sizeof(allocator_with_fit_mode::fit_mode)
         + sizeof(size_t)
+        + sizeof(void*)
         );
 }
 
@@ -313,13 +477,15 @@ inline void allocator_red_black_tree::set_root(void* pointer)
         + sizeof(std::mutex)
         + sizeof(allocator_with_fit_mode::fit_mode)
         + sizeof(size_t)
+        + sizeof(void*)
         ) = pointer;
 }
 
 
+
 #pragma endregion
 
-//+
+
 #pragma region Metadata block methods
 
 inline size_t allocator_red_black_tree::get_free_block_metadata_size() const
@@ -365,12 +531,12 @@ inline void* allocator_red_black_tree::get_block_previous(void* block) const
 
 inline void allocator_red_black_tree::set_block_previous(void* block, void* ptr)
 {
-    trace_with_guard("Called method inline void allocator_red_black_tree::set_block_previous(void* block, void* ptr)");
-    trace_with_guard("Successfully executed method inline void allocator_red_black_tree::set_block_previous(void* block, void* ptr)");
+    trace_with_guard("Called method inline void* allocator_red_black_tree::set_block_previous(void* block) const");
+    trace_with_guard("Successfully executed method inline void* allocator_red_black_tree::get_block_previous(void* block) const");
     *reinterpret_cast<void**>(
-    reinterpret_cast<unsigned char*>(block)
-    + sizeof(void*)
-    ) = ptr;
+        reinterpret_cast<unsigned char*>(block)
+        + sizeof(void*)
+        ) = ptr;
 }
 
 
@@ -443,6 +609,7 @@ inline void* allocator_red_black_tree::get_block_parent(void* block) const
 {
     trace_with_guard("Called method inline void* allocator_red_black_tree::get_block_parent(void* block) const");
     trace_with_guard("Successfully executed method inline void* allocator_red_black_tree::get_block_parent(void* block) const");
+    if (block == nullptr) return get_nullptr_parent();
     return *reinterpret_cast <void**> (
         reinterpret_cast<unsigned char*>(block)
         + sizeof(void*) * 3
@@ -455,6 +622,7 @@ inline void allocator_red_black_tree::set_block_parent(void* block, void* ptr)
 {
     trace_with_guard("Called method inline void allocator_red_black_tree::set_block_parent(void* block, void* ptr)");
     trace_with_guard("Successfully executed method inline void allocator_red_black_tree::set_block_parent(void* block, void* ptr)");
+    if (block == nullptr) set_nullptr_parent(ptr);
     *reinterpret_cast <void**> (
         reinterpret_cast<unsigned char*>(block)
         + sizeof(void*) * 3
@@ -517,76 +685,56 @@ inline void allocator_red_black_tree::set_block_right_child(void* block, void* p
 
 #pragma endregion
 
-//-
+
 #pragma region Log methods
 
-std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_blocks_info() const noexcept
+std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_blocks_info() noexcept
 {
 
     debug_with_guard("Called method std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_blocks_info() const noexcept");
     std::vector<allocator_test_utils::block_info> state;
+    auto compare = [](int a, int b) {return a == b ? 0 : (a > b ? 1 : -1); };
 
-   /* void* current_block = get_first_occupied_block_address();
-    void* previous_block = nullptr;
+    void* current = get_root();
+    void* prev = current;
 
-    if (current_block == nullptr) //если нет занятых
+    if (current == nullptr)
     {
-        allocator_test_utils::block_info current_info{ get_space_size(), false };
-        state.push_back(current_info);
-        return state;
+        debug_with_guard("Successfully executed method std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_blocks_info() const noexcept");
     }
 
-    void* memory_start = get_memory_start();
-    if (current_block != memory_start)
+    while (prev != nullptr)
     {
-        size_t size = reinterpret_cast<unsigned char*>(current_block)
-            - reinterpret_cast<unsigned char*>(memory_start);
-        allocator_test_utils::block_info current_info{ size, false };
-        state.push_back(current_info);
+        current = prev;
+        prev = get_block_previous(prev);
     }
 
-
-    while (current_block != nullptr)
+    void* next;
+    while (current != nullptr)
     {
-        if (previous_block != nullptr)
+        size_t size;
+        bool isFree = tree_is_node_exists(get_root(), current, compare);
+        if (isFree)
         {
-            size_t size =
-                reinterpret_cast<unsigned char*>(current_block) -
-                reinterpret_cast<unsigned char*>(previous_block) -
-                get_occupied_block_metadata_size() -
-                get_occupied_block_size(previous_block);
-
-            if (size != 0)
-            {
-                allocator_test_utils::block_info current_info2{ size, false };
-                state.push_back(current_info2);
-            }
+            size = get_block_size(current);
+        }
+        else
+        {
+            size = reinterpret_cast<unsigned char*>(get_block_next(current) != nullptr ? get_block_next(current) : get_memory_end()) - reinterpret_cast<unsigned char*>(current) - get_occupied_block_metadata_size();
         }
 
-        allocator_test_utils::block_info current_info{ get_occupied_block_size(current_block), true };
+        allocator_test_utils::block_info current_info{ size, isFree };
         state.push_back(current_info);
 
-        previous_block = current_block;
-        current_block = get_occupied_block_next_block_ptr(current_block);
+        current = get_block_next(current);
     }
-
-    void* memory_end = get_memory_end();
-    auto* last_occupied_block_end =
-        reinterpret_cast<unsigned char*>(previous_block) +
-        get_occupied_block_metadata_size() + get_occupied_block_size(previous_block);
-    if (memory_end != last_occupied_block_end)
-    {
-        size_t size = reinterpret_cast<unsigned char*>(memory_end) - last_occupied_block_end;
-        allocator_test_utils::block_info current_info{ size, false };
-        state.push_back(current_info);
-    }
-    */
+    
     debug_with_guard("Successfully executed method std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_blocks_info() const noexcept");
 
     return state;
 }
 
-void allocator_red_black_tree::log_blocks_info() const
+void allocator_red_black_tree::log_blocks_info() 
 {
     debug_with_guard("Called method void allocator_red_black_tree::log_blocks_info() const");
 
@@ -606,17 +754,14 @@ void allocator_red_black_tree::log_blocks_info() const
 
 #pragma endregion
 
-//+ проверить несколько раз по алгоритму. ПРОВЕРИТЬ КОРРЕКТНОСТЬ (например "дедов" надо обновлять каждый раз. а иногда наоборот НЕ надо)
+
 #pragma region RedBlackTree methods
-
-//get uncle utc
-
 
 void* allocator_red_black_tree::tree_search(void* node, size_t size, std::function<bool(int, int)>compare)
 {
     while (node != nullptr)
     {
-        switch (comparator(size, get_block_size(node)))
+        switch (compare(size, get_block_size(node)))
         {
             case 0: 
                 return node;
@@ -632,6 +777,28 @@ void* allocator_red_black_tree::tree_search(void* node, size_t size, std::functi
     return node;
 }
 
+
+bool allocator_red_black_tree::tree_is_node_exists(void* node, void * search_node, std::function<bool(int, int)>compare)
+{
+    void* current = node;
+    while (node != nullptr)
+    {
+        switch (compare(get_block_size(search_node), get_block_size(node)))
+        {
+        case 0:
+            return true;
+        case 1:
+            node = get_block_right_child(node);
+            break;
+        case -1:
+            node = get_block_left_child(node);
+            break;
+        }
+    }
+    return false;
+}
+
+
 void* allocator_red_black_tree::tree_minimum(void* node)
 {
     //идем влево до низа
@@ -640,6 +807,22 @@ void* allocator_red_black_tree::tree_minimum(void* node)
     {
         node = current;
         current = get_block_left_child(current);
+    }
+    return node;
+}
+
+
+void* allocator_red_black_tree::tree_first(void* node, size_t size)
+{
+    //идем вправо до низа
+    if (get_block_size(node) >= size) return node;
+
+    void* current = node;
+    while (current != nullptr)
+    {
+        node = current;
+        if (get_block_size(node) >= size) return node;
+        current = get_block_right_child(current);
     }
     return node;
 }
@@ -792,11 +975,11 @@ void allocator_red_black_tree::tree_insert(void* node, std::function<int(int, in
 
 void allocator_red_black_tree::tree_insert_fixup(void* node, std::function<int(int, int)>compare)
 {
-    //пока что ячейка красная и не равна нулл птр
-    while (get_block_parent(node)!=nullptr && get_block_color(get_block_parent(node))==Red)
+    //пока что ячейка красная и не равна нулл птр (если нулл птр то вернется черный цвет)
+    while (get_block_color(get_block_parent(node))==Red)
     {
         void* father = get_block_parent(node);
-        void* grandfather = get_block_parent(father);
+        void* grandfather = get_block_parent(get_block_parent(node));
 
         if (father == get_block_left_child(grandfather))
         {
@@ -813,9 +996,9 @@ void allocator_red_black_tree::tree_insert_fixup(void* node, std::function<int(i
                 if (node == get_block_right_child(father))
                 {
                     node = father;
-                    father = get_block_parent(node);
-                    grandfather = get_block_parent(father);
                     tree_left_rotate(node);
+                    father = get_block_parent(node);
+                    grandfather = get_block_parent(get_block_parent(node));
                 }
 
                 set_block_color(father, Black);
@@ -838,9 +1021,9 @@ void allocator_red_black_tree::tree_insert_fixup(void* node, std::function<int(i
                 if (node == get_block_left_child(father))
                 {
                     node = father;
-                    father = get_block_parent(node);
-                    grandfather = get_block_parent(father);
                     tree_right_rotate(node);
+                    father = get_block_parent(node);
+                    grandfather = get_block_parent(get_block_parent(node));
                 }
 
                 set_block_color(father, Black);
@@ -855,7 +1038,6 @@ void* allocator_red_black_tree::tree_delete(void* node, std::function<int(int, i
 {
     void* todestroy;
     void* orphan;
-    void* saved_parent = nullptr;
 
     //выбираем ячейку для удаления. если у текущей <2 наследников то берем ее. иначе ищем "следующий" элемент тк у него точно будет <2 элементов
     if (get_block_left_child(node) == nullptr || get_block_right_child(node) == nullptr)
@@ -878,11 +1060,7 @@ void* allocator_red_black_tree::tree_delete(void* node, std::function<int(int, i
     }
 
     //удаляем выбранную в шаге 1 ячейку
-    if (orphan != nullptr)
-        set_block_parent(orphan, get_block_parent(todestroy));
-    else
-        saved_parent = get_block_parent(todestroy); //сохраняем чтобы обработать в tree_delete_fiorphanup
-
+    set_block_parent(orphan, get_block_parent(todestroy));
 
     if (get_block_parent(todestroy) == nullptr)
     {
@@ -901,54 +1079,67 @@ void* allocator_red_black_tree::tree_delete(void* node, std::function<int(int, i
         }
     }
 
-    //если заменяли ячейку для удаления то переписываем ее данные
+    //если заменяли ячейку для удаления то переписываем ее туда
+    //как в книге нельзя - у нас есть связи со списоком, адреса конкретных блоков по возрастанию и тд
+    //надо подменять связи блоков дерева целиком.
     if (todestroy != node)
     {
-        set_block_size(node, get_block_size(todestroy));
+        set_block_color(todestroy, get_block_color(node));
+        set_block_right_child(todestroy, get_block_right_child(node));
+        set_block_left_child(todestroy, get_block_left_child(node));
+        set_block_parent(todestroy, get_block_parent(node));
+        
+        //сущ тк подменяли ранее. значит было две ветки. значит обе они не nullptr
+        set_block_parent(get_block_left_child(node), todestroy);
+        set_block_parent(get_block_right_child(node), todestroy);
 
-        void* next = get_block_next(todestroy);
-        void* previous = get_block_previous(todestroy);
-
-        set_block_next(node, next);
-        set_block_previous(node, previous);
-
-        if (next != nullptr)
-            set_block_previous(next, node);
-        if (previous != nullptr)
-            set_block_next(previous, node);
+        //устанавливаем себя в родителя
+        void* parent = get_block_parent(node);
+        if (parent == nullptr)
+        {
+            set_root(todestroy);
+        }
+        else
+        {
+            if (get_block_right_child(parent) == node)
+            {
+                set_block_right_child(parent, todestroy);
+            }
+            else
+            {
+                set_block_left_child(parent, todestroy);
+            }
+        }
     }
 
     if (get_block_color(todestroy) == Black)
-        tree_delete_fixup(orphan, saved_parent, compare);
+        tree_delete_fixup(orphan, compare);
 
     return todestroy;
 
 }
 
-void allocator_red_black_tree::tree_delete_fixup(void* node, void* saved_parent, std::function<int(int, int)>compare)
-{
-    
-   
+
+void allocator_red_black_tree::tree_delete_fixup(void* node, std::function<int(int, int)>compare)
+{   
     while (node != get_root() && get_block_color(node) == Black)
     {
-        void* parent = node == nullptr ? saved_parent : get_block_parent(node);
         void* uncle;
-        if (node == get_block_left_child(parent))
+        if (node == get_block_left_child(get_block_parent(node)))
         {
-            uncle = get_block_right_child(parent);
+            uncle = get_block_right_child(get_block_parent(node));
             if (get_block_color(uncle) == Red)
             {
                 set_block_color(uncle, Black);
-                set_block_color(parent, Red);
-                tree_left_rotate(parent);
-                uncle = get_block_right_child(parent);
+                set_block_color(get_block_parent(node), Red);
+                tree_left_rotate(get_block_parent(node));
+                uncle = get_block_right_child(get_block_parent(node));
             }
-
 
             if (get_block_color(get_block_left_child(uncle)) == Black && get_block_color(get_block_right_child(uncle)) == Black)
             {
                 set_block_color(uncle, Red);
-                node = parent;
+                node = get_block_parent(node);
             }
             else
             {
@@ -957,32 +1148,32 @@ void allocator_red_black_tree::tree_delete_fixup(void* node, void* saved_parent,
                     set_block_color(get_block_left_child(uncle), Black);
                     set_block_color(uncle, Red);
                     tree_right_rotate(uncle);
-                    uncle = get_block_right_child(parent);
+                    uncle = get_block_right_child(get_block_parent(node));
                 }
 
-                set_block_color(uncle, get_block_color(parent));
-                set_block_color(parent, Black);
+                set_block_color(uncle, get_block_color(get_block_parent(node)));
+                set_block_color(get_block_parent(node), Black);
                 set_block_color(get_block_right_child(uncle), Black);
-                tree_left_rotate(parent);
-                break;
+                tree_left_rotate(get_block_parent(node));
+                node = get_root();
             }
         }
         else
         {
-            uncle = get_block_left_child(parent);
+            uncle = get_block_left_child(get_block_parent(node));
             if (get_block_color(uncle) == Red)
             {
                 set_block_color(uncle, Black);
-                set_block_color(parent, Red);
-                tree_right_rotate(parent);
-                uncle = get_block_left_child(parent);
+                set_block_color(get_block_parent(node), Red);
+                tree_right_rotate(get_block_parent(node));
+                uncle = get_block_left_child(get_block_parent(node));
             }
 
 
             if (get_block_color(get_block_right_child(uncle)) == Black && get_block_color(get_block_left_child(uncle)) == Black)
             {
                 set_block_color(uncle, Red);
-                node = parent;
+                node = get_block_parent(node);
             }
             else
             {
@@ -991,20 +1182,20 @@ void allocator_red_black_tree::tree_delete_fixup(void* node, void* saved_parent,
                     set_block_color(get_block_right_child(uncle), Black);
                     set_block_color(uncle, Red);
                     tree_left_rotate(uncle);
-                    uncle = get_block_left_child(parent);
+                    uncle = get_block_left_child(get_block_parent(node));
                 }
 
-                set_block_color(uncle, get_block_color(parent));
-                set_block_color(parent, Black);
+                set_block_color(uncle, get_block_color(get_block_parent(node)));
+                set_block_color(get_block_parent(node), Black);
                 set_block_color(get_block_left_child(uncle), Black);
-                tree_right_rotate(parent);
-                break;
+                tree_right_rotate(get_block_parent(node));
+                node = get_root();
             }
         }
     }
 
 }
 
-//по хорошему для элементов занятых, свободных и тп надо делать отдельные классы - поля создавать вместо этой всей фигни и тп. тупанул. уже пофиг - долго.
+//по хорошему для элементов занятых, свободных и тп надо делать отдельные классы - поля создавать и тд.
 
 #pragma endregion

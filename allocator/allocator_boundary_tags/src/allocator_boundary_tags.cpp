@@ -309,6 +309,8 @@ void allocator_boundary_tags::deallocate(
         set_occupied_block_previous_block_ptr(next_block, previous_block);
  
 
+    //свободные блоки считаются как промежуток между занятыми, поэтому "объединение" как в прошлом делать не нужно
+
     debug_with_guard("Successfully executed method: void allocator_sorted_list::deallocate(void* at)");
     log_blocks_info();
     log_current_block_reference_info(previous_block);

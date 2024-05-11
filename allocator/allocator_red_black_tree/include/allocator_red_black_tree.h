@@ -121,7 +121,7 @@ private:
 
     inline void* get_nullptr_parent() const;
 
-    inline void* set_nullptr_parent(void * parent) const;
+    inline void set_nullptr_parent(void * parent) const;
 
     inline void* get_root() const;
 
@@ -172,6 +172,7 @@ private:
 
     inline void set_block_right_child(void* block, void* ptr);
 
+    void allocator_red_black_tree::tree_node_winkle_out(void* node);
 
 
 #pragma endregion
@@ -181,11 +182,11 @@ private:
 
 public:
     
-    std::vector<allocator_test_utils::block_info> get_blocks_info() const noexcept override;
+    std::vector<allocator_test_utils::block_info> get_blocks_info() noexcept override;
 
 private:
 
-        void log_blocks_info() const;
+        void log_blocks_info();
 
 #pragma endregion
 
@@ -194,9 +195,13 @@ private:
 
     void* tree_search(void* node, size_t size, std::function<bool(int, int)>compare);
 
+    bool tree_is_node_exists(void* node, void * search_node, std::function<bool(int, int)>compare);
+
     void* tree_minimum(void* node);
 
     void* tree_maximum(void* node);
+
+    void* tree_first(void* node, size_t size);
 
     void* tree_successor(void* node);
 
@@ -212,7 +217,7 @@ private:
 
     void* tree_delete(void* node, std::function<int(int, int)>compare);
 
-    void tree_delete_fixup(void* node, void* saved_parent, std::function<int(int, int)>compare);
+    void tree_delete_fixup(void* node, std::function<int(int, int)>compare);
 
 #pragma endregion
 
