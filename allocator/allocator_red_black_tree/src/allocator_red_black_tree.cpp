@@ -28,11 +28,11 @@ void allocator_red_black_tree::deallocate_object_fields()
 allocator_red_black_tree::~allocator_red_black_tree()
 {
     auto* logger = get_logger();
-    if (logger != nullptr) logger->debug("Called method allocator_red_black_tree::~allocator_boundary_tags()");
+    if (logger != nullptr) logger->debug("Called method allocator_red_black_tree::~allocator_red_black_tree()");
 
     deallocate_object_fields();
 
-    if (logger != nullptr) logger->debug("Successfully executed method allocator_red_black_tree::~allocator_boundary_tags()");
+    if (logger != nullptr) logger->debug("Successfully executed method allocator_red_black_tree::~allocator_red_black_tree()");
 }
 
 allocator_red_black_tree::allocator_red_black_tree(
@@ -41,14 +41,14 @@ allocator_red_black_tree::allocator_red_black_tree(
     _trusted_memory = other._trusted_memory;
     other._trusted_memory = nullptr;
 
-    debug_with_guard("Called method allocator_red_black_tree::allocator_boundary_tags(allocator_boundary_tags && other) noexcept");
-    debug_with_guard("Successfully executed method allocator_red_black_tree::allocator_boundary_tags(allocator_boundary_tags && other) noexcept");
+    debug_with_guard("Called method allocator_red_black_tree::allocator_red_black_tree(allocator_red_black_tree && other) noexcept");
+    debug_with_guard("Successfully executed method allocator_red_black_tree::allocator_red_black_tree(allocator_red_black_tree && other) noexcept");
 }
 
 allocator_red_black_tree &allocator_red_black_tree::operator=(
     allocator_red_black_tree &&other) noexcept
 {
-    debug_with_guard("Called method allocator_boundary_tags& allocator_red_black_tree::operator=(allocator_boundary_tags && other) noexcept");
+    debug_with_guard("Called method allocator_red_black_tree& allocator_red_black_tree::operator=(allocator_red_black_tree && other) noexcept");
 
     if (&other != this)
     {
@@ -57,7 +57,7 @@ allocator_red_black_tree &allocator_red_black_tree::operator=(
         other._trusted_memory = nullptr;
     }
 
-    debug_with_guard("Successfully executed method allocator_boundary_tags& allocator_red_black_tree::operator=(allocator_boundary_tags && other) noexcept");
+    debug_with_guard("Successfully executed method allocator_red_black_tree& allocator_red_black_tree::operator=(allocator_red_black_tree && other) noexcept");
     return *this;
 }
 
@@ -72,7 +72,7 @@ allocator_red_black_tree::allocator_red_black_tree(
     logger *logger,
     allocator_with_fit_mode::fit_mode allocate_fit_mode)
 {
-    if (logger != nullptr) logger->debug("Called method allocator_red_black_tree::allocator_boundary_tags(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with request: memory:\n" + std::to_string(space_size) + ", metadata:" + std::to_string(get_allocator_metadata_size()));
+    if (logger != nullptr) logger->debug("Called method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode) with request: memory:\n" + std::to_string(space_size) + ", metadata:" + std::to_string(get_allocator_metadata_size()));
 
     size_t space_size_with_metadata = space_size + get_allocator_metadata_size();
 
@@ -130,7 +130,7 @@ allocator_red_black_tree::allocator_red_black_tree(
   //  set_block_color(block, Black);
 
     log_blocks_info();
-    if (logger != nullptr) logger->debug("Succesfully executed method allocator_red_black_tree::allocator_boundary_tags(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode)");
+    if (logger != nullptr) logger->debug("Succesfully executed method allocator_red_black_tree::allocator_red_black_tree(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode)");
 }
 
 [[nodiscard]] void *allocator_red_black_tree::allocate(
@@ -345,7 +345,7 @@ inline std::string allocator_red_black_tree::get_typename() const noexcept
 {
     debug_with_guard("Called method inline std::string allocator_red_black_tree::get_typename() const noexcept");
     debug_with_guard("Successfully executed method inline std::string allocator_red_black_tree::get_typename() const noexcept");
-    return "string allocator_boundary_tags";
+    return "string allocator_red_black_tree";
 }
 
 inline logger* allocator_red_black_tree::get_logger() const
@@ -500,8 +500,8 @@ inline size_t allocator_red_black_tree::get_occupied_block_metadata_size() const
 
 inline size_t allocator_red_black_tree::get_block_minimum_size() const
 {
-    trace_with_guard("Called method size_t allocator_boundary_tags::get_block_minimum_size() const");
-    trace_with_guard("Successfully executed method size_t allocator_boundary_tags::get_block_minimum_size() const");
+    trace_with_guard("Called method size_t allocator_red_black_tree::get_block_minimum_size() const");
+    trace_with_guard("Successfully executed method size_t allocator_red_black_tree::get_block_minimum_size() const");
     return get_occupied_block_metadata_size() + 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
 }
 
@@ -700,7 +700,9 @@ std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_bloc
 
     if (current == nullptr)
     {
+        allocator_test_utils::block_info current_info{ get_space_size(), false};
         debug_with_guard("Successfully executed method std::vector<allocator_test_utils::block_info> allocator_red_black_tree::get_blocks_info() const noexcept");
+        return state;
     }
 
     while (prev != nullptr)
