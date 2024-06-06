@@ -3,20 +3,18 @@
     "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440": [
       "out\\build\\x64-Debug",
       "out\\install\\x64-Debug"
+    ],
+    "Local Machine": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug"
     ]
   },
   "ExpandedNodes": [
     "",
-    "\\allocator",
-    "\\allocator\\allocator_global_heap",
-    "\\allocator\\allocator_global_heap\\include",
-    "\\allocator\\allocator_global_heap\\src",
-    "\\logger",
-    "\\logger\\client_logger",
-    "\\logger\\client_logger\\include",
-    "\\logger\\client_logger\\tests",
-    "\\tasks\\mai"
+    "\\associative_container",
+    "\\associative_container\\search_tree",
+    "\\associative_container\\search_tree\\binary_search_tree",
+    "\\associative_container\\search_tree\\binary_search_tree\\include"
   ],
-  "SelectedNode": "\\allocator\\allocator_global_heap\\src\\allocator_global_heap.cpp",
   "PreviewInSolutionExplorer": false
 }

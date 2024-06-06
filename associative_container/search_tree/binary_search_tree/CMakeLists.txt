@@ -27,6 +27,6 @@ set_target_properties(
         DESCRIPTION "binary search tree implementation library"
         LANGUAGES CXX
         LINKER_LANGUAGE CXX
-        CXX_STANDARD 14
+        CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
         CXX_EXTENSIONS OFF)

@@ -26,6 +26,34 @@ rule CUSTOM_COMMAND
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator\CMakeFiles\mp_os_allctr_allctr.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_allctr_allctr_unscanned_Debug
@@ -44,6 +72,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_allctr_allctr_Debug
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_bndr_tgs_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_bndr_tgs_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_boundary_tags\CMakeFiles\mp_os_allctr_allctr_bndr_tgs.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_bndr_tgs_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_allctr_allctr_bndr_tgs_unscanned_Debug
@@ -59,6 +115,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_allctr_allctr_bndr_tgs_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_bndr_tgs_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_bndr_tgs_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_boundary_tags\tests\CMakeFiles\mp_os_allctr_allctr_bndr_tgs_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_bndr_tgs_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -152,6 +236,34 @@ rule CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_bdds_sstm_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_bdds_sstm_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_buddies_system\CMakeFiles\mp_os_allctr_allctr_bdds_sstm.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_bdds_sstm_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_allctr_allctr_bdds_sstm_unscanned_Debug
@@ -216,6 +328,34 @@ rule CXX_EXECUTABLE_LINKER__mp_os_allctr_allctr_bdds_sstm_tests_Debug
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_glbl_hp_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_glbl_hp_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_global_heap\CMakeFiles\mp_os_allctr_allctr_glbl_hp.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_glbl_hp_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_allctr_allctr_glbl_hp_unscanned_Debug
@@ -231,6 +371,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_allctr_allctr_glbl_hp_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_glbl_hp_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_glbl_hp_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_global_heap\tests\CMakeFiles\mp_os_allctr_allctr_glbl_hp_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_glbl_hp_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -252,6 +420,34 @@ rule CXX_EXECUTABLE_LINKER__mp_os_allctr_allctr_glbl_hp_tests_Debug
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_rb_tr_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_rb_tr_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_red_black_tree\CMakeFiles\mp_os_allctr_allctr_rb_tr.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_rb_tr_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_allctr_allctr_rb_tr_unscanned_Debug
@@ -267,6 +463,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_allctr_allctr_rb_tr_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_rb_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_rb_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_red_black_tree\tests\CMakeFiles\mp_os_allctr_allctr_rb_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_rb_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -288,6 +512,34 @@ rule CXX_EXECUTABLE_LINKER__mp_os_allctr_allctr_rb_tr_tests_Debug
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_srtd_lst_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_srtd_lst_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_sorted_list\CMakeFiles\mp_os_allctr_allctr_srtd_lst.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_srtd_lst_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_allctr_allctr_srtd_lst_unscanned_Debug
@@ -303,6 +555,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_allctr_allctr_srtd_lst_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_allctr_allctr_srtd_lst_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_allctr_allctr_srtd_lst_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=allocator\allocator_sorted_list\tests\CMakeFiles\mp_os_allctr_allctr_srtd_lst_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_allctr_allctr_srtd_lst_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -335,6 +615,61 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_Debug
 #############################################
 # Rule for linking CXX static library.
 
+rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_hsh_tbl_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_hsh_tbl_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_hsh_tbl_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\hash_table\tests\CMakeFiles\mp_os_assctv_cntnr_hsh_tbl_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_hsh_tbl_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_hsh_tbl_tests_unscanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_hsh_tbl_tests_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for linking CXX static library.
+
 rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
@@ -357,6 +692,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_AVL_tr_De
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_AVL_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_AVL_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\binary_search_tree\AVL_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_AVL_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_AVL_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -387,6 +750,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_rb_tr_Deb
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_rb_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_rb_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\binary_search_tree\red_black_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_rb_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_rb_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_rb_tr_tests_unscanned_Debug
@@ -411,6 +802,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_scpgt_tr_
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_scpgt_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_scpgt_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\binary_search_tree\scapegoat_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_scpgt_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_scpgt_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -441,6 +860,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_De
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\binary_search_tree\splay_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_tests_unscanned_Debug
@@ -456,6 +903,34 @@ rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_spl_tr_tests_
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\binary_search_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -477,6 +952,254 @@ rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_srch_tr_bnr_srch_tr_tests_Debug
 
 
 #############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\indexing_tree\b_plus_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_tests_unscanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_pls_tr_tests_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\indexing_tree\b_star_plus_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_tests_unscanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_pls_tr_tests_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\indexing_tree\b_star_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_tests_unscanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_str_tr_tests_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=associative_container\search_tree\indexing_tree\b_tree\tests\CMakeFiles\mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_tests_unscanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX executable.
+
+rule CXX_EXECUTABLE_LINKER__mp_os_assctv_cntnr_srch_tr_indxng_tr_b_tr_tests_Debug
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
+  description = Linking CXX executable $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_cmmn_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_cmmn_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=common\CMakeFiles\mp_os_cmmn.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_cmmn_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_cmmn_unscanned_Debug
@@ -492,6 +1215,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_cmmn_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_lggr_clnt_lggr_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_lggr_clnt_lggr_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=logger\client_logger\CMakeFiles\mp_os_lggr_clnt_lggr.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_lggr_clnt_lggr_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -513,6 +1264,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_lggr_clnt_lggr_Debug
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_lggr_clnt_lggr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_lggr_clnt_lggr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=logger\client_logger\tests\CMakeFiles\mp_os_lggr_clnt_lggr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_lggr_clnt_lggr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__mp_os_lggr_clnt_lggr_tests_unscanned_Debug
@@ -528,6 +1307,34 @@ rule CXX_EXECUTABLE_LINKER__mp_os_lggr_clnt_lggr_tests_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\rc.exe --mt=C:\PROGRA~2\WINDOW~4\10\bin\100226~1.0\x64\mt.exe --manifests $MANIFESTS -- C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\link.exe /nologo $in  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:1.0 $LINK_FLAGS $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_lggr_lggr_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_lggr_lggr_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=logger\logger\CMakeFiles\mp_os_lggr_lggr.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_lggr_lggr_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################
@@ -592,6 +1399,34 @@ rule CXX_STATIC_LIBRARY_LINKER__mp_os_lggr_srvr_lggr_Debug
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\lib.exe /nologo $LINK_FLAGS /out:$TARGET_FILE $in  && $POST_BUILD"
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
+
+
+#############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__mp_os_lggr_srvr_lggr_tests_Debug
+  deps = msvc
+  command = C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe $DEFINES $INCLUDES $FLAGS $in -nologo -TP -showIncludes -scanDependencies $DYNDEP_INTERMEDIATE_FILE -Fo$OBJ_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__mp_os_lggr_srvr_lggr_tests_Debug
+  command = "C:\Extensions\Programs\Visual Studio\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_ninja_dyndep --tdi=logger\server_logger\tests\CMakeFiles\mp_os_lggr_srvr_lggr_tests.dir\CXXDependInfo.json --lang=CXX --modmapfmt=msvc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__mp_os_lggr_srvr_lggr_tests_scanned_Debug
+  deps = msvc
+  command = ${LAUNCHER}${CODE_CHECK}C:\EXTENS~1\Programs\VISUAL~1\VISUAL~1\VC\Tools\MSVC\1439~1.335\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes @$DYNDEP_MODULE_MAP_FILE /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  description = Building CXX object $out
 
 
 #############################################

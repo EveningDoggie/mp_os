@@ -34,6 +34,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/Extensions/Ortem/mp_os/out/build/x64-Debug/associative_container/hash_table/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/Extensions/Ortem/mp_os/out/build/x64-Debug/associative_container/search_tree/cmake_install.cmake")
 endif()
 
