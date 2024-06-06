@@ -86,3 +86,7 @@ out/build/x64-Debug/Testing/Temporary/LastTest.log
 .vs/mp_os/FileContentIndex/1e411ea2-2e05-4472-965a-f74127c42c9d.vsidx
 .vs/cmake.db
 /.vs
+.vs/mp_os/v17/ipch/AutoPCH/4ee09c5000b1270c/ALLOCATOR_BUDDIES_SYSTEM_TESTS.ipch
+.vs/mp_os/v17/ipch/AutoPCH/751351808d2d6aca/LOGGER.ipch
+.vs/mp_os/v17/ipch/AutoPCH/b0724600de0dc09a/ALLOCATOR_BOUNDARY_TAGS.ipch
+.vs/mp_os/v17/ipch/AutoPCH/f84a062795554766/ALLOCATOR_BOUNDARY_TAGS_TESTS.ipch
