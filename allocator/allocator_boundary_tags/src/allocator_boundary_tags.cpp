@@ -150,13 +150,13 @@ allocator_boundary_tags::allocator_boundary_tags(
 
 
 
-    if (current_block == nullptr) //нет ни одного занятого блока
+    if (current_block == nullptr) //пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     {
         previous_target = nullptr;
         current_target = nullptr;
         size_optimal = get_space_size();
     }
-    else if (memory_start != current_block) //слева есть свободный блок
+    else if (memory_start != current_block) //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
     {
         between_block_size = reinterpret_cast<unsigned char*>(current_block) -
             reinterpret_cast<unsigned char*>(memory_start);
@@ -171,12 +171,12 @@ allocator_boundary_tags::allocator_boundary_tags(
     }
     
     
-    while (current_block != nullptr) //на последней итерации будет проверено наличие свободной ячейки перед концом памяти
+    while (current_block != nullptr) //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     {
         previous_block = current_block;
         current_block = get_occupied_block_next_block_ptr(current_block);
 
-        between_block_size = //если есть след блок то отнимаем от него. иначе от конца памяти
+        between_block_size = //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             reinterpret_cast<unsigned char*>(current_block != nullptr ? current_block : memory_end) -
             reinterpret_cast<unsigned char*>(previous_block) -
             get_occupied_block_size(previous_block) -
@@ -184,25 +184,25 @@ allocator_boundary_tags::allocator_boundary_tags(
         
         if (between_block_size >= required_data_size)
         {
-            bool belonging_сondition = false;
+            bool belonging_condition = false;
             bool break_condition = false;
 
             switch (fit_mode)
             {
                 case allocator_with_fit_mode::fit_mode::first_fit:
-                    belonging_сondition = true;
+                    belonging_condition = true;
                     break_condition = true;
                     break;
                 case allocator_with_fit_mode::fit_mode::the_best_fit:
-                    belonging_сondition = between_block_size <= size_optimal;
+                    belonging_condition = between_block_size <= size_optimal;
                     if (between_block_size == required_data_size) break_condition = true;
                     break;
                 case allocator_with_fit_mode::fit_mode::the_worst_fit:
-                    belonging_сondition = between_block_size >= size_optimal;
+                    belonging_condition = between_block_size >= size_optimal;
                     break;
             }
 
-            if (belonging_сondition)
+            if (belonging_condition)
             {
                 size_optimal = between_block_size;
                 current_target = current_block;
@@ -213,7 +213,7 @@ allocator_boundary_tags::allocator_boundary_tags(
     }
     
   
-    if (size_optimal==-1 || size_optimal==get_space_size()+1) //подходящих блоков не найдено
+    if (size_optimal==-1 || size_optimal==get_space_size()+1) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     {
         error_with_guard(get_typename() + ": can't allocate memory - no occupied memory");
         debug_with_guard("Cancel with error method [[nodiscard]] void* allocator_sorted_list::allocate(size_t value_size, size_t values_count): can't allocate memory - no occupied memory");
@@ -225,7 +225,7 @@ allocator_boundary_tags::allocator_boundary_tags(
     size_t right_block_size = size_optimal - required_data_size;
     void* current;
     
-    if (right_block_size <= get_occupied_block_minimum_size()) //отдать весь блок, если размер правого блока = 0 или меньше допустимого (мета+минЗнач - оптимизация из кнута)
+    if (right_block_size <= get_occupied_block_minimum_size()) //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ = 0 пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ+пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)
     {
         warning_with_guard("The amount of allocated memory has been overridden in method allocator_sorted_list::allocator_sorted_list(size_t space_size, allocator * parent_allocator,logger * logger,allocator_with_fit_mode::fit_mode allocate_fit_mode): a small remainder from the neighboring block is given to the requested one");
         current = add_finded_block_to_occupied_list(previous_target, current_target, size_optimal - get_occupied_block_metadata_size());
@@ -298,8 +298,8 @@ void allocator_boundary_tags::deallocate(
     void* previous_block = get_occupied_block_previous_block_ptr(target_block);
     void* next_block = get_occupied_block_next_block_ptr(target_block);
 
-    //если прошлый есть то ставим ссылку на текущий в него. иначе в начало. 
-    // автоматом проставляется nullptr если это был последний занятый (хранится в next block). ниже аналогично
+    //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. 
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ nullptr пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ next block). пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if (previous_block != nullptr) 
         set_occupied_block_next_block_ptr(previous_block, next_block);
     else
@@ -309,7 +309,7 @@ void allocator_boundary_tags::deallocate(
         set_occupied_block_previous_block_ptr(next_block, previous_block);
  
 
-    //свободные блоки считаются как промежуток между занятыми, поэтому "объединение" как в прошлом делать не нужно
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 
     debug_with_guard("Successfully executed method: void allocator_sorted_list::deallocate(void* at)");
     log_blocks_info();
@@ -439,7 +439,7 @@ inline std::mutex& allocator_boundary_tags::get_sync_object() const
 
 size_t allocator_boundary_tags::get_allocator_metadata_size() const
 {
-    //аллокатор, логгер, размер кучи, мьютекс, фитмод, указатель на 1 элемент, размер свободной памяти
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1 пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     //allocator*, logger*, size_t, mutex, allocator_with_fit_mode::fit_mode, void*
     //size_ptr, void* trusted, void* next
     return sizeof(allocator*) + sizeof(logger*) + sizeof(size_t) + sizeof(std::mutex) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(void*) + sizeof(size_t);
@@ -496,14 +496,14 @@ inline void allocator_boundary_tags::set_first_occupied_block_address(void* poin
 
 inline size_t allocator_boundary_tags::get_occupied_block_metadata_size() const
 {
-    return sizeof(size_t) + sizeof(void*) * 3; //размер блока, начало памяти, указатель на след занятый, указатель на предыдущий занятый
+    return sizeof(size_t) + sizeof(void*) * 3; //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 }
 
 inline size_t allocator_boundary_tags::get_occupied_block_minimum_size() const
 {
     trace_with_guard("Called method size_t allocator_boundary_tags::get_occupied_block_minimum_size() const");
     trace_with_guard("Successfully executed method size_t allocator_boundary_tags::get_occupied_block_minimum_size() const");
-    return get_occupied_block_metadata_size() + 8; //минимальный кусок должен включать хоть сколько то малое пространство (оптимизация из кнута: обычно берутся значения от 8 до 10 б)
+    return get_occupied_block_metadata_size() + 8; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 8 пїЅпїЅ 10 пїЅ)
 }
 
 inline void* allocator_boundary_tags::get_occupied_block_trusted_memory(void* occupied_block) const
@@ -594,7 +594,7 @@ std::vector<allocator_test_utils::block_info> allocator_boundary_tags::get_block
     void* current_block = get_first_occupied_block_address();
     void* previous_block = nullptr;
 
-    if (current_block == nullptr) //если нет занятых
+    if (current_block == nullptr) //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     {
         allocator_test_utils::block_info current_info{ get_space_size(), false };
         state.push_back(current_info);

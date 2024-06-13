@@ -165,23 +165,31 @@ TEST(redBlackTreePositiveTests, test1)
 {
     logger *logger = create_logger(std::vector<std::pair<std::string, logger::severity>>
         {
-            {
-                "red_black_tree_tests_logs.txt",
-                logger::severity::trace
-            },
-        });
-    
+                {
+                    "red_black_tree_tests_logs.txt",
+                    logger::severity::trace
+                }
+        }, true, logger::severity::trace);
     logger->trace("redBlackTreePositiveTests.test1 started");
     
     search_tree<int, std::string> *rb = new red_black_tree<int, std::string>(nullptr, logger);
-    
+
     rb->insert(5, "a");
     rb->insert(2, "b");
     rb->insert(15, "c");
     rb->insert(3, "d");
     rb->insert(14, "e");
     rb->insert(1, "l");
-    
+
+
+    red_black_tree<int, std::string> const &tree =*reinterpret_cast<red_black_tree<int, std::string> *>(rb);
+
+    for(auto it = tree.begin_infix(); it!=tree.end_infix(); ++it) {
+        logger->trace(std::to_string((*it)->key));
+    }
+
+    logger->trace("End");
+
     std::vector<typename red_black_tree<int, std::string>::iterator_data> expected_result =
         {
             red_black_tree<int, std::string>::iterator_data(2, 1, "l", red_black_tree<int, std::string>::node_color::RED),

@@ -12,6 +12,7 @@
 #include <logger.h>
 #include <logger_guardant.h>
 #include <not_implemented.h>
+#include <ranges>
 
 template<
     typename tkey,
@@ -48,9 +49,9 @@ protected:
     std::function<int(tkey const &, tkey const &)> _keys_comparer;
 
 private:
-    
+
     logger *_logger;
-    
+
     allocator *_allocator;
 
 protected:
@@ -104,7 +105,9 @@ search_tree<tkey, tvalue>::search_tree(
     logger *logger,
     allocator *allocator)
 {
-    throw not_implemented("template<typename tkey, typename tvalue> search_tree<tkey, tvalue>::search_tree(std::function<int(tkey const &, tkey const &)>, logger *, allocator *)", "your code should be here...");
+    _keys_comparer = keys_comparer;
+    _logger = logger;
+    _allocator = allocator;
 }
 
 template<
@@ -112,7 +115,7 @@ template<
     typename tvalue>
 [[nodiscard]] inline allocator *search_tree<tkey, tvalue>::get_allocator() const
 {
-    throw not_implemented("template<typename tkey, typename tvalue> [[nodiscard]] inline allocator *search_tree<tkey, tvalue>::get_allocator() const", "your code should be here...");
+    return _allocator;
 }
 
 template<
@@ -120,7 +123,7 @@ template<
     typename tvalue>
 [[nodiscard]] inline logger *search_tree<tkey, tvalue>::get_logger() const
 {
-    throw not_implemented("template<typename tkey, typename tvalue> [[nodiscard]] inline logger *search_tree<tkey, tvalue>::get_logger() const", "your code should be here...");
+    return _logger;
 }
 
 #endif //MATH_PRACTICE_AND_OPERATING_SYSTEMS_SEARCH_TREE_H

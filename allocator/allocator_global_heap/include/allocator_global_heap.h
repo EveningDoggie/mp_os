@@ -35,7 +35,7 @@ public:
     allocator_global_heap& operator=(
         allocator_global_heap&& other) noexcept;
 
-    void allocator_global_heap::move_from_other(allocator_global_heap&& other);
+    void move_from_other(allocator_global_heap&& other);
 
 public:
     

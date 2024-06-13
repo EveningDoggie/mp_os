@@ -23,9 +23,17 @@ private:
     struct node final:
         binary_search_tree<tkey, tvalue>::node
     {
-        
-        // TODO: think about it!
-        
+    public:
+
+        node_color color;
+
+        explicit node(
+            tkey const &key,
+            tvalue const &value);
+
+        explicit node(
+            tkey const &key,
+            tvalue &&value);
     };
 
 public:
@@ -33,9 +41,9 @@ public:
     struct iterator_data final:
         public binary_search_tree<tkey, tvalue>::iterator_data
     {
-    
+
     public:
-        
+
         node_color color;
     
     public:
@@ -45,24 +53,29 @@ public:
             tkey const &key,
             tvalue const &value,
             node_color color);
-        
+
+        explicit iterator_data(
+            unsigned int depth,
+            node const * node);
     };
 
+
+
 private:
-    
+
     class insertion_template_method final:
         public binary_search_tree<tkey, tvalue>::insertion_template_method
     {
     
     public:
-        
+
         explicit insertion_template_method(
             red_black_tree<tkey, tvalue> *tree,
             typename binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy insertion_strategy);
     
     private:
-        
-        // TODO: think about it!
+
+         void balance_execute() override;
         
     };
     
@@ -74,9 +87,6 @@ private:
         
         explicit obtaining_template_method(
             red_black_tree<tkey, tvalue> *tree);
-        
-        // TODO: think about it!
-        
     };
     
     class disposal_template_method final:
@@ -89,7 +99,7 @@ private:
             red_black_tree<tkey, tvalue> *tree,
             typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy disposal_strategy);
         
-        // TODO: think about it!
+        void balance_execute() override;
         
     };
 
@@ -101,8 +111,13 @@ public:
         typename binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy insertion_strategy = binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy::throw_an_exception,
         typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy disposal_strategy = binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy::throw_an_exception);
 
+
+private:
+
+    static int key_comparer(tkey const &first_key, tkey const &second_key);
+
 public:
-    
+
     ~red_black_tree() noexcept final;
     
     red_black_tree(
@@ -119,6 +134,22 @@ public:
     
 };
 
+template<typename tkey, typename tvalue>
+red_black_tree<tkey, tvalue>::node::node(tkey const &key, tvalue const &value):
+binary_search_tree<tkey, tvalue>(key, value),
+color(node_color::RED)
+{
+
+}
+
+template<typename tkey, typename tvalue>
+red_black_tree<tkey, tvalue>::node::node(tkey const &key, tvalue &&value):
+binary_search_tree<tkey, tvalue>(key, value),
+color(node_color::RED)
+{
+
+}
+
 template<
     typename tkey,
     typename tvalue>
@@ -127,9 +158,17 @@ red_black_tree<tkey, tvalue>::iterator_data::iterator_data(
     tkey const &key,
     tvalue const &value,
     typename red_black_tree<tkey, tvalue>::node_color color):
-    binary_search_tree<tkey, tvalue>::iterator_data(depth, key, value)
+    binary_search_tree<tkey, tvalue>::iterator_data(depth, key, value),
+    color(color)
 {
-    throw not_implemented("template<typename tkey, typename tvalue> red_black_tree<tkey, tvalue>::iterator_data::iterator_data(unsigned int, tkey const &, tvalue const &, typename red_black_tree<tkey, tvalue>::node_color)", "your code should be here...");
+
+}
+
+template<typename tkey, typename tvalue>
+red_black_tree<tkey, tvalue>::iterator_data::iterator_data(unsigned int depth, node const *node):
+iterator_data(depth, node->key, node->value, node->color)
+{
+
 }
 
 template<
@@ -140,16 +179,37 @@ red_black_tree<tkey, tvalue>::insertion_template_method::insertion_template_meth
     typename binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy insertion_strategy):
     binary_search_tree<tkey, tvalue>::insertion_template_method(tree, insertion_strategy)
 {
-    throw not_implemented("template<typename tkey, typename tvalue> red_black_tree<tkey, tvalue>::insertion_template_method::insertion_template_method(red_black_tree<tkey, tvalue> *, typename binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy)", "your code should be here...");
+
+}
+
+template<typename tkey, typename tvalue>
+void red_black_tree<tkey, tvalue>::insertion_template_method::balance_execute()
+{
+   // if(insertion_template_method::template_method_basics::_order_stack.size()==0)
+//   auto var = static_cast<node*>(red_black_tree::insertion_template_method::_order_stack.top())->color;
+   // binary_search_tree<tkey, tvalue>::stack_kek.top()
+   // binary_search_tree<tkey,tvalue>
+   /// insertion_template_method::template_method_basics::get_logger()->trace("KEK");
+  ///   (*static_cast<node**>(&insertion_template_method::template_method_basics::_order_stack.top()))->color=node_color::RED;
+
+  //  insertion_template_method::template_method_basics::get_logger()->trace("KEK");
+
+   // auto var =  insertion_template_method::template_method_basics::_order_stack.top();
+   // auto v = dynamic_cast<red_black_tree<tkey, tvalue>::node*>(var);
+
+  // auto var = _order_stack.size();
+  //  insertion_template_method::template_method_basics::get_logger()->trace(std::to_string(var));
+
+    auto var = dynamic_cast<red_black_tree::node*>(insertion_template_method::template_method_basics::_order_stack.top());
 }
 
 template<
     typename tkey,
     typename tvalue>
-red_black_tree<tkey, tvalue>::obtaining_template_method::obtaining_template_method(
-    red_black_tree<tkey, tvalue> *tree)
+red_black_tree<tkey, tvalue>::obtaining_template_method::obtaining_template_method(red_black_tree<tkey, tvalue> *tree):
+binary_search_tree<tkey, tvalue>::obtaining_template_method(tree)
 {
-    throw not_implemented("template<typename tkey, typename tvalue> red_black_tree<tkey, tvalue>::obtaining_template_method::obtaining_template_method(red_black_tree<tkey, tvalue> *)", "your code should be here...");
+
 }
 
 template<
@@ -160,7 +220,13 @@ red_black_tree<tkey, tvalue>::disposal_template_method::disposal_template_method
     typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy disposal_strategy):
     binary_search_tree<tkey, tvalue>::disposal_template_method(tree, disposal_strategy)
 {
-    throw not_implemented("template<typename tkey, typename tvalue> red_black_tree<tkey, tvalue>::disposal_template_method::disposal_template_method(red_black_tree<tkey, tvalue> *, typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy)", "your code should be here...");
+
+}
+
+template<typename tkey, typename tvalue>
+void red_black_tree<tkey, tvalue>::disposal_template_method::balance_execute()
+{
+
 }
 
 template<
@@ -170,9 +236,28 @@ red_black_tree<tkey, tvalue>::red_black_tree(
     allocator *allocator,
     logger *logger,
     typename binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy insertion_strategy,
-    typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy disposal_strategy)
+    typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy disposal_strategy):
+binary_search_tree<tkey, tvalue>::binary_search_tree(
+        new red_black_tree<tkey, tvalue>::insertion_template_method(this, insertion_strategy),
+        new red_black_tree<tkey, tvalue>::obtaining_template_method(this),
+        new red_black_tree<tkey, tvalue>::disposal_template_method(this, disposal_strategy),
+        key_comparer,
+        allocator,
+        logger)
 {
-    throw not_implemented("template<typename tkey, typename tvalue> red_black_tree<tkey, tvalue>::red_black_tree(allocator *, logger *, typename binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy, typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy)", "your code should be here...");
+
+}
+
+template<typename tkey, typename tvalue>
+int red_black_tree<tkey, tvalue>::key_comparer(tkey const &first_key, tkey const &second_key)
+{
+    if(first_key==second_key)
+        return 0;
+
+    if(first_key>second_key)
+        return 1;
+
+    return -1;
 }
 
 template<
